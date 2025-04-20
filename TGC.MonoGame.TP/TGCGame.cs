@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq.Expressions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TGC.MonoGame.TP.src.Esenario;
 
 namespace TGC.MonoGame.TP
 {
@@ -46,6 +48,10 @@ namespace TGC.MonoGame.TP
         private Matrix View { get; set; }
         private Matrix Projection { get; set; }
 
+        //objetos
+        private Esenario _Esenario;
+
+
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
         ///     Escribir aqui el codigo de inicializacion: el procesamiento que podemos pre calcular para nuestro juego.
@@ -61,6 +67,8 @@ namespace TGC.MonoGame.TP
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
             // Seria hasta aca.
+
+
 
             // Configuramos nuestras matrices de la escena.
             World = Matrix.Identity;
@@ -83,6 +91,8 @@ namespace TGC.MonoGame.TP
 
             // Cargo el modelo del logo.
             Model = Content.Load<Model>(ContentFolder3D + "tgc-logo/tgc-logo");
+
+            _Esenario = new Esenario(GraphicsDevice);
 
             // Cargo un efecto basico propio declarado en el Content pipeline.
             // En el juego no pueden usar BasicEffect de MG, deben usar siempre efectos propios.
@@ -135,6 +145,8 @@ namespace TGC.MonoGame.TP
             // Aca deberiamos poner toda la logia de renderizado del juego.
             GraphicsDevice.Clear(Color.Black);
 
+
+
             // Para dibujar le modelo necesitamos pasarle informacion que el efecto esta esperando.
             Effect.Parameters["View"].SetValue(View);
             Effect.Parameters["Projection"].SetValue(Projection);
@@ -145,6 +157,9 @@ namespace TGC.MonoGame.TP
                 Effect.Parameters["World"].SetValue(mesh.ParentBone.Transform * World);
                 mesh.Draw();
             }
+
+            _Esenario.Dibujar(GraphicsDevice);
+
         }
 
         /// <summary>
