@@ -16,13 +16,13 @@ namespace TGC.MonoGame.TP.src.Esenario
         // escenario plano (Dibujado)
         private VertexBuffer _vertices;
         private IndexBuffer _indices;
-        private BasicEffect _effect;
+        private Effect _effect;
 
 
         // objeto escenario (Configuracion)
-        private Matrix _matrixMundo {get;}
-        private Matrix _matrixView{get;}
-        private Matrix _matrixProyection{get;}
+        private Matrix _matrixMundo {get; set;}
+        private Matrix _matrixView{get; set;}
+        private Matrix _matrixProyection{get; set;}
 
         //var a = GraphicsDevice
 
@@ -38,15 +38,6 @@ namespace TGC.MonoGame.TP.src.Esenario
 
 
             //Configuración Dibujar
-
-            // Setup our basic effect
-            _effect = new BasicEffect(Graphics)
-            {
-                World = _matrixMundo,
-                View = _matrixView,
-                Projection = _matrixProyection,
-                VertexColorEnabled = true
-            };
 
             VertexPositionColor[] puntos = new VertexPositionColor[]
             {
@@ -70,21 +61,27 @@ namespace TGC.MonoGame.TP.src.Esenario
 
         }
 
+        public void CargarEfectos (ContentManager Content, String ContentFolderEffects){
+            this._effect = Content.Load<Effect>(ContentFolderEffects + "BasicShader");
+        }
+
         public void Dibujar(GraphicsDevice Graphics)
         {
             Graphics.SetVertexBuffer(_vertices);
             Graphics.Indices = _indices;
 
-            _effect.Parameters["World"].SetValue(_matrixMundo);
-            _effect.Parameters["View"].SetValue(_matrixView);
-//            _effect.Parameters["Projection"].SetValue(_matrixProyection);
 
-            foreach (var pass in _effect.CurrentTechnique.Passes)
+                _effect.Parameters["World"].SetValue(_matrixMundo);
+                _effect.Parameters["View"].SetValue(_matrixView);
+                _effect.Parameters["Projection"].SetValue(_matrixProyection);
+                _effect.Parameters["DiffuseColor"].SetValue(Color.Green.ToVector3());
+
+          /*  foreach (var pass in _effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
                 Graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 2);
             }
-
+            */
            Graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 2);
         }
         
