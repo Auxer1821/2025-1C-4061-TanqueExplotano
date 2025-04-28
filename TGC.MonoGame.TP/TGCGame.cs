@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Casa;
-using TGC.MonoGame.TP.src.Terreno;
+using TGC.MonoGame.TP.src.Esenario;
 
 namespace TGC.MonoGame.TP
 {
@@ -21,6 +22,9 @@ namespace TGC.MonoGame.TP
         public const string ContentFolderSounds = "Sounds/";
         public const string ContentFolderSpriteFonts = "SpriteFonts/";
         public const string ContentFolderTextures = "Textures/";
+
+        //camara
+
 
         /// <summary>
         ///     Constructor del juego.
@@ -42,22 +46,23 @@ namespace TGC.MonoGame.TP
 
         private GraphicsDeviceManager Graphics { get; }
         private SpriteBatch SpriteBatch { get; set; }
-        private Model Model { get; set; }
-        private Effect Effect { get; set; }
-        private float Rotation { get; set; }
-        private Matrix World { get; set; }
         private Matrix View { get; set; }
         private Matrix Projection { get; set; }
+        
 
         //objetos
         //private Esenario _Esenario;
+        private Esenario _esenario;
+
+        /*
         private Terreno _Terreno;
         private Casa _Casa;
+        
         private Arbol1 _Arbol1;
         private Caja _Caja;
         private Prueba _Prueba;
         private Roca _Roca;
-
+        */
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -79,18 +84,22 @@ namespace TGC.MonoGame.TP
 
 
             // Configuramos nuestras matrices de la escena.
-            World = Matrix.Identity;
             View = Matrix.CreateLookAt(Vector3.UnitZ * 150, Vector3.Zero, Vector3.Up);
             Projection =
                 Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
 
             //_Esenario = new Esenario(GraphicsDevice);
+            _esenario = new Esenario();
+            _esenario.Initialize(GraphicsDevice, Content, Matrix.Identity, View, Projection);
+
+            
+            /*
             _Terreno = new Terreno();
             _Terreno.Initialize(GraphicsDevice, World * Matrix.CreateTranslation(Vector3.UnitY * -1), View, Projection, Content);
 
             _Casa = new Casa();
             _Casa.Initialize(GraphicsDevice, World, View, Projection, Content);
-
+            
             _Caja = new Caja();
             _Caja.Initialize(GraphicsDevice, World * Matrix.CreateTranslation(Vector3.UnitX * -10), View, Projection, Content);
 
@@ -102,7 +111,7 @@ namespace TGC.MonoGame.TP
 
             _Roca = new Roca();
             _Roca.Initialize(GraphicsDevice, World * Matrix.CreateScale(30) * Matrix.CreateTranslation(Vector3.UnitX * 10 + Vector3.UnitZ * -31), View, Projection, Content);
-
+            */
 
             base.Initialize();
         }
@@ -117,18 +126,15 @@ namespace TGC.MonoGame.TP
             // Aca es donde deberiamos cargar todos los contenido necesarios antes de iniciar el juego.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Cargo el modelo del logo.
-            Model = Content.Load<Model>(ContentFolder3D + "tgc-logo/tgc-logo");
 
-            //_Esenario = new Esenario(GraphicsDevice);
+            
 
             // Cargo un efecto basico propio declarado en el Content pipeline.
-            // En el juego no pueden usar BasicEffect de MG, deben usar siempre efectos propios.
-            Effect = Content.Load<Effect>(ContentFolderEffects + "BasicShader");
-            //_Esenario.CargarEfectos(Content, ContentFolderEffects);
+
 
             // Asigno el efecto que cargue a cada parte del mesh.
             // Un modelo puede tener mas de 1 mesh internamente.
+            /*
             foreach (var mesh in Model.Meshes)
             {
                 // Un mesh puede tener mas de 1 mesh part (cada 1 puede tener su propio efecto).
@@ -137,7 +143,8 @@ namespace TGC.MonoGame.TP
                     meshPart.Effect = Effect;
                 }
             }
-
+            */
+            
             base.LoadContent();
         }
 
@@ -150,17 +157,18 @@ namespace TGC.MonoGame.TP
         {
             // Aca deberiamos poner toda la logica de actualizacion del juego.
 
+            
+
+
             // Capturar Input teclado
+
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 //Salgo del juego.
                 Exit();
             }
             
-            // Basado en el tiempo que paso se va generando una rotacion.
-            Rotation += Convert.ToSingle(gameTime.ElapsedGameTime.TotalSeconds);
-
-            World = Matrix.CreateRotationY(Rotation);
+            
 
             base.Update(gameTime);
         }
@@ -189,13 +197,15 @@ namespace TGC.MonoGame.TP
             }
 */
             
-
+/*
            _Terreno.Dibujar(GraphicsDevice);
            _Casa.Dibujar(GraphicsDevice);
            _Arbol1.Dibujar(GraphicsDevice);
            _Caja.Dibujar(GraphicsDevice);
            _Prueba.Dibujar(GraphicsDevice);
            _Roca.Dibujar(GraphicsDevice);
+*/
+        _esenario.Dibujar(GraphicsDevice);
 
         }
 

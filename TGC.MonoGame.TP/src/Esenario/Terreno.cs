@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Objetos;
 
 
-namespace TGC.MonoGame.TP.src.Terreno
+namespace TGC.MonoGame.TP.src.Esenario
 {
     /// <summary>
     ///     Esta es la clase del esenario donde se controla 

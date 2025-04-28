@@ -21,6 +21,8 @@ namespace TGC.MonoGame.TP.src.Objetos
         protected Matrix _matrixMundo {get; set;}
         protected Matrix _matrixView {get; set;}
         protected Matrix _matrixProyection {get; set;}
+
+        protected Vector3 ubicacion {get; set;}
         protected Vector3 _Color {get; set;}
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -109,6 +111,7 @@ namespace TGC.MonoGame.TP.src.Objetos
         protected virtual Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content){
             return Content.Load<Effect>("Effects/BasicShader");
         }
+
 
         
     }
