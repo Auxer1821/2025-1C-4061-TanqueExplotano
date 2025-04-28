@@ -13,18 +13,17 @@ namespace TGC.MonoGame.TP
         public Matrix Vista { get; private set; }
         public Matrix Proyeccion { get; private set; }
 
+        //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
+
         public Camara(Vector3 posicionInicial, Vector3 objetivoInicial, float relacionAspecto)
         {
             Posicion = posicionInicial;
             Objetivo = objetivoInicial + new Vector3(0, -10, 0);
             ActualizarVista();
-            Proyeccion = Matrix.CreatePerspectiveFieldOfView(
-                MathHelper.PiOver4, 
-                relacionAspecto, 
-                0.1f, 
-                1000f
-            );
+            Proyeccion = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, relacionAspecto, 0.1f, 1000f);
         }
+
+        //----------------------------------------------Update--------------------------------------------------//
 
         public void Actualizar(GameTime gameTime)
         {
@@ -43,6 +42,10 @@ namespace TGC.MonoGame.TP
                 direccionMovimiento -= derecha;
             if (teclado.IsKeyDown(Keys.D))
                 direccionMovimiento += derecha;
+            if (teclado.IsKeyDown(Keys.Space))
+                direccionMovimiento += Arriba;
+            if (teclado.IsKeyDown(Keys.LeftShift))
+                direccionMovimiento -= Arriba;
 
             if (direccionMovimiento != Vector3.Zero)
             {

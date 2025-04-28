@@ -51,18 +51,10 @@ namespace TGC.MonoGame.TP
         
 
         //objetos
-        //private Esenario _Esenario;
         private Esenario _esenario;
 
-        /*
-        private Terreno _Terreno;
-        private Casa _Casa;
-        
-        private Arbol1 _Arbol1;
-        private Caja _Caja;
-        private Prueba _Prueba;
-        private Roca _Roca;
-        */
+        private Camara _camara;
+
 
         /// <summary>
         ///     Se llama una sola vez, al principio cuando se ejecuta el ejemplo.
@@ -88,30 +80,13 @@ namespace TGC.MonoGame.TP
             Projection =
                 Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
 
+            _camara = new Camara(Vector3.UnitZ * 150, Vector3.Zero , GraphicsDevice.Viewport.AspectRatio);
+
             //_Esenario = new Esenario(GraphicsDevice);
             _esenario = new Esenario();
-            _esenario.Initialize(GraphicsDevice, Content, Matrix.Identity, View, Projection);
+            //_esenario.Initialize(GraphicsDevice, Matrix.Identity, View, Projection, Content);
+            _esenario.Initialize(GraphicsDevice, Matrix.Identity, _camara.Vista, _camara.Proyeccion, Content);
 
-            
-            /*
-            _Terreno = new Terreno();
-            _Terreno.Initialize(GraphicsDevice, World * Matrix.CreateTranslation(Vector3.UnitY * -1), View, Projection, Content);
-
-            _Casa = new Casa();
-            _Casa.Initialize(GraphicsDevice, World, View, Projection, Content);
-            
-            _Caja = new Caja();
-            _Caja.Initialize(GraphicsDevice, World * Matrix.CreateTranslation(Vector3.UnitX * -10), View, Projection, Content);
-
-            _Arbol1 = new Arbol1();
-            _Arbol1.Initialize(GraphicsDevice, World * Matrix.CreateTranslation(Vector3.UnitX * -20), View, Projection, Content);
-
-            _Prueba = new Prueba();
-            _Prueba.Initialize(GraphicsDevice, World * Matrix.CreateTranslation(Vector3.UnitX * -10), View, Projection, Content);
-
-            _Roca = new Roca();
-            _Roca.Initialize(GraphicsDevice, World * Matrix.CreateScale(30) * Matrix.CreateTranslation(Vector3.UnitX * 10 + Vector3.UnitZ * -31), View, Projection, Content);
-            */
 
             base.Initialize();
         }
@@ -125,25 +100,6 @@ namespace TGC.MonoGame.TP
         {
             // Aca es donde deberiamos cargar todos los contenido necesarios antes de iniciar el juego.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-
-
-            
-
-            // Cargo un efecto basico propio declarado en el Content pipeline.
-
-
-            // Asigno el efecto que cargue a cada parte del mesh.
-            // Un modelo puede tener mas de 1 mesh internamente.
-            /*
-            foreach (var mesh in Model.Meshes)
-            {
-                // Un mesh puede tener mas de 1 mesh part (cada 1 puede tener su propio efecto).
-                foreach (var meshPart in mesh.MeshParts)
-                {
-                    meshPart.Effect = Effect;
-                }
-            }
-            */
             
             base.LoadContent();
         }
@@ -156,10 +112,6 @@ namespace TGC.MonoGame.TP
         protected override void Update(GameTime gameTime)
         {
             // Aca deberiamos poner toda la logica de actualizacion del juego.
-
-            
-
-
             // Capturar Input teclado
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -167,9 +119,10 @@ namespace TGC.MonoGame.TP
                 //Salgo del juego.
                 Exit();
             }
-            
-            
 
+            _camara.Actualizar(gameTime);
+            _esenario.ActualizarCamara(_camara);
+            
             base.Update(gameTime);
         }
 
@@ -181,31 +134,8 @@ namespace TGC.MonoGame.TP
         {
             // Aca deberiamos poner toda la logia de renderizado del juego.
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-
-
-            // Para dibujar le modelo necesitamos pasarle informacion que el efecto esta esperando.
-/*            
-            Effect.Parameters["View"].SetValue(View);
-            Effect.Parameters["Projection"].SetValue(Projection);
-            Effect.Parameters["DiffuseColor"].SetValue(Color.DarkBlue.ToVector3());
-
-            foreach (var mesh in Model.Meshes)
-            {
-                Effect.Parameters["World"].SetValue(mesh.ParentBone.Transform * World);
-                mesh.Draw();
-            }
-*/
             
-/*
-           _Terreno.Dibujar(GraphicsDevice);
-           _Casa.Dibujar(GraphicsDevice);
-           _Arbol1.Dibujar(GraphicsDevice);
-           _Caja.Dibujar(GraphicsDevice);
-           _Prueba.Dibujar(GraphicsDevice);
-           _Roca.Dibujar(GraphicsDevice);
-*/
-        _esenario.Dibujar(GraphicsDevice);
+            _esenario.Dibujar(GraphicsDevice);
 
         }
 

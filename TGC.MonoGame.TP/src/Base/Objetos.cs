@@ -112,6 +112,11 @@ namespace TGC.MonoGame.TP.src.Objetos
             return Content.Load<Effect>("Effects/BasicShader");
         }
 
+        public void ActualizarVistaProyeccion(Matrix Vista, Matrix Proyeccion){
+            this._matrixView = Vista;
+            this._matrixProyection = Proyeccion;
+        }
+
 
         
     }

@@ -82,6 +82,30 @@ namespace TGC.MonoGame.TP.src.Esenario
             }
         }
 
+        public void ActualizarVistaProyeccion(Matrix Vista, Matrix Proyeccion){
+            foreach (var objeto in _objetos)
+            {
+                objeto.ActualizarVistaProyeccion(Vista, Proyeccion);
+            }
+
+            foreach (var casa in _casas)
+            {
+                casa.ActualizarVistaProyeccion(Vista, Proyeccion);
+            }
+            foreach (var caja in _cajas)
+            {
+                caja.ActualizarVistaProyeccion(Vista, Proyeccion);
+            }
+            foreach (var arbol in _arboles)
+            {
+                arbol.ActualizarVistaProyeccion(Vista, Proyeccion);
+            }
+            foreach (var roca in _rocas)
+            {
+                roca.ActualizarVistaProyeccion(Vista, Proyeccion);
+            }
+        }
+
 
 
 

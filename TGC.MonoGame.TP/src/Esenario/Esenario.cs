@@ -26,7 +26,7 @@ namespace TGC.MonoGame.TP.src.Esenario
             _manageObjetos = new ManageObjetos();
         }
 
-        public void Initialize(GraphicsDevice graphicsDevice, ContentManager content, Matrix world, Matrix view, Matrix projection)
+        public void Initialize(GraphicsDevice graphicsDevice, Matrix world, Matrix view, Matrix projection, ContentManager content)
         {
             // Inicializar terreno
             _terreno = new Terreno();
@@ -78,9 +78,11 @@ namespace TGC.MonoGame.TP.src.Esenario
         {
             _manageObjetos.AgregarObjeto(objeto);
         }
+
+        public void ActualizarCamara(Camara camara){
+            _manageObjetos.ActualizarVistaProyeccion(camara.Vista, camara.Proyeccion);
+        }
+
     }
 
-
-
-        
 }
