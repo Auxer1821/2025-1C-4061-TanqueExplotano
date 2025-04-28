@@ -20,7 +20,7 @@ namespace TGC.MonoGame.TP.src.Esenario
         private List<Casa.Caja> _cajas;
         private List<Casa.Casa> _casas;
         private List<Casa.Roca> _rocas;
-
+        private List<Montana.Montana> _montanas;
 
         public ManageObjetos()
         {
@@ -29,6 +29,7 @@ namespace TGC.MonoGame.TP.src.Esenario
             _cajas = new List<Casa.Caja>();
             _casas = new List<Casa.Casa>();
             _rocas = new List<Casa.Roca>();
+            _montanas = new List<Montana.Montana>();
         }
 
         public void AgregarObjeto(Objetos.Objetos objeto)
@@ -56,6 +57,11 @@ namespace TGC.MonoGame.TP.src.Esenario
             _rocas.Add(roca);
         }
 
+        public void AgregarMontana(Montana.Montana montana)
+        {
+            _montanas.Add(montana);
+        }
+
 
         public void DibujarObjetos(GraphicsDevice graphicsDevice)
         {
@@ -80,6 +86,10 @@ namespace TGC.MonoGame.TP.src.Esenario
             {
                 roca.Dibujar(graphicsDevice);
             }
+            foreach (var montana in _montanas)
+            {
+                montana.Dibujar(graphicsDevice);
+            }
         }
 
         public void ActualizarVistaProyeccion(Matrix Vista, Matrix Proyeccion){
@@ -103,6 +113,10 @@ namespace TGC.MonoGame.TP.src.Esenario
             foreach (var roca in _rocas)
             {
                 roca.ActualizarVistaProyeccion(Vista, Proyeccion);
+            }
+            foreach (var montana in _montanas)
+            {
+                montana.ActualizarVistaProyeccion(Vista, Proyeccion);
             }
         }
 

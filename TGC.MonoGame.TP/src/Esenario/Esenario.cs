@@ -18,7 +18,6 @@ namespace TGC.MonoGame.TP.src.Esenario
         // Variables
         private Terreno _terreno;
         private ManageObjetos _manageObjetos;
-        private Montana.Montana _montana;
 
         
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -68,14 +67,24 @@ namespace TGC.MonoGame.TP.src.Esenario
                 roca.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content);
                 _manageObjetos.AgregarRoca(roca);
             }
-            _montana = new Montana.Montana();
-            _montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(-400, 0, 0), view, projection, content);
+
+            // Crear Coordillera
+            for(int i = 0; i< 5; i++){
+                //IZQUIERDA
+                var montana = new Montana.Montana();
+                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(-400, 0, -400 + 200 * i), view, projection, content);
+                _manageObjetos.AgregarMontana(montana);
+                    //DERECHA
+                montana = new Montana.Montana();
+                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(400, 0, -400 + 200 * i), view, projection, content);
+                _manageObjetos.AgregarMontana(montana);
+            }
+
         }
         public void Dibujar(GraphicsDevice graphicsDevice)
         {
             _terreno.Dibujar(graphicsDevice);
             _manageObjetos.DibujarObjetos(graphicsDevice);
-            _montana.Dibujar(graphicsDevice);
         }
 
         public void AgregarObjeto(Objetos.Objetos objeto)
@@ -86,7 +95,6 @@ namespace TGC.MonoGame.TP.src.Esenario
         public void ActualizarCamara(Camara camara){
             _manageObjetos.ActualizarVistaProyeccion(camara.Vista, camara.Proyeccion);
             _terreno.ActualizarVistaProyeccion(camara.Vista,camara.Proyeccion);
-            _montana.ActualizarVistaProyeccion(camara.Vista,camara.Proyeccion);
         }
 
     }
