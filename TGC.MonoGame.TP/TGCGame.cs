@@ -3,8 +3,8 @@ using System.Linq.Expressions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using TGC.MonoGame.TP.src.Esenario;
-using TGC.MonoGame.TP.src.Esenario2;
+using TGC.MonoGame.TP.src.Casa;
+using TGC.MonoGame.TP.src.Terreno;
 
 namespace TGC.MonoGame.TP
 {
@@ -51,7 +51,12 @@ namespace TGC.MonoGame.TP
 
         //objetos
         //private Esenario _Esenario;
-        private Esenario2 _Esenario2;
+        private Terreno _Terreno;
+        private Casa _Casa;
+        private Arbol1 _Arbol1;
+        private Caja _Caja;
+        private Prueba _Prueba;
+        private Roca _Roca;
 
 
         /// <summary>
@@ -80,8 +85,23 @@ namespace TGC.MonoGame.TP
                 Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
 
             //_Esenario = new Esenario(GraphicsDevice);
-            _Esenario2 = new Esenario2();
-            _Esenario2.Esenario2_Initialize(GraphicsDevice);
+            _Terreno = new Terreno();
+            _Terreno.Initialize(GraphicsDevice, World * Matrix.CreateTranslation(Vector3.UnitY * -1), View, Projection, Content);
+
+            _Casa = new Casa();
+            _Casa.Initialize(GraphicsDevice, World, View, Projection, Content);
+
+            _Caja = new Caja();
+            _Caja.Initialize(GraphicsDevice, World * Matrix.CreateTranslation(Vector3.UnitX * -10), View, Projection, Content);
+
+            _Arbol1 = new Arbol1();
+            _Arbol1.Initialize(GraphicsDevice, World * Matrix.CreateTranslation(Vector3.UnitX * -20), View, Projection, Content);
+
+            _Prueba = new Prueba();
+            _Prueba.Initialize(GraphicsDevice, World * Matrix.CreateTranslation(Vector3.UnitX * -10), View, Projection, Content);
+
+            _Roca = new Roca();
+            _Roca.Initialize(GraphicsDevice, World * Matrix.CreateScale(30) * Matrix.CreateTranslation(Vector3.UnitX * 10 + Vector3.UnitZ * -31), View, Projection, Content);
 
 
             base.Initialize();
@@ -152,12 +172,12 @@ namespace TGC.MonoGame.TP
         protected override void Draw(GameTime gameTime)
         {
             // Aca deberiamos poner toda la logia de renderizado del juego.
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
 
 
             // Para dibujar le modelo necesitamos pasarle informacion que el efecto esta esperando.
-            /*
+/*            
             Effect.Parameters["View"].SetValue(View);
             Effect.Parameters["Projection"].SetValue(Projection);
             Effect.Parameters["DiffuseColor"].SetValue(Color.DarkBlue.ToVector3());
@@ -167,11 +187,15 @@ namespace TGC.MonoGame.TP
                 Effect.Parameters["World"].SetValue(mesh.ParentBone.Transform * World);
                 mesh.Draw();
             }
+*/
+            
 
-            */
-
-            //_Esenario.Dibujar(GraphicsDevice);
-            _Esenario2.Escenario2_Dibujar(GraphicsDevice);
+           _Terreno.Dibujar(GraphicsDevice);
+           _Casa.Dibujar(GraphicsDevice);
+           _Arbol1.Dibujar(GraphicsDevice);
+           _Caja.Dibujar(GraphicsDevice);
+           _Prueba.Dibujar(GraphicsDevice);
+           _Roca.Dibujar(GraphicsDevice);
 
         }
 
@@ -185,5 +209,6 @@ namespace TGC.MonoGame.TP
 
             base.UnloadContent();
         }
+
     }
 }
