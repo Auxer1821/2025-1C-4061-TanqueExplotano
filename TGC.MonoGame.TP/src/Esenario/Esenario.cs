@@ -18,6 +18,7 @@ namespace TGC.MonoGame.TP.src.Esenario
         // Variables
         private Terreno _terreno;
         private ManageObjetos _manageObjetos;
+        private Montana.Montana _montana;
 
         
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -42,14 +43,14 @@ namespace TGC.MonoGame.TP.src.Esenario
                     _manageObjetos.AgregarCasa(casa);
 
                     var caja = new Casa.Caja();
-                    caja.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x + 5, 0, z + 5), view, projection, content);
+                    caja.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x + 8, 0, z + 8), view, projection, content);
                     _manageObjetos.AgregarCaja(caja);
                 }
             }
 
             // Crear un bosque (árboles)
             Random random = new Random(0);
-            for (int i = 0; i < 150; i++)
+            for (int i = 0; i < 500; i++)
             {
                 var arbol = new Casa.Arbol1();
                 float x = random.Next(-300, 300);
@@ -59,7 +60,7 @@ namespace TGC.MonoGame.TP.src.Esenario
             }
 
             // Crear algunas rocas dispersas
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 120; i++)
             {
                 var roca = new Casa.Roca();
                 float x = random.Next(-300, 300);
@@ -67,11 +68,14 @@ namespace TGC.MonoGame.TP.src.Esenario
                 roca.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content);
                 _manageObjetos.AgregarRoca(roca);
             }
+            _montana = new Montana.Montana();
+            _montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(-400, 0, 0), view, projection, content);
         }
         public void Dibujar(GraphicsDevice graphicsDevice)
         {
             _terreno.Dibujar(graphicsDevice);
             _manageObjetos.DibujarObjetos(graphicsDevice);
+            _montana.Dibujar(graphicsDevice);
         }
 
         public void AgregarObjeto(Objetos.Objetos objeto)
@@ -81,6 +85,8 @@ namespace TGC.MonoGame.TP.src.Esenario
 
         public void ActualizarCamara(Camara camara){
             _manageObjetos.ActualizarVistaProyeccion(camara.Vista, camara.Proyeccion);
+            _terreno.ActualizarVistaProyeccion(camara.Vista,camara.Proyeccion);
+            _montana.ActualizarVistaProyeccion(camara.Vista,camara.Proyeccion);
         }
 
     }

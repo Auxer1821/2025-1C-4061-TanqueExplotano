@@ -30,8 +30,8 @@ namespace TGC.MonoGame.TP.src.Esenario
 
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
         {
-            this._Color = Color.Black.ToVector3();
-            base.Initialize(Graphics, Mundo * Matrix.CreateScale(1000), View, Projection, Content);
+            this._Color = Color.SandyBrown.ToVector3();
+            base.Initialize(Graphics, Matrix.CreateScale(500) * Mundo, View, Projection, Content);
         }
 
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta

@@ -8,7 +8,7 @@ namespace TGC.MonoGame.TP
         public Vector3 Posicion { get; private set; }
         public Vector3 Objetivo { get; private set; }
         public Vector3 Arriba { get; private set; } = Vector3.Up;
-        public float Velocidad { get; set; } = 50f;
+        public float Velocidad { get; set; } = 500f;
 
         public Matrix Vista { get; private set; }
         public Matrix Proyeccion { get; private set; }

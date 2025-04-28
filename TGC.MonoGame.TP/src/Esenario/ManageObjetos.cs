@@ -106,10 +106,5 @@ namespace TGC.MonoGame.TP.src.Esenario
             }
         }
 
-
-
-
-
-
     }
 }

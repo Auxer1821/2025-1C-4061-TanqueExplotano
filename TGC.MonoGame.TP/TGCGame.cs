@@ -48,6 +48,7 @@ namespace TGC.MonoGame.TP
         private SpriteBatch SpriteBatch { get; set; }
         private Matrix View { get; set; }
         private Matrix Projection { get; set; }
+        private Terreno _Terreno;
         
 
         //objetos
@@ -87,6 +88,8 @@ namespace TGC.MonoGame.TP
             //_esenario.Initialize(GraphicsDevice, Matrix.Identity, View, Projection, Content);
             _esenario.Initialize(GraphicsDevice, Matrix.Identity, _camara.Vista, _camara.Proyeccion, Content);
 
+            _Terreno = new Terreno();  
+            _Terreno.Initialize(GraphicsDevice, Matrix.Identity * Matrix.CreateTranslation(Vector3.UnitY * -1), _camara.Vista, _camara.Proyeccion, Content);
 
             base.Initialize();
         }
@@ -136,6 +139,7 @@ namespace TGC.MonoGame.TP
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
             _esenario.Dibujar(GraphicsDevice);
+
 
         }
 
