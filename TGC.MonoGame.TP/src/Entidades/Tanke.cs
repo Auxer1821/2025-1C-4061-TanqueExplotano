@@ -16,10 +16,9 @@ namespace TGC.MonoGame.TP.src.Tanke
         
         // Variables
         //  En Clase Abstracta
-        private TipoTanke.TipoTanke _tipo {get; set;}
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
-
+        
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
         {
             this._Color = Color.Gray.ToVector3();
@@ -27,10 +26,11 @@ namespace TGC.MonoGame.TP.src.Tanke
         }
 
         protected override void ConfigurarModelo(ContentManager Content){
-            this._modelo = Content.Load<Model>("Models/tgc-tanks"+ _tipo.file());
+            this._modelo = Content.Load<Model>("Models/tgc-tanks"+ "/Panzer/Panzer");
         }
         protected override void AjustarModelo(){
-            _matrixMundo =  _tipo.AjusteMatrix();
+            _matrixMundo = Matrix.CreateScale(0.02f) * _matrixMundo;
+            //_matrixMundo = Matrix.CreateScale(0.1f) * Matrix.CreateRotationX(4.71f) * _matrixMundo;
         }
         //TODO CAMBIAR A UN PATROM TEMPLED METODO CON EL PANZER Y EL OTRO TANKE ME DIO PAJA PARA PROBAR
         

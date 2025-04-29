@@ -81,6 +81,7 @@ namespace TGC.MonoGame.TP.src.Esenario
             }
             
             // crear tanks
+            
             for (int i = 0; i < 5; i++)
             {
                 var tank = new Tanke.Tanke();

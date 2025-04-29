@@ -30,6 +30,7 @@ namespace TGC.MonoGame.TP.src.Entidad
         {
             //Configuración de matrices
             this._matrixMundo = Mundo;
+            this.AjustarModelo();
             this._matrixView = View;
             this._matrixProyection = Projection;
 
