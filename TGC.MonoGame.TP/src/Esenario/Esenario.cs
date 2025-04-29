@@ -79,6 +79,16 @@ namespace TGC.MonoGame.TP.src.Esenario
                 montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(400, 0, -400 + 200 * i), view, projection, content);
                 _manageObjetos.AgregarMontana(montana);
             }
+            
+            // crear tanks
+            for (int i = 0; i < 5; i++)
+            {
+                var tank = new Tanke.Tanke();
+                float Ax = random.Next(-150, 150);
+                float Az = random.Next(-150, 150);
+                tank.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Ax, 0, Az), view, projection, content);
+                _manageObjetos.AgregarTanke(tank);
+            }
 
         }
         public void Dibujar(GraphicsDevice graphicsDevice)

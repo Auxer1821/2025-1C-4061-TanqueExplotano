@@ -21,6 +21,7 @@ namespace TGC.MonoGame.TP.src.Esenario
         private List<Casa.Casa> _casas;
         private List<Casa.Roca> _rocas;
         private List<Montana.Montana> _montanas;
+        private List<Entidad.Entidad> _tanks;
 
         public ManageObjetos()
         {
@@ -30,6 +31,7 @@ namespace TGC.MonoGame.TP.src.Esenario
             _casas = new List<Casa.Casa>();
             _rocas = new List<Casa.Roca>();
             _montanas = new List<Montana.Montana>();
+            _tanks = new List<Entidad.Entidad>();
         }
 
         public void AgregarObjeto(Objetos.Objetos objeto)
@@ -62,6 +64,11 @@ namespace TGC.MonoGame.TP.src.Esenario
             _montanas.Add(montana);
         }
 
+        public void AgregarTanke(Tanke.Tanke Tanke)
+        {
+            _tanks.Add(Tanke);
+        }
+
 
         public void DibujarObjetos(GraphicsDevice graphicsDevice)
         {
@@ -90,6 +97,10 @@ namespace TGC.MonoGame.TP.src.Esenario
             {
                 montana.Dibujar(graphicsDevice);
             }
+            foreach (var tank in _tanks)
+            {
+                tank.Dibujar(graphicsDevice);
+            }
         }
 
         public void ActualizarVistaProyeccion(Matrix Vista, Matrix Proyeccion){
@@ -117,6 +128,10 @@ namespace TGC.MonoGame.TP.src.Esenario
             foreach (var montana in _montanas)
             {
                 montana.ActualizarVistaProyeccion(Vista, Proyeccion);
+            }
+            foreach (var tank in _tanks)
+            {
+                tank.ActualizarVistaProyeccion(Vista, Proyeccion);
             }
         }
 

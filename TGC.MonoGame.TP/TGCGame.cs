@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Casa;
 using TGC.MonoGame.TP.src.Esenario;
+using TGC.MonoGame.TP.src.Tanke;
 
 namespace TGC.MonoGame.TP
 {
@@ -23,7 +24,7 @@ namespace TGC.MonoGame.TP
         public const string ContentFolderSpriteFonts = "SpriteFonts/";
         public const string ContentFolderTextures = "Textures/";
 
-        //camara
+        //pruebas
 
 
         /// <summary>
@@ -48,7 +49,6 @@ namespace TGC.MonoGame.TP
         private SpriteBatch SpriteBatch { get; set; }
         private Matrix View { get; set; }
         private Matrix Projection { get; set; }
-        private Terreno _Terreno;
         
 
         //objetos
@@ -88,9 +88,6 @@ namespace TGC.MonoGame.TP
             //_esenario.Initialize(GraphicsDevice, Matrix.Identity, View, Projection, Content);
             _esenario.Initialize(GraphicsDevice, Matrix.Identity, _camara.Vista, _camara.Proyeccion, Content);
 
-            _Terreno = new Terreno();  
-            _Terreno.Initialize(GraphicsDevice, Matrix.Identity * Matrix.CreateTranslation(Vector3.UnitY * -1), _camara.Vista, _camara.Proyeccion, Content);
-
             base.Initialize();
         }
 
@@ -125,7 +122,6 @@ namespace TGC.MonoGame.TP
 
             _camara.Actualizar(gameTime);
             _esenario.ActualizarCamara(_camara);
-            
             base.Update(gameTime);
         }
 

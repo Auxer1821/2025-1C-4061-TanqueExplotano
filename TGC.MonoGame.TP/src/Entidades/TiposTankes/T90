@@ -1,0 +1,21 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
+
+namespace TGC.MonoGame.TP.src.TipoTanke
+{
+    /// <summary>
+    ///     Esta es la clase del esenario donde se controla 
+    /// </summary>
+    public class T90 : TipoTanke 
+    {
+        public override string file(){
+            return "T90/T90";
+        }
+        public override Matrix AjusteMatrix()
+        {
+            return Matrix.Create;
+        }
+
+    }
+}
