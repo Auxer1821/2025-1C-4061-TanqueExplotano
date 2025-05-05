@@ -6,22 +6,22 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Objetos;
 
 
-namespace TGC.MonoGame.TP.src.Montana
+namespace TGC.MonoGame.TP.src.Arboles
 {
     /// <summary>
     ///     Esta es la clase del esenario donde se controla 
     /// </summary>
-    public class Montana : Objetos.Objetos
+    public class OArbol : Objetos.Objeto
     {
         
         // Variables
         //  En Clase Abstracta
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
+        public OArbol(){}
         public override void Initialize (GraphicsDevice Graphics)
         {
             //Configuración de matrices
-            this._Color = Color.Yellow.ToVector3();
             this._matrixMundo = Matrix.Identity;
             this._matrixView = Matrix.CreateLookAt(Vector3.UnitZ * 150, Vector3.Zero, Vector3.Up);
             this._matrixProyection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, Graphics.Viewport.AspectRatio, 1, 250);
@@ -32,33 +32,13 @@ namespace TGC.MonoGame.TP.src.Montana
 
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
         {
-            this._Color = Color.DarkGray.ToVector3();
-            base.Initialize(Graphics, Matrix.CreateScale(new Vector3(100,200,100)) * Mundo, View, Projection, Content);
+            this._Color = Color.Green.ToVector3();
+            base.Initialize(Graphics, Mundo, View, Projection, Content);
         }
 
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta
 
         //----------------------------------------------Dibujado--------------------------------------------------//
-
-        public override void Dibujar(GraphicsDevice Graphics)
-        {
-            
-
-            _effect2.Parameters["View"].SetValue(this._matrixView);
-            _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
-            _effect2.Parameters["World"].SetValue(this._matrixMundo);
-            _effect2.Parameters["DiffuseColor"].SetValue(this._Color);
-
-            Graphics.SetVertexBuffer(_vertices);
-            Graphics.Indices = _indices;
-
-            foreach (var pass in _effect2.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                Graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList,0,0,12);
-            }
-            
-        }
         
 
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------//
@@ -66,11 +46,14 @@ namespace TGC.MonoGame.TP.src.Montana
 
             VertexPositionColor[] puntos = new VertexPositionColor[]
             {
-                new VertexPositionColor(new Vector3(-1f, 0f, -1f), Color.Yellow),
-                new VertexPositionColor(new Vector3(1f, 0f, -1f), Color.Yellow),
-                new VertexPositionColor(new Vector3(-1f, 0f, 1f), Color.Yellow),
-                new VertexPositionColor(new Vector3(1f, 0f, 1f), Color.Yellow),
-                new VertexPositionColor(new Vector3(0f, 2f, 0f), Color.Yellow)
+                new VertexPositionColor(new Vector3(0f, 0f, 0f), Color.Green),
+                new VertexPositionColor(new Vector3(1f, 0f, 0f), Color.Green),
+                new VertexPositionColor(new Vector3(0f, 3f, 0f), Color.Green),
+                new VertexPositionColor(new Vector3(1f, 3f, 0f), Color.Green),
+                new VertexPositionColor(new Vector3(0f, 0f, 1f), Color.Green),
+                new VertexPositionColor(new Vector3(1f, 0f, 1f), Color.Green),
+                new VertexPositionColor(new Vector3(0f, 3f, 1f), Color.Green),
+                new VertexPositionColor(new Vector3(1f, 3f, 1f), Color.Green)
             };
 
             _vertices = new VertexBuffer(Graphics, VertexPositionColor.VertexDeclaration, puntos.Length , BufferUsage.WriteOnly);
@@ -78,14 +61,15 @@ namespace TGC.MonoGame.TP.src.Montana
 
             ushort[] Indices = new ushort[]
             {
-                0,1,2, 1,2,3, //Cara Piso
-                0,4,2, //Cara izq
-                0,4,1, //Cara trasera
-                1,4,3, //Cara der
-                2,4,3, //Cara delantera
+                0,1,2, 1,2,3, //Cara Trasera
+                4,5,6, 5,6,7, //Cara delantera
+                0,4,5, 0,1,5, //Cara abajo
+                2,6,7, 2,3,7, //Cara superior
+                7,5,1, 1,7,3, //Cara derecha
+                0,4,6, 0,6,2  //Cara izquierda
             };
 
-            _indices = new IndexBuffer(Graphics, IndexElementSize.SixteenBits, 18 , BufferUsage.None);
+            _indices = new IndexBuffer(Graphics, IndexElementSize.SixteenBits, 36 , BufferUsage.None);
             _indices.SetData(Indices);
         }
 

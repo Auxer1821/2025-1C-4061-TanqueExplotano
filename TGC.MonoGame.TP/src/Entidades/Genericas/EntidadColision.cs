@@ -10,14 +10,15 @@ namespace TGC.MonoGame.TP.src.Entidades
     /// <summary>
     ///     Clase Abstracta para todos los objetos
     /// </summary>
-    public abstract class Entidad
+    public abstract class EntidadColision:Entidad
     {
         
         // Variables
-        protected Modelos.Modelo _modelo;
-        protected BoundingsVolumes.BoundingVolume _boundingVolume;
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
+        public virtual void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content){
+            this._modelo = null;
+        }
 
         
     }

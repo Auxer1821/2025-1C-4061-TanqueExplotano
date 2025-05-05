@@ -6,18 +6,19 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Objetos;
 
 
-namespace TGC.MonoGame.TP.src.Casa
+namespace TGC.MonoGame.TP.src.Cajas
 {
     /// <summary>
     ///     Esta es la clase del esenario donde se controla 
     /// </summary>
-    public class Prueba : Objetos.Objetos
+    public class OCaja : Objetos.Objeto
     {
         
         // Variables
         //  En Clase Abstracta
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
+        public OCaja(){}
         public override void Initialize (GraphicsDevice Graphics)
         {
             //Configuración de matrices
@@ -28,26 +29,31 @@ namespace TGC.MonoGame.TP.src.Casa
             base.Initialize(Graphics);
 
         }
+        
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
+        {
+            this._Color = Color.Brown.ToVector3();
+            base.Initialize(Graphics, Mundo, View, Projection, Content);
+        }
 
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta
 
         //----------------------------------------------Dibujado--------------------------------------------------//
-
-        //Uso el default de objetos        
+        
 
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------//
         protected override void ConfigPuntos(GraphicsDevice Graphics){
 
             VertexPositionColor[] puntos = new VertexPositionColor[]
             {
-                new VertexPositionColor(new Vector3(0f, 0f, 0f), Color.White),
-                new VertexPositionColor(new Vector3(7f, 0f, 0f), Color.White),
-                new VertexPositionColor(new Vector3(0f, 7f, 0f), Color.White),
-                new VertexPositionColor(new Vector3(7f, 7f, 0f), Color.White),
-                new VertexPositionColor(new Vector3(0f, 0f, 7f), Color.White),
-                new VertexPositionColor(new Vector3(7f, 0f, 7f), Color.White),
-                new VertexPositionColor(new Vector3(0f, 7f, 7f), Color.White),
-                new VertexPositionColor(new Vector3(7f, 7f, 7f), Color.White)
+                new VertexPositionColor(new Vector3(0f, 0f, 0f), Color.Brown),
+                new VertexPositionColor(new Vector3(1f, 0f, 0f), Color.Brown),
+                new VertexPositionColor(new Vector3(0f, 1f, 0f), Color.Brown),
+                new VertexPositionColor(new Vector3(1f, 1f, 0f), Color.Brown),
+                new VertexPositionColor(new Vector3(0f, 0f, 1f), Color.Brown),
+                new VertexPositionColor(new Vector3(1f, 0f, 1f), Color.Brown),
+                new VertexPositionColor(new Vector3(0f, 1f, 1f), Color.Brown),
+                new VertexPositionColor(new Vector3(1f, 1f, 1f), Color.Brown)
             };
 
             _vertices = new VertexBuffer(Graphics, VertexPositionColor.VertexDeclaration, puntos.Length , BufferUsage.WriteOnly);
@@ -68,6 +74,6 @@ namespace TGC.MonoGame.TP.src.Casa
         }
 
         //Configuración de efectos tomados desde la clase padre
-
+        
     }
 }

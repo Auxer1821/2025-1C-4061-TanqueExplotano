@@ -10,15 +10,18 @@ namespace TGC.MonoGame.TP.src.Entidades
     /// <summary>
     ///     Clase Abstracta para todos los objetos
     /// </summary>
-    public abstract class Entidad
+    public class Etanque:EntidadFull
     {
         
         // Variables
-        protected Modelos.Modelo _modelo;
-        protected BoundingsVolumes.BoundingVolume _boundingVolume;
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
-
+        public Etanque(){}
+        public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content){
+            this._modelo = new Tanques.MTanque();
+            //Crear Bounding Volume
+            base.Initialize(Graphics,Mundo,View,Projection,Content);
+        }
         
     }
 }

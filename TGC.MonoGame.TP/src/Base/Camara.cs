@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace TGC.MonoGame.TP
+namespace TGC.MonoGame.TP.src.Camaras
 {
     public class Camara
     {

@@ -6,18 +6,19 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Objetos;
 
 
-namespace TGC.MonoGame.TP.src.Casa
+namespace TGC.MonoGame.TP.src.Montanas
 {
     /// <summary>
     ///     Esta es la clase del esenario donde se controla 
     /// </summary>
-    public class Roca : Objetos.Objetos
+    public class OMontana : Objetos.Objeto
     {
         
         // Variables
         //  En Clase Abstracta
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
+        public OMontana(){}
         public override void Initialize (GraphicsDevice Graphics)
         {
             //Configuración de matrices
@@ -32,8 +33,8 @@ namespace TGC.MonoGame.TP.src.Casa
 
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
         {
-            this._Color = Color.Yellow.ToVector3();
-            base.Initialize(Graphics, Mundo, View, Projection, Content);
+            this._Color = Color.DarkGray.ToVector3();
+            base.Initialize(Graphics, Matrix.CreateScale(new Vector3(100,200,100)) * Mundo, View, Projection, Content);
         }
 
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta

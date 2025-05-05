@@ -4,9 +4,8 @@ using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using TGC.MonoGame.TP.src.Casa;
-using TGC.MonoGame.TP.src.Esenario;
-using TGC.MonoGame.TP.src.Tanke;
+using TGC.MonoGame.TP.src.Esenarios;
+using TGC.MonoGame.TP.src.Camaras;
 
 namespace TGC.MonoGame.TP
 {

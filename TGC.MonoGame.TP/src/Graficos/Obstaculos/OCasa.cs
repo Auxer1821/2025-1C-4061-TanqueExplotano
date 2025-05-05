@@ -6,18 +6,19 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Objetos;
 
 
-namespace TGC.MonoGame.TP.src.Casa
+namespace TGC.MonoGame.TP.src.Casas
 {
     /// <summary>
     ///     Esta es la clase del esenario donde se controla 
     /// </summary>
-    public class Casa : Objetos.Objetos
+    public class OCasa : Objetos.Objeto
     {
         
         // Variables
         //  En Clase Abstracta
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
+        public OCasa(){}
         public override void Initialize (GraphicsDevice Graphics)
         {
             //Configuración de matrices

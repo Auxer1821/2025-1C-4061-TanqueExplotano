@@ -6,12 +6,12 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Objetos;
 
 
-namespace TGC.MonoGame.TP.src.Tanke
+namespace TGC.MonoGame.TP.src.Tanques
 {
     /// <summary>
     ///     Esta es la clase del esenario donde se controla 
     /// </summary>
-    public class Tanke : Entidad.Entidad
+    public class MTanque : Modelos.Modelo
     {
         
         // Variables
@@ -32,7 +32,7 @@ namespace TGC.MonoGame.TP.src.Tanke
             _matrixMundo = Matrix.CreateScale(0.02f) * _matrixMundo;
             //_matrixMundo = Matrix.CreateScale(0.1f) * Matrix.CreateRotationX(4.71f) * _matrixMundo;
         }
-        //TODO CAMBIAR A UN PATROM TEMPLED METODO CON EL PANZER Y EL OTRO TANKE ME DIO PAJA PARA PROBAR
+        //TODO CAMBIAR A UN PATROM TEMPLED METODO CON EL PANZER Y EL OTRO TANQUE ME DIO PAJA PARA PROBAR
         
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta
 
