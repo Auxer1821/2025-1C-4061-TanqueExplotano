@@ -8,16 +8,16 @@ using Microsoft.Xna.Framework.Input;
 namespace TGC.MonoGame.TP.src.BoundingsVolumes
 {
     /// <summary>
-    ///     Clase Abstracta para todos los objetos
+    ///     Clase de esfera para los bounding Volume.
     /// </summary>
-    public abstract class BoundingVolume
+    public class BVCilindro : BoundingsVolumes.BoundingVolume
     {
         
         // Variables
-        protected Modelos.Modelo _modelo;
-        protected BoundingVolume _boundingVolume;
+        public float _radio { get; set;}
+        public Vector3 _cento { get; set;}
+        public float _alto { get; set;}
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------// 
-        
     }
 }

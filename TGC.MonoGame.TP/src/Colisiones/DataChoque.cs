@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 
-namespace TGC.MonoGame.TP.src.DataChoques
+namespace TGC.MonoGame.TP.src.BoundingsVolumes
 {
     /// <summary>
     ///     Clase Abstracta para todos los objetos
@@ -19,7 +19,11 @@ namespace TGC.MonoGame.TP.src.DataChoques
         private Vector3 _normal{get; set;}
 
  //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
+        public DataChoque (Vector3 puntoContacto, float penetracion, Vector3 normal){
+            this._puntoContacto =  puntoContacto;
+            this._penetracion =  penetracion;
+            this._normal =  normal;
+        } 
 
-        
     }
 }
