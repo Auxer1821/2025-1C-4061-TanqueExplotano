@@ -15,12 +15,12 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         
         // Variables
         public float _radio { get; set;}
-        public Vector3 _cento { get; set;}
+        public Vector3 _centro { get; set;}
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------// 
         public BVEsfera(float radio, Vector3 centro){
             _radio = radio;
-            _cento = centro;
+            _centro = centro;
         }
 
         //----------------------------------------------Funciones-de-Detección--------------------------------------------------// 
