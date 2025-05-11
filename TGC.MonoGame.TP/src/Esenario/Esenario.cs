@@ -11,24 +11,37 @@ using TGC.MonoGame.TP.src.Objetos;
 namespace TGC.MonoGame.TP.src.Esenarios
 {
     /// <summary>
-    ///     Esta es la clase del esenario donde se controla 
+    ///     Esta es la clase del esenario donde se controla los managers
     /// </summary>
     public class Esenario 
     {
 
         // Variables
         private Terrenos.Terreno _terreno;
-        private ManagersObjetos.ManagerObjetos _managerObjetos;
+        private Managers.ManagerGrafico _managerGrafico;
+        private Managers.ManagerColisiones _managerColision;
+
+        private Camaras.Camara _camara;
 
         
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public Esenario()
         {
-            _managerObjetos = new ManagersObjetos.ManagerObjetos();
+            _managerGrafico = new Managers.ManagerGrafico();
+            _managerColision = new Managers.ManagerColisiones();
         }
 
-        public void Initialize(GraphicsDevice graphicsDevice, Matrix world, Matrix view, Matrix projection, ContentManager content)
+        public void AgregarEntidad(Entidades.Entidad entidad){
+            _managerGrafico.AgregarEntidad(entidad);
+            _managerColision.AgregarEntidad(entidad);
+        }
+
+        public void Initialize(GraphicsDevice graphicsDevice, Matrix world, ContentManager content)
         {
+            _camara = new Camaras.Camara(Vector3.UnitZ * 150, Vector3.Zero , graphicsDevice.Viewport.AspectRatio);
+            Matrix view = _camara.Vista;
+            Matrix projection = _camara.Proyeccion;
+
             // Inicializar terreno
             _terreno = new Terrenos.Terreno();
             _terreno.Initialize(graphicsDevice, world, view, projection, content);
@@ -43,12 +56,12 @@ namespace TGC.MonoGame.TP.src.Esenarios
                 {
                     var casa = new Entidades.ECasa();
                     casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content);
-                    this.AgregarEntidadFull(casa);
+                    this.AgregarEntidad(casa);
                     posicionesUsadas.Add(new Vector3(x,z,4));
 
                     var caja = new Entidades.ECaja();
                     caja.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x + 8, 0, z + 8), view, projection, content);
-                    this.AgregarEntidadFull(caja);
+                    this.AgregarEntidad(caja);
                     posicionesUsadas.Add(new Vector3(x+8,z+8,2));
                 }
             }
@@ -64,7 +77,7 @@ namespace TGC.MonoGame.TP.src.Esenarios
 
                 if(PosicionesLibre(pos, posicionesUsadas, 1)){
                     arbol.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content);
-                    this.AgregarEntidadFull(arbol);
+                    this.AgregarEntidad(arbol);
                     posicionesUsadas.Add(new Vector3(x,z,1));
                 }
                 else
@@ -82,7 +95,7 @@ namespace TGC.MonoGame.TP.src.Esenarios
                 var pos = new Vector2(x,z); 
                  if(PosicionesLibre(pos, posicionesUsadas,1)){
                     roca.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content);
-                    this.AgregarEntidadFull(roca);
+                    this.AgregarEntidad(roca);
                     posicionesUsadas.Add(new Vector3(x,z,1));
                 }
                 else
@@ -96,11 +109,11 @@ namespace TGC.MonoGame.TP.src.Esenarios
                 //IZQUIERDA
                 var montana = new Entidades.EMontana();
                 montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(-400, 0, -400 + 200 * i), view, projection, content);
-                this.AgregarEntidadFull(montana);
+                this.AgregarEntidad(montana);
                     //DERECHA
                 montana = new Entidades.EMontana();
                 montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(400, 0, -400 + 200 * i), view, projection, content);
-                this.AgregarEntidadFull(montana);
+                this.AgregarEntidad(montana);
             }
             
             // crear tanks
@@ -113,7 +126,7 @@ namespace TGC.MonoGame.TP.src.Esenarios
                 var pos = new Vector2(Ax,Az); 
                 if(PosicionesLibre(pos, posicionesUsadas, 10)){
                     tank.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Ax, 0, Az), view, projection, content);
-                    this.AgregarEntidadFull(tank);
+                    this.AgregarEntidad(tank);
                     posicionesUsadas.Add(new Vector3(Ax,Az,10));
                 }
                 else
@@ -126,29 +139,24 @@ namespace TGC.MonoGame.TP.src.Esenarios
         public void Dibujar(GraphicsDevice graphicsDevice)
         {
             _terreno.Dibujar(graphicsDevice);
-            _managerObjetos.DibujarObjetos(graphicsDevice);
+            _managerGrafico.DibujarObjetos(graphicsDevice);
+        }
+
+        public void ActualizarCamara(GameTime gameTime){
+            _camara.Actualizar(gameTime);
+            _managerGrafico.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
+            _terreno.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
+        }
+
+        public void Update(GameTime gameTime){
+            
+            //manager gamplay
+            _managerColision.VerificarColisiones();
+            this.ActualizarCamara(gameTime);
         }
 
 
-        public void AgregarEntidadFull(Entidades.EntidadFull eFull)
-        {
-            _managerObjetos.AgregarEntidadFull(eFull);
-        }
-        public void AgregarEntidadGrafica(Entidades.EntidadGrafica eGrafica)
-        {
-            _managerObjetos.AgregarEntidadGrafica(eGrafica);
-        }
-        public void AgregarEntidadColicion(Entidades.EntidadColision eColicion)
-        {
-            _managerObjetos.AgregarEntidadColicion(eColicion);
-        }
-
-
-        public void ActualizarCamara(Camaras.Camara camara){
-            _managerObjetos.ActualizarVistaProyeccion(camara.Vista, camara.Proyeccion);
-            _terreno.ActualizarVistaProyeccion(camara.Vista,camara.Proyeccion);
-        }
-
+        //----------------------------------Funciones-auxiliares--------------------------------------------//
         private bool PosicionesLibre( Vector2 newPos, List<Vector3> usadas, float distancia){
             foreach (var pos in usadas){
                 if(Vector2.Distance(new Vector2(pos.X,pos.Y), newPos) < (distancia+pos.Z) )

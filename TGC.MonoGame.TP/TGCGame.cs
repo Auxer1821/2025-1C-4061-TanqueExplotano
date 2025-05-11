@@ -53,7 +53,7 @@ namespace TGC.MonoGame.TP
         //objetos
         private Esenario _esenario;
 
-        private Camara _camara;
+        //private Camara _camara;
 
 
         /// <summary>
@@ -80,12 +80,12 @@ namespace TGC.MonoGame.TP
             Projection =
                 Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
 
-            _camara = new Camara(Vector3.UnitZ * 150, Vector3.Zero , GraphicsDevice.Viewport.AspectRatio);
+            //_camara = new Camara(Vector3.UnitZ * 150, Vector3.Zero , GraphicsDevice.Viewport.AspectRatio);
 
             //_Esenario = new Esenario(GraphicsDevice);
             _esenario = new Esenario();
             //_esenario.Initialize(GraphicsDevice, Matrix.Identity, View, Projection, Content);
-            _esenario.Initialize(GraphicsDevice, Matrix.Identity, _camara.Vista, _camara.Proyeccion, Content);
+            _esenario.Initialize(GraphicsDevice, Matrix.Identity, Content);
 
             base.Initialize();
         }
@@ -119,8 +119,7 @@ namespace TGC.MonoGame.TP
                 Exit();
             }
 
-            _camara.Actualizar(gameTime);
-            _esenario.ActualizarCamara(_camara);
+            _esenario.Update(gameTime);
             base.Update(gameTime);
         }
 

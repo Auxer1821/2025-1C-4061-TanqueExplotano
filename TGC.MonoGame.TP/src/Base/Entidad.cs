@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TGC.MonoGame.TP.src.BoundingsVolumes;
 
 
 namespace TGC.MonoGame.TP.src.Entidades
@@ -14,10 +15,28 @@ namespace TGC.MonoGame.TP.src.Entidades
     {
         
         // Variables
-        protected Modelos.Modelo _modelo;
-        protected BoundingsVolumes.BoundingVolume _boundingVolume;
+        public Modelos.Modelo _modelo {get;set;}
+        public BoundingsVolumes.BoundingVolume _boundingVolume {get;set;}
+        
 
-        //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
+        //----------------------------------------------Metodos--------------------------------------------------//
+        public virtual bool PuedeChocar(){
+            throw new NotImplementedException();
+        }
+        public virtual bool PuedeSerChocado(){
+            throw new NotImplementedException();
+        }
+        public virtual void Dibujar(GraphicsDevice graphics){
+            throw new NotImplementedException();
+        }
+
+        public void Chocar(DataChoque dataChoque, Entidad entidadEstatica)
+        {
+            throw new NotImplementedException();
+        }
+        public virtual void ActualizarVistaProyeccion(Matrix Vista, Matrix Proyeccion){
+            throw new NotImplementedException();
+        }
 
         
     }

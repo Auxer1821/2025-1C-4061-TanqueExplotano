@@ -23,10 +23,12 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._modelo.Initialize(Graphics,Mundo,View,Projection,Content);
         }
 
-        public virtual void Dibujar(GraphicsDevice graphics){
+        //----------------------------------------------Metodos--------------------------------------------------//
+
+        public override void Dibujar(GraphicsDevice graphics){
             this._modelo.Dibujar(graphics);
         }
-        public virtual void ActualizarVistaProyeccion(Matrix Vista, Matrix Proyeccion){
+        public override void ActualizarVistaProyeccion(Matrix Vista, Matrix Proyeccion){
             this._modelo.ActualizarVistaProyeccion(Vista,Proyeccion);
         }
 

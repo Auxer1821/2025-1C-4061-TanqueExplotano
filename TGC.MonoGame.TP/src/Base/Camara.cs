@@ -34,17 +34,17 @@ namespace TGC.MonoGame.TP.src.Camaras
             var frente = Vector3.Normalize(Objetivo - Posicion);
             var derecha = Vector3.Normalize(Vector3.Cross(frente, Arriba));
 
-            if (teclado.IsKeyDown(Keys.W))
+            if (teclado.IsKeyDown(Keys.I))
                 direccionMovimiento += frente;
-            if (teclado.IsKeyDown(Keys.S))
+            if (teclado.IsKeyDown(Keys.K))
                 direccionMovimiento -= frente;
-            if (teclado.IsKeyDown(Keys.A))
+            if (teclado.IsKeyDown(Keys.J))
                 direccionMovimiento -= derecha;
-            if (teclado.IsKeyDown(Keys.D))
+            if (teclado.IsKeyDown(Keys.L))
                 direccionMovimiento += derecha;
-            if (teclado.IsKeyDown(Keys.Space))
+            if (teclado.IsKeyDown(Keys.O))
                 direccionMovimiento += Arriba;
-            if (teclado.IsKeyDown(Keys.LeftShift))
+            if (teclado.IsKeyDown(Keys.U))
                 direccionMovimiento -= Arriba;
 
             if (direccionMovimiento != Vector3.Zero)

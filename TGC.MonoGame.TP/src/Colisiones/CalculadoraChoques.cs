@@ -22,6 +22,14 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
              - 1er objeto (movil) CHOCA al 2do objeto (estatico)
              - choque:punto de choque es respecto al estatico
         */
+        public static bool DetectarColisiones(BoundingVolume Movimiento, BoundingVolume Chocada)
+        {
+            // Usa despacho dinámico para elegir la sobrecarga correcta en tiempo de ejecución
+            return DetectarColisiones((dynamic)Movimiento, (dynamic)Chocada);
+        }
+        public static DataChoque ParametrosChoque (BoundingVolume Movimiento, BoundingVolume Chocada){
+            return ParametrosChoque((dynamic)Movimiento, (dynamic)Chocada);
+        }
 
         // ----------------------------- Coliciones entre Esferas / Esfera - Esfera --------------------------------------------- //
 
@@ -116,10 +124,10 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         }
 
         // ----------------------------- Coliciones entre CubosAABB / CuboAAABB - CuboAABB --------------------------------------------- //
-        public static bool DetectarColisiones (BVCuboAABB cubo1, BVCuboAABB cubo2){
-            if (cubo1._minimo.X > cubo2._maximo.X || cubo2._minimo.X > cubo1._maximo.X) return false;
-            if (cubo1._minimo.Y > cubo2._maximo.Y || cubo2._minimo.Y > cubo1._maximo.Y) return false;
-            if (cubo1._minimo.Z > cubo2._maximo.Z || cubo2._minimo.Z > cubo1._maximo.Z) return false;
+        public static bool DetectarColisiones (BVCuboAABB cuboMovimiento, BVCuboAABB cuboChocado){
+            if (cuboMovimiento._minimo.X > cuboChocado._maximo.X || cuboChocado._minimo.X > cuboMovimiento._maximo.X) return false;
+            if (cuboMovimiento._minimo.Y > cuboChocado._maximo.Y || cuboChocado._minimo.Y > cuboMovimiento._maximo.Y) return false;
+            if (cuboMovimiento._minimo.Z > cuboChocado._maximo.Z || cuboChocado._minimo.Z > cuboMovimiento._maximo.Z) return false;
             return true;
 
         }
@@ -239,7 +247,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
 
 
 
-                public static bool DetectarColisiones(BVCuboOBB a, BVCuboOBB b)
+        public static bool DetectarColisiones(BVCuboOBB a, BVCuboOBB b)
         {
             // ---------------------------------------
             // Extraemos los ejes locales de cada caja

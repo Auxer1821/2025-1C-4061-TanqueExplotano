@@ -20,6 +20,13 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._modelo = null;
         }
 
+        public override bool PuedeChocar(){
+            return false;
+        }
+        public override bool PuedeSerChocado(){
+            return true;
+        }
+
         
     }
 }
