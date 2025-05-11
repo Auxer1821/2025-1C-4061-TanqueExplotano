@@ -10,7 +10,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
     /// <summary>
     ///     Clase de esfera para los bounding Volume.
     /// </summary>
-    public class BVCilindro : BoundingsVolumes.BoundingVolume
+    public class BVCilindroAABB : BoundingsVolumes.BoundingVolume
     {
         
         // Variables

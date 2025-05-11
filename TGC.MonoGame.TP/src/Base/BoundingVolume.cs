@@ -13,11 +13,5 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
     public abstract class BoundingVolume
     {
         
-        // Variables
-        protected Modelos.Modelo _modelo;
-        protected BoundingVolume _boundingVolume;
-
-        //----------------------------------------------Constructores-e-inicializador--------------------------------------------------// 
-        
     }
 }

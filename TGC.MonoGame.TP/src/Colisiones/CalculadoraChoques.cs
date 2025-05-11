@@ -50,17 +50,80 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             return new DataChoque(puntoContacto, penetracion, normal);
         }
 
+        // ----------------------------- Coliciones entre / Rayo - Esfera --------------------------------------------- //
+
+        public static Boolean DetectarColisiones (BVRayo rayoMovimento, BVEsfera esferaChocada){
+            
+            float Cx = rayoMovimento._PuntoPartda.X - esferaChocada._centro.X;
+            float Cy = rayoMovimento._PuntoPartda.Y - esferaChocada._centro.Y;
+            float Cz = rayoMovimento._PuntoPartda.Z - esferaChocada._centro.Z;
+
+            float Bx = Cx * rayoMovimento._Direccion.X;
+            float By = Cy * rayoMovimento._Direccion.Y;
+            float Bz = Cz * rayoMovimento._Direccion.Z;
+
+            Cx = sqr(Cx);
+            Cy = sqr (Cy);
+            Cz = sqr (Cz);
+            
+            float B = 2*(Bx + By + Bz);
+            float C = Cx + Cy + Cz - sqr(esferaChocada._radio);
+
+            if( C <= 0) return true;
+
+            if ( B>= 0) return false;
+
+            return ( sqr(B)- 4*C ) >= 0;
+        }
+
+        public static DataChoque ParametrosChoque (BVRayo rayoMovimento, BVEsfera esferaChocada){
 
 
-        // ----------------------------- Coliciones entre Cubos / Cubo - Cubo --------------------------------------------- //
-        public static bool DetectarColisiones (BVCubo cubo1, BVCubo cubo2){
+            // c 000   p 000  d 100  r 1
+            float Cx = rayoMovimento._PuntoPartda.X - esferaChocada._centro.X; //0
+            float Cy = rayoMovimento._PuntoPartda.Y - esferaChocada._centro.Y; //0
+            float Cz = rayoMovimento._PuntoPartda.Z - esferaChocada._centro.Z; //0
+
+            float Bx = Cx * rayoMovimento._Direccion.X; //0
+            float By = Cy * rayoMovimento._Direccion.Y; //0
+            float Bz = Cz * rayoMovimento._Direccion.Z; //0
+
+            Cx = sqr(Cx); //0
+            Cy = sqr (Cy); //0
+            Cz = sqr (Cz); // 0
+            
+            float B = 2 * (Bx + By + Bz); // 0
+            float C = Cx + Cy + Cz - sqr(esferaChocada._radio); // -1
+
+            float determinante = (float) Math.Sqrt(sqr(B) - 4*C ); // 2
+
+            float raiz1 = (-B - determinante) * 0.5f; // -1
+            float raiz2 = (-B + determinante) * 0.5f; // 1
+
+            float lamda = 0.0f;
+
+            if (raiz1 > 0 && raiz2 > 0) 
+                lamda = Math.Min(raiz1, raiz2);
+            else if (raiz1 > 0) 
+                lamda = raiz1;
+            else 
+                lamda = raiz2;
+
+
+            Vector3 puntoContacto = rayoMovimento._PuntoPartda + lamda * rayoMovimento._Direccion;
+            Vector3 normal = (puntoContacto - esferaChocada._centro) / esferaChocada._radio;
+            return new DataChoque(puntoContacto, 0, normal);
+        }
+
+        // ----------------------------- Coliciones entre CubosAABB / CuboAAABB - CuboAABB --------------------------------------------- //
+        public static bool DetectarColisiones (BVCuboAABB cubo1, BVCuboAABB cubo2){
             if (cubo1._minimo.X > cubo2._maximo.X || cubo2._minimo.X > cubo1._maximo.X) return false;
             if (cubo1._minimo.Y > cubo2._maximo.Y || cubo2._minimo.Y > cubo1._maximo.Y) return false;
             if (cubo1._minimo.Z > cubo2._maximo.Z || cubo2._minimo.Z > cubo1._maximo.Z) return false;
             return true;
 
         }
-        public static DataChoque ParametrosChoque (BVCubo cuboMovimiento, BVCubo cuboChocado)
+        public static DataChoque ParametrosChoque (BVCuboAABB cuboMovimiento, BVCuboAABB cuboChocado)
         {
             float dif_centros_x = cuboChocado.Centro().X - cuboMovimiento.Centro().X;
             float dif_centros_y = cuboChocado.Centro().Y - cuboMovimiento.Centro().Y;
@@ -85,8 +148,8 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             return new DataChoque(puntoContacto, penetracion, normal);
         }
         
-        // ----------------------------- Coliciones entre Cubo - Esfera / Esfera - Cubo --------------------------------------------- //
-        public static bool DetectarColisiones (BVCubo cuboMovimento, BVEsfera esferaChocada){
+        // ----------------------------- Coliciones entre CuboAABB - Esfera / Esfera - CuboAABB --------------------------------------------- //
+        public static bool DetectarColisiones (BVCuboAABB cuboMovimento, BVEsfera esferaChocada){
             
             float distancia2 = 0.0f;
 
@@ -102,13 +165,13 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             return distancia2 <= esferaChocada._radio * esferaChocada._radio;
         }
 
-        public static bool DetectarColisiones (BVEsfera esferaMovimento, BVCubo cuboChocado){
+        public static bool DetectarColisiones (BVEsfera esferaMovimento, BVCuboAABB cuboChocado){
             return CalculadorasChoque.DetectarColisiones(cuboChocado,esferaMovimento);
         }
 
 
 
-        public static DataChoque ParametrosChoque (BVCubo cuboMovimento, BVEsfera esferaChocada){
+        public static DataChoque ParametrosChoque (BVCuboAABB cuboMovimento, BVEsfera esferaChocada){
             // 1. Punto más cercano del cubo al centro de la esfera
             Vector3 puntoMasCercano = new Vector3(
             Math.Clamp(esferaChocada._centro.X, cuboMovimento._minimo.X, cuboMovimento._maximo.X),
@@ -141,7 +204,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             return new DataChoque(puntoContacto,penetracion,normal);
         }
 
-        public static DataChoque ParametrosChoque (BVEsfera esferaMovimento, BVCubo cuboChocado){
+        public static DataChoque ParametrosChoque (BVEsfera esferaMovimento, BVCuboAABB cuboChocado){
             //TODO: Optimizar pq hacen lo mismo 
             //TODO: Entrega 3
             // 1. Punto más cercano del cubo al centro de la esfera
@@ -171,7 +234,127 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             float penetracion = esferaMovimento._radio - distancia;
             return new DataChoque(puntoContacto,penetracion,normal);
         }
+
+
+
+
+
+                public static bool DetectarColisiones(BVCuboOBB a, BVCuboOBB b)
+        {
+            // ---------------------------------------
+            // Extraemos los ejes locales de cada caja
+            // Estos ejes representan cómo están rotadas en el espacio
+            // ---------------------------------------
+
+            Vector3 aRight = a.Orientacion.Right;       // Eje X de la caja A
+            Vector3 aUp = a.Orientacion.Up;             // Eje Y de la caja A
+            Vector3 aForward = a.Orientacion.Backward;  // Eje Z de la caja A
+
+            Vector3 bRight = b.Orientacion.Right;       // Eje X de la caja B
+            Vector3 bUp = b.Orientacion.Up;             // Eje Y de la caja B
+            Vector3 bForward = b.Orientacion.Backward;  // Eje Z de la caja B
+
+            // ---------------------------------------
+            // Vector entre los centros de A y B
+            // Este vector se proyectará en cada eje
+            // ---------------------------------------
+
+            Vector3 centroDiff = b.Centro - a.Centro;
+
+            // ---------------------------------------
+            // Test 1: Ejes de A
+            // Si hay separación en cualquiera de estos, no hay colisión
+            // ---------------------------------------
+
+            if (Separan(a, b, aRight, centroDiff)) return false;
+            if (Separan(a, b, aUp, centroDiff)) return false;
+            if (Separan(a, b, aForward, centroDiff)) return false;
+
+            // ---------------------------------------
+            // Test 2: Ejes de B
+            // ---------------------------------------
+
+            if (Separan(a, b, bRight, centroDiff)) return false;
+            if (Separan(a, b, bUp, centroDiff)) return false;
+            if (Separan(a, b, bForward, centroDiff)) return false;
+
+            // ---------------------------------------
+            // Test 3: Productos cruzados entre ejes de A y B (9 combinaciones)
+            // Cada uno de estos genera un eje perpendicular a ambos
+            // Si hay separación en alguno de estos, no hay colisión
+            // ---------------------------------------
+
+            Vector3 axis1 = Vector3.Cross(aRight, bRight);
+            if (axis1.LengthSquared() > 1e-6f && Separan(a, b, axis1, centroDiff)) return false;
+
+            Vector3 axis2 = Vector3.Cross(aRight, bUp);
+            if (axis2.LengthSquared() > 1e-6f && Separan(a, b, axis2, centroDiff)) return false;
+
+            Vector3 axis3 = Vector3.Cross(aRight, bForward);
+            if (axis3.LengthSquared() > 1e-6f && Separan(a, b, axis3, centroDiff)) return false;
+
+            Vector3 axis4 = Vector3.Cross(aUp, bRight);
+            if (axis4.LengthSquared() > 1e-6f && Separan(a, b, axis4, centroDiff)) return false;
+
+            Vector3 axis5 = Vector3.Cross(aUp, bUp);
+            if (axis5.LengthSquared() > 1e-6f && Separan(a, b, axis5, centroDiff)) return false;
+
+            Vector3 axis6 = Vector3.Cross(aUp, bForward);
+            if (axis6.LengthSquared() > 1e-6f && Separan(a, b, axis6, centroDiff)) return false;
+
+            Vector3 axis7 = Vector3.Cross(aForward, bRight);
+            if (axis7.LengthSquared() > 1e-6f && Separan(a, b, axis7, centroDiff)) return false;
+
+            Vector3 axis8 = Vector3.Cross(aForward, bUp);
+            if (axis8.LengthSquared() > 1e-6f && Separan(a, b, axis8, centroDiff)) return false;
+
+            Vector3 axis9 = Vector3.Cross(aForward, bForward);
+            if (axis9.LengthSquared() > 1e-6f && Separan(a, b, axis9, centroDiff)) return false;
+
+            // ---------------------------------------
+            // Si no encontramos ningún eje de separación, hay colisión
+            // ---------------------------------------
+
+            return true;
+        }
+
+        private static bool Separan(BVCuboOBB a, BVCuboOBB b, Vector3 axis, Vector3 centroDiff)
+        {
+            // Si el eje es muy pequeño, no se considera válido
+            if (axis.LengthSquared() < 1e-6f)
+                return false;
+
+            // Normalizamos el eje de prueba
+            axis.Normalize();
+
+            // Proyectamos cada caja sobre ese eje
+            float proyA = ProyectarOBB(a, axis);
+            float proyB = ProyectarOBB(b, axis);
+
+            // Proyectamos la distancia entre centros sobre el eje
+            float distanciaCentros = MathF.Abs(Vector3.Dot(centroDiff, axis));
+
+            // Si la distancia es mayor que la suma de proyecciones => hay separación
+            return distanciaCentros > (proyA + proyB);
+        }
+
+        private static float ProyectarOBB(BVCuboOBB obb, Vector3 axis)
+        {
+            // Obtenemos los ejes locales del OBB
+            Vector3 right = obb.Orientacion.Right;
+            Vector3 up = obb.Orientacion.Up;
+            Vector3 forward = obb.Orientacion.Backward;
+
+            // Cada eje contribuye con su proyección escalada por el tamaño (half-extent)
+            float proyRight = MathF.Abs(Vector3.Dot(axis, right)) * obb.Tamaño.X;
+            float proyUp = MathF.Abs(Vector3.Dot(axis, up)) * obb.Tamaño.Y;
+            float proyForward = MathF.Abs(Vector3.Dot(axis, forward)) * obb.Tamaño.Z;
+
+            // La proyección total es la suma de las 3
+            return proyRight + proyUp + proyForward;
+        }
         
+
         
 
         
