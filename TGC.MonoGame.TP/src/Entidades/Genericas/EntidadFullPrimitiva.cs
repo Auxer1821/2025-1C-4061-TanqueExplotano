@@ -18,10 +18,14 @@ namespace TGC.MonoGame.TP.src.Entidades
         protected Objeto _objeto;
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
-        public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content){
+        public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
+            this.InicializarDataMundo();
+
             this._modelo = null;
             this._objeto.Initialize(Graphics,Mundo,View,Projection,Content);
-            //this._boundingVolume;
+            this._escenario = escenario;
+            this._posicion=Vector3.Transform(Vector3.Zero,Mundo);
+            this._boundingVolume= new BoundingsVolumes.BVEsfera(3.0f,  this._posicion);
 
         }
 
@@ -32,6 +36,16 @@ namespace TGC.MonoGame.TP.src.Entidades
         public override void ActualizarVistaProyeccion(Matrix Vista, Matrix Proyeccion){
             this._objeto.ActualizarVistaProyeccion(Vista,Proyeccion);
         }
+
+        public override void ActualizarMatrizMundo(){
+            Matrix mundo = Matrix.Identity;
+            mundo *= Matrix.CreateScale(this._escala);
+            mundo *= Matrix.CreateFromYawPitchRoll(this._angulo.Z, this._angulo.Y, this._angulo.X);
+            mundo *= Matrix.CreateTranslation(this._posicion);
+
+            this._objeto.ActualizarMatrizMundo(mundo);
+
+        } 
         
     }
 }

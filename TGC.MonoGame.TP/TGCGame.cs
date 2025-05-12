@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using TGC.MonoGame.TP.src.Esenarios;
+using TGC.MonoGame.TP.src.Escenarios;
 using TGC.MonoGame.TP.src.Camaras;
 
 namespace TGC.MonoGame.TP
@@ -51,7 +51,7 @@ namespace TGC.MonoGame.TP
         
 
         //objetos
-        private Esenario _esenario;
+        private Escenario _escenario;
 
         //private Camara _camara;
 
@@ -82,10 +82,10 @@ namespace TGC.MonoGame.TP
 
             //_camara = new Camara(Vector3.UnitZ * 150, Vector3.Zero , GraphicsDevice.Viewport.AspectRatio);
 
-            //_Esenario = new Esenario(GraphicsDevice);
-            _esenario = new Esenario();
-            //_esenario.Initialize(GraphicsDevice, Matrix.Identity, View, Projection, Content);
-            _esenario.Initialize(GraphicsDevice, Matrix.Identity, Content);
+            //_Escenario = new Escenario(GraphicsDevice);
+            _escenario = new Escenario();
+            //_escenario.Initialize(GraphicsDevice, Matrix.Identity, View, Projection, Content);
+            _escenario.Initialize(GraphicsDevice, Matrix.Identity, Content);
 
             base.Initialize();
         }
@@ -119,7 +119,7 @@ namespace TGC.MonoGame.TP
                 Exit();
             }
 
-            _esenario.Update(gameTime);
+            _escenario.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -132,7 +132,7 @@ namespace TGC.MonoGame.TP
             // Aca deberiamos poner toda la logia de renderizado del juego.
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
-            _esenario.Dibujar(GraphicsDevice);
+            _escenario.Dibujar(GraphicsDevice);
 
 
         }

@@ -15,9 +15,16 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         
         // Variables
         public float _radio { get; set;}
-        public Vector3 _cento { get; set;}
+        public Vector3 _centro { get; set;}
         public float _alto { get; set;}
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------// 
+    public BVCilindroAABB(Vector3 centro, float radio, float alto)
+    {
+        _centro = centro;
+        _radio = radio;
+        _alto = alto;
+    }
+
     }
 }

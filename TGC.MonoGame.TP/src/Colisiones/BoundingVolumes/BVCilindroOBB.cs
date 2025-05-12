@@ -1,23 +1,21 @@
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-
 
 namespace TGC.MonoGame.TP.src.BoundingsVolumes
 {
-    /// <summary>
-    ///     Clase de esfera para los bounding Volume.
-    /// </summary>
-    public class BVCilindroOBB : BoundingsVolumes.BoundingVolume
+    public class BVCilindroOBB : BoundingVolume
     {
-        
-        // Variables
-        public float _radio { get; set;}
-        public Vector3 _cento { get; set;}
-        public float _alto { get; set;}
+        public Vector3 _centro { get; set; }
+        public float _radio { get; set; }
+        public float _alto { get; set; }
+        public Vector3 _direccion { get; set; } // Unidad, define la orientación del eje del cilindro
 
-        //----------------------------------------------Constructores-e-inicializador--------------------------------------------------// 
+        public BVCilindroOBB(Vector3 centro, float radio, float alto, Vector3 direccion)
+        {
+            _centro = centro;
+            _radio = radio;
+            _alto = alto;
+            _direccion = Vector3.Normalize(direccion); // Aseguramos que sea unitario
+        }
     }
 }

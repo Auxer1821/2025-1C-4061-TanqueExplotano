@@ -9,7 +9,7 @@ using TGC.MonoGame.TP.src.Objetos;
 namespace TGC.MonoGame.TP.src.Montanas
 {
     /// <summary>
-    ///     Esta es la clase del esenario donde se controla 
+    ///     Esta es la clase del escenario donde se controla 
     /// </summary>
     public class OMontana : Objetos.Objeto
     {

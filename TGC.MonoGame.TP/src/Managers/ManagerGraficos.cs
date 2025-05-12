@@ -12,7 +12,7 @@ using System.Linq;
 namespace TGC.MonoGame.TP.src.Managers
 {
     /// <summary>
-    ///     Esta es la clase del esenario donde se controla 
+    ///     Esta es la clase del escenario donde se controla 
     /// </summary>
     public class ManagerGrafico 
     {
@@ -28,7 +28,7 @@ namespace TGC.MonoGame.TP.src.Managers
         {
             _entidades.Add(entidad);
         }
-        public void RemoverEntidad(Entidades.EntidadFull entidad)
+        public void RemoverEntidad(Entidades.Entidad entidad)
         {
             _entidades.Remove(entidad);
         }

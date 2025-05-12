@@ -4,16 +4,17 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TGC.MonoGame.TP.src.Entidades;
 using TGC.MonoGame.TP.src.Objetos;
 
 
 
-namespace TGC.MonoGame.TP.src.Esenarios
+namespace TGC.MonoGame.TP.src.Escenarios
 {
     /// <summary>
-    ///     Esta es la clase del esenario donde se controla los managers
+    ///     Esta es la clase del escenario donde se controla los managers
     /// </summary>
-    public class Esenario 
+    public class Escenario 
     {
 
         // Variables
@@ -25,7 +26,7 @@ namespace TGC.MonoGame.TP.src.Esenarios
 
         
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
-        public Esenario()
+        public Escenario()
         {
             _managerGrafico = new Managers.ManagerGrafico();
             _managerColision = new Managers.ManagerColisiones();
@@ -44,8 +45,8 @@ namespace TGC.MonoGame.TP.src.Esenarios
 
             // Inicializar terreno
             _terreno = new Terrenos.Terreno();
-            _terreno.Initialize(graphicsDevice, world, view, projection, content);
-
+            _terreno.Initialize(graphicsDevice, world, view, projection,  content);
+            
             //Posiciones usadas
             List<Vector3> posicionesUsadas = new List<Vector3>();
 
@@ -55,17 +56,17 @@ namespace TGC.MonoGame.TP.src.Esenarios
                 for (int z = -50; z <= 50; z += 20)
                 {
                     var casa = new Entidades.ECasa();
-                    casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content);
+                    casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content, this);
                     this.AgregarEntidad(casa);
                     posicionesUsadas.Add(new Vector3(x,z,4));
 
                     var caja = new Entidades.ECaja();
-                    caja.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x + 8, 0, z + 8), view, projection, content);
+                    caja.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x + 8, 0, z + 8), view, projection, content, this);
                     this.AgregarEntidad(caja);
                     posicionesUsadas.Add(new Vector3(x+8,z+8,2));
                 }
             }
-
+            
             // Crear un bosque (árboles)
             Random random = new Random(0);
             for (int i = 0; i < 500; i++)
@@ -76,7 +77,7 @@ namespace TGC.MonoGame.TP.src.Esenarios
                 var pos = new Vector2(x,z); 
 
                 if(PosicionesLibre(pos, posicionesUsadas, 1)){
-                    arbol.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content);
+                    arbol.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content, this);
                     this.AgregarEntidad(arbol);
                     posicionesUsadas.Add(new Vector3(x,z,1));
                 }
@@ -94,7 +95,7 @@ namespace TGC.MonoGame.TP.src.Esenarios
                 float z = random.Next(-300, 300);
                 var pos = new Vector2(x,z); 
                  if(PosicionesLibre(pos, posicionesUsadas,1)){
-                    roca.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content);
+                    roca.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content, this);
                     this.AgregarEntidad(roca);
                     posicionesUsadas.Add(new Vector3(x,z,1));
                 }
@@ -108,11 +109,11 @@ namespace TGC.MonoGame.TP.src.Esenarios
             for(int i = 0; i< 5; i++){
                 //IZQUIERDA
                 var montana = new Entidades.EMontana();
-                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(-400, 0, -400 + 200 * i), view, projection, content);
+                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(-400, 0, -400 + 200 * i), view, projection, content, this);
                 this.AgregarEntidad(montana);
                     //DERECHA
                 montana = new Entidades.EMontana();
-                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(400, 0, -400 + 200 * i), view, projection, content);
+                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(400, 0, -400 + 200 * i), view, projection, content, this);
                 this.AgregarEntidad(montana);
             }
             
@@ -125,7 +126,7 @@ namespace TGC.MonoGame.TP.src.Esenarios
                 float Az = random.Next(-150, 150);
                 var pos = new Vector2(Ax,Az); 
                 if(PosicionesLibre(pos, posicionesUsadas, 10)){
-                    tank.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Ax, 0, Az), view, projection, content);
+                    tank.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Ax, 0, Az), view, projection, content, this);
                     this.AgregarEntidad(tank);
                     posicionesUsadas.Add(new Vector3(Ax,Az,10));
                 }
@@ -165,6 +166,11 @@ namespace TGC.MonoGame.TP.src.Esenarios
             return true;
         }
 
+        internal void EliminarEntidad(Entidad entidad)
+        {
+            _managerGrafico.RemoverEntidad(entidad);
+            _managerColision.RemoverEntidad(entidad);
+        }
     }
 
 }

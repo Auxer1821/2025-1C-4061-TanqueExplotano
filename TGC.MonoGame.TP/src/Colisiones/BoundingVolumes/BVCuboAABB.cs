@@ -18,9 +18,13 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         public Vector3 _maximo {get; set;}
 
         
-
+        public BVCuboAABB(Vector3 minimo, Vector3 maximo){
+            _minimo=minimo;
+            _maximo=maximo;
+        }
 
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------// 
+
         public float LadoX(){
             return this._maximo.X - this._minimo.X;
         }

@@ -25,18 +25,18 @@ namespace TGC.MonoGame.TP.src.Managers
             _estaticas=  new List<Entidades.Entidad>();
         }
 
-        public void AgregarEntidad(Entidades.Entidad eFull)
+        public void AgregarEntidad(Entidades.Entidad entidad)
         {
-            if(eFull.PuedeChocar())
-                _movimientos.Add(eFull);
-            if(eFull.PuedeSerChocado())
-                _estaticas.Add(eFull);
+            if(entidad.PuedeChocar())
+                _movimientos.Add(entidad);
+            if(entidad.PuedeSerChocado())
+                _estaticas.Add(entidad);
         }
 
-        public void RemoverEntidad(Entidades.Entidad eFull) //TODO - Revisar si intenta borrar algo que no existe ROMPE o no.
+        public void RemoverEntidad(Entidades.Entidad entidad) //TODO - Revisar si intenta borrar algo que no existe ROMPE o no.
         {
-            _movimientos.Remove(eFull);
-            _estaticas.Remove(eFull);
+            _movimientos.Remove(entidad);
+            _estaticas.Remove(entidad);
         }
 
         public void VerificarColisiones(){

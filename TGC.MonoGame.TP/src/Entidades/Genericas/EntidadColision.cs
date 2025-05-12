@@ -16,8 +16,13 @@ namespace TGC.MonoGame.TP.src.Entidades
         // Variables
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
-        public virtual void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content){
+        public virtual void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
+            this.InicializarDataMundo();
+
             this._modelo = null;
+            this._escenario = escenario;
+            this._posicion=Vector3.Transform(Vector3.Zero,Mundo);
+            this._boundingVolume= new BoundingsVolumes.BVEsfera(3.0f,  this._posicion);
         }
 
         public override bool PuedeChocar(){

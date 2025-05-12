@@ -17,11 +17,10 @@ namespace TGC.MonoGame.TP.src.Modelos
         protected Model _modelo;
         protected BasicEffect _effect;
         protected Effect _effect2;
+        protected Matrix _matixBase {get; set;}
         protected Matrix _matrixMundo {get; set;}
         protected Matrix _matrixView {get; set;}
         protected Matrix _matrixProyection {get; set;}
-
-        protected Vector3 ubicacion {get; set;}
         protected Vector3 _Color {get; set;}
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -33,8 +32,7 @@ namespace TGC.MonoGame.TP.src.Modelos
         public virtual void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
         {
             //Configuración de matrices
-            this._matrixMundo = Mundo;
-            this.AjustarModelo();
+            //this._matrixMundo = Mundo;
             this._matrixView = View;
             this._matrixProyection = Projection;
 
@@ -43,6 +41,7 @@ namespace TGC.MonoGame.TP.src.Modelos
 
             //Configuración Dibujar
             this.ConfigurarModelo(Content);
+            this.AjustarModelo();
 
             //efecto al modelo
             foreach (var mesh in _modelo.Meshes)
@@ -53,8 +52,8 @@ namespace TGC.MonoGame.TP.src.Modelos
                     meshPart.Effect = _effect2;
                 }
             }
-                
-
+            
+            ActualizarMatrizMundo(Mundo);
 
         }
 
@@ -79,7 +78,9 @@ namespace TGC.MonoGame.TP.src.Modelos
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------//
 
         protected abstract void ConfigurarModelo(ContentManager content);
-        protected abstract void AjustarModelo();
+        protected virtual void AjustarModelo(){
+            this._matixBase= Matrix.Identity;
+        }
         
         protected virtual void ConfigEfectos(GraphicsDevice Graphics){
             this._effect = new BasicEffect(Graphics)
@@ -98,6 +99,10 @@ namespace TGC.MonoGame.TP.src.Modelos
         public void ActualizarVistaProyeccion(Matrix Vista, Matrix Proyeccion){
             this._matrixView = Vista;
             this._matrixProyection = Proyeccion;
+        }
+
+        public virtual void ActualizarMatrizMundo(Matrix mundo){
+            this._matrixMundo= this._matixBase * mundo;
         }
 
 

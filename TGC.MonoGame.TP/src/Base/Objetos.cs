@@ -116,6 +116,9 @@ namespace TGC.MonoGame.TP.src.Objetos
             this._matrixView = Vista;
             this._matrixProyection = Proyeccion;
         }
+        public virtual void ActualizarMatrizMundo(Matrix mundo){
+            this._matrixMundo= mundo;
+        }
 
 
         

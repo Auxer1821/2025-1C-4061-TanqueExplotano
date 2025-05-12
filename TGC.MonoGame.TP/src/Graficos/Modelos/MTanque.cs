@@ -9,39 +9,39 @@ using TGC.MonoGame.TP.src.Objetos;
 namespace TGC.MonoGame.TP.src.Tanques
 {
     /// <summary>
-    ///     Esta es la clase del esenario donde se controla 
+    ///     Esta es la clase del escenario donde se controla 
     /// </summary>
     public class MTanque : Modelos.Modelo
     {
         
-        // Variables
-        //  En Clase Abstracta
+        //----------------------------------------------Variables--------------------------------------------------//
+        private TipoTanque _tipoTanque;
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
-        
+        public MTanque(TipoTanque tipoTanque)
+        {
+            _tipoTanque = tipoTanque;
+        }
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
         {
             this._Color = Color.Gray.ToVector3();
             base.Initialize(Graphics, Mundo, View, Projection, Content);
         }
 
+        //----------------------------------------------Funciones-Principales--------------------------------------------------//
+
         protected override void ConfigurarModelo(ContentManager Content){
-            this._modelo = Content.Load<Model>("Models/tgc-tanks"+ "/Panzer/Panzer");
+            this._modelo = Content.Load<Model>("Models/tgc-tanks"+ this._tipoTanque.directorioModelo());
         }
-        protected override void AjustarModelo(){
-            _matrixMundo = Matrix.CreateScale(0.02f) * _matrixMundo;
-            //_matrixMundo = Matrix.CreateScale(0.1f) * Matrix.CreateRotationX(4.71f) * _matrixMundo;
-        }
-        //TODO CAMBIAR A UN PATROM TEMPLED METODO CON EL PANZER Y EL OTRO TANQUE ME DIO PAJA PARA PROBAR
         
-        //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta
+        protected override void AjustarModelo(){
+            this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo()) ;//TODO - SOLO ROTA EN X. Si queres hacerlo hermoso, cambiar. Escala de modelo no amerita.
+        }
 
         //----------------------------------------------Dibujado--------------------------------------------------//
         
 
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------//
-        
-        //Configuración de efectos tomados desde la clase padre
         
     }
 }
