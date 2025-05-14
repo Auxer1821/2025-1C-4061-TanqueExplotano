@@ -11,7 +11,7 @@ namespace TGC.MonoGame.TP.src.Entidades
     /// <summary>
     ///     Clase Abstracta para todos los objetos
     /// </summary>
-    public class ECasa:EntidadFullPrimitiva
+    public class ECasa:EntidadFull
     {
         
         // Variables
@@ -19,7 +19,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public ECasa(){}
         public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content){
-            this._objeto = new Casas.OCasa();
+            this._modelo = new Casas.OCasa();
             //Crear Bounding Volume
             base.Initialize(Graphics,Mundo,View,Projection,Content);
         }

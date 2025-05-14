@@ -11,11 +11,14 @@ namespace TGC.MonoGame.TP.src.Entidades
     /// <summary>
     ///     Esta es la clase del esenario donde se controla 
     /// </summary>
-    public class ERoca : Entidades.EntidadFullPrimitiva
+
+    
+    //cambio de endidad full primitiva a entidad full
+    public class ERoca : Entidades.EntidadFull
     {
         public ERoca(){}
         public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content){
-            this._objeto = new Rocas.ORoca();
+            this._modelo = new Rocas.ORoca();
             //TODO: Crear Bounding Volume
             base.Initialize(Graphics,Mundo,View,Projection,Content);
         }
