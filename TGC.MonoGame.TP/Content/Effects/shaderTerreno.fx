@@ -72,9 +72,12 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     float lightIntensity = saturate(dot(normalize(input.Normal), -normalize(input.LightDirection)));
     float4 lighting = saturate(LightColor * lightIntensity + AmbientColor);
 	*/
-	 float4 texColor = tex2D(TextureSampler, input.TexCoord);
-    return float4(texColor.rgb, 1);
-	return float4(input.TexCoord.x, input.TexCoord.y, 0, 1);
+	float4 baseColor = tex2D(TextureSampler, input.TexCoord * 0.1); // Textura base (gran escala)
+    float4 detailColor = tex2D(TextureSampler, input.TexCoord * 2.0); // Textura detalle
+    
+    // Mezcla según distancia (implementa tu lógica)
+    return lerp(baseColor, detailColor, 0.5);
+    //return float4(baseColor.rgb, 1);
     //return textureColor * lighting;
 }
 

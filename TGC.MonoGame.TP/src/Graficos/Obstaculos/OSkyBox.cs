@@ -58,7 +58,6 @@ namespace TGC.MonoGame.TP.src.SkyBox
             _effect2.Parameters["View"].SetValue(_matrixView);
             _effect2.Parameters["Projection"].SetValue(_matrixProyection);
             _effect2.Parameters["Texture"].SetValue(skyBoxTexture);
-            //_effect2.Parameters["DiffuseColor"].SetValue(this._Color);
 
             //Dibujar el modelo
             foreach (var mesh in _modelo.Meshes)

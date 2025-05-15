@@ -62,6 +62,10 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
+	float4 baseColor = tex2D(TextureSampler, input.TexCoord * 0.1); // Textura base (gran escala)
+	//return float4(input.TexCoord.x, input.TexCoord.y, 0, 1);
+	//return float4(1, 0, 0, 1); // Color rojo
+    //return float4(baseColor.rgb, 1);
     return tex2D(TextureSampler, input.TexCoord);
 }
 
