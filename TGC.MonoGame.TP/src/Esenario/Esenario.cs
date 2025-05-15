@@ -18,6 +18,7 @@ namespace TGC.MonoGame.TP.src.Esenarios
 
         // Variables
         private Terrenos.Terreno _terreno;
+        private Entidades.ESkyBox _skyBox;
         private ManagersObjetos.ManagerObjetos _managerObjetos;
 
         
@@ -29,6 +30,11 @@ namespace TGC.MonoGame.TP.src.Esenarios
 
         public void Initialize(GraphicsDevice graphicsDevice, Matrix world, Matrix view, Matrix projection, ContentManager content)
         {
+            //inicializar el skybox
+            _skyBox = new Entidades.ESkyBox();
+            _skyBox.Initialize(graphicsDevice, world, view, projection, content);
+            _managerObjetos.AgregarEntidadGrafica(_skyBox);
+
             // Inicializar terreno
             _terreno = new Terrenos.Terreno();
             _terreno.Initialize(graphicsDevice, world, view, projection, content);
@@ -125,8 +131,8 @@ namespace TGC.MonoGame.TP.src.Esenarios
         }
         public void Dibujar(GraphicsDevice graphicsDevice)
         {
-            _terreno.Dibujar(graphicsDevice);
             _managerObjetos.DibujarObjetos(graphicsDevice);
+            _terreno.Dibujar(graphicsDevice);
         }
 
 

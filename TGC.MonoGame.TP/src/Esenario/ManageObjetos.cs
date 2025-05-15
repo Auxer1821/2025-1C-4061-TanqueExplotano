@@ -44,13 +44,13 @@ namespace TGC.MonoGame.TP.src.ManagersObjetos
 
         public void DibujarObjetos(GraphicsDevice graphicsDevice)
         {
-            foreach (var eFull in _eFulls)
-            {
-                eFull.Dibujar(graphicsDevice);
-            }
             foreach (var eGrafica in _eGrafica)
             {
                 eGrafica.Dibujar(graphicsDevice);
+            }
+            foreach (var eFull in _eFulls)
+            {
+                eFull.Dibujar(graphicsDevice);
             }
         }
 
