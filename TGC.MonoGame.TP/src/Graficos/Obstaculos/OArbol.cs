@@ -11,69 +11,98 @@ namespace TGC.MonoGame.TP.src.Arboles
     /// <summary>
     ///     Esta es la clase del escenario donde se controla 
     /// </summary>
-    public class OArbol : Objetos.Objeto
+    
+    //cambio de objeto a modelo, para poder usar el modelo de arbol
+    public class OArbol : Modelos.Modelo
     {
         
         // Variables
+        Texture2D troncoTexture;
+        Texture2D hojasTexture;
+        string[] meshes;
         //  En Clase Abstracta
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public OArbol(){}
-        public override void Initialize (GraphicsDevice Graphics)
-        {
-            //Configuración de matrices
-            this._matrixMundo = Matrix.Identity;
-            this._matrixView = Matrix.CreateLookAt(Vector3.UnitZ * 150, Vector3.Zero, Vector3.Up);
-            this._matrixProyection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, Graphics.Viewport.AspectRatio, 1, 250);
-
-            base.Initialize(Graphics);
-
-        }
-
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
         {
             this._Color = Color.Green.ToVector3();
             base.Initialize(Graphics, Mundo, View, Projection, Content);
         }
 
+        protected override void ConfigurarModelo(ContentManager Content)
+        {
+            this._modelo = Content.Load<Model>("Models/tree/tree");
+            troncoTexture = Content.Load<Texture2D>("Models/tree/tronco2");
+            hojasTexture = Content.Load<Texture2D>("Models/heightmap/pasto2");
+
+            //obtenemos los meshes del modelo
+            int count = 0;
+            int meshCount = _modelo.Meshes.Count;
+            meshes = new string[meshCount];
+            foreach (var mesh in _modelo.Meshes)
+            {
+                if (!string.IsNullOrEmpty(mesh.Name))
+                {
+                    meshes[count] = mesh.Name;
+                    //Console.WriteLine($"Mesh {count}: {mesh.Name}");
+                }
+                else
+                {
+                    // Asignar nombre genérico si no tiene
+                    mesh.Name = $"Mesh_{count}";
+                    meshes[count] = mesh.Name;
+                    //Console.WriteLine($"Mesh {count}: {mesh.Name}");
+                }
+                count++;
+            }
+        }
+
+        protected override void AjustarModelo()
+        {
+            _matrixMundo = Matrix.CreateScale(0.004f) * _matrixMundo;
+        }
+
+        public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
+        {
+            return Content.Load<Effect>("Effects/shaderTextura");
+        }
+
+        //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta
+
+
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta
 
         //----------------------------------------------Dibujado--------------------------------------------------//
-        
+        public override void Dibujar(GraphicsDevice Graphics)
+        {
+            // Seteo de textura
+            _effect2.Parameters["View"].SetValue(this._matrixView);
+            _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
+            _effect2.Parameters["World"].SetValue(this._matrixMundo);
+            //_effect2.Parameters["Texture"].SetValue(troncoTexture);
+
+            foreach (var mesh in _modelo.Meshes)
+            {
+                if (mesh.Name == meshes[0])
+                {
+                    _effect2.Parameters["Texture"].SetValue(troncoTexture);
+                }
+                else
+                {
+                    _effect2.Parameters["Texture"].SetValue(hojasTexture);
+                }
+                _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
+                mesh.Draw();
+                //_effect2.Parameters["Texture"].SetValue(hojasTexture);
+            }
+        }
+ 
 
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------//
-        protected override void ConfigPuntos(GraphicsDevice Graphics){
 
-            VertexPositionColor[] puntos = new VertexPositionColor[]
-            {
-                new VertexPositionColor(new Vector3(0f, 0f, 0f), Color.Green),
-                new VertexPositionColor(new Vector3(1f, 0f, 0f), Color.Green),
-                new VertexPositionColor(new Vector3(0f, 3f, 0f), Color.Green),
-                new VertexPositionColor(new Vector3(1f, 3f, 0f), Color.Green),
-                new VertexPositionColor(new Vector3(0f, 0f, 1f), Color.Green),
-                new VertexPositionColor(new Vector3(1f, 0f, 1f), Color.Green),
-                new VertexPositionColor(new Vector3(0f, 3f, 1f), Color.Green),
-                new VertexPositionColor(new Vector3(1f, 3f, 1f), Color.Green)
-            };
-
-            _vertices = new VertexBuffer(Graphics, VertexPositionColor.VertexDeclaration, puntos.Length , BufferUsage.WriteOnly);
-            _vertices.SetData(puntos);
-
-            ushort[] Indices = new ushort[]
-            {
-                0,1,2, 1,2,3, //Cara Trasera
-                4,5,6, 5,6,7, //Cara delantera
-                0,4,5, 0,1,5, //Cara abajo
-                2,6,7, 2,3,7, //Cara superior
-                7,5,1, 1,7,3, //Cara derecha
-                0,4,6, 0,6,2  //Cara izquierda
-            };
-
-            _indices = new IndexBuffer(Graphics, IndexElementSize.SixteenBits, 36 , BufferUsage.None);
-            _indices.SetData(Indices);
-        }
 
         //Configuración de efectos tomados desde la clase padre
-        
+
     }
 }

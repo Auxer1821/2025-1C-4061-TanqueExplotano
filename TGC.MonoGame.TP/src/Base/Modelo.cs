@@ -92,7 +92,7 @@ namespace TGC.MonoGame.TP.src.Modelos
             };
         }
 
-        protected virtual Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content){
+        public virtual Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content){
             return Content.Load<Effect>("Effects/BasicShader");
         }
 

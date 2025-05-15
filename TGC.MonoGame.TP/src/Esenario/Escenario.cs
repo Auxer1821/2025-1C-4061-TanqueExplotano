@@ -23,6 +23,8 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private Managers.ManagerColisiones _managerColision;
 
         private Camaras.Camara _camara;
+        private Entidades.ESkyBox _skyBox;
+            //TODO: Que sea el primero en ser dibujado
 
         
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -42,6 +44,10 @@ namespace TGC.MonoGame.TP.src.Escenarios
             _camara = new Camaras.Camara(Vector3.UnitZ * 150, Vector3.Zero , graphicsDevice.Viewport.AspectRatio);
             Matrix view = _camara.Vista;
             Matrix projection = _camara.Proyeccion;
+            //inicializar el skybox
+            _skyBox = new Entidades.ESkyBox();
+            _skyBox.Initialize(graphicsDevice, world, view, projection, content, this);
+            this.AgregarEntidad(_skyBox);
 
             // Inicializar terreno
             _terreno = new Terrenos.Terreno();
@@ -139,8 +145,8 @@ namespace TGC.MonoGame.TP.src.Escenarios
         }
         public void Dibujar(GraphicsDevice graphicsDevice)
         {
-            _terreno.Dibujar(graphicsDevice);
             _managerGrafico.DibujarObjetos(graphicsDevice);
+            _terreno.Dibujar(graphicsDevice);
         }
 
         public void ActualizarCamara(GameTime gameTime){

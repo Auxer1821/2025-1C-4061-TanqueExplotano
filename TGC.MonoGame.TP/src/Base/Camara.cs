@@ -20,7 +20,7 @@ namespace TGC.MonoGame.TP.src.Camaras
             Posicion = posicionInicial;
             Objetivo = objetivoInicial + new Vector3(0, -10, 0);
             ActualizarVista();
-            Proyeccion = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, relacionAspecto, 0.1f, 1000f);
+            Proyeccion = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, relacionAspecto, 0.1f, 100000f);
         }
 
         //----------------------------------------------Update--------------------------------------------------//

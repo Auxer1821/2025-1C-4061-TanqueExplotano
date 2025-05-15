@@ -9,19 +9,19 @@ using TGC.MonoGame.TP.src.Objetos;
 namespace TGC.MonoGame.TP.src.Entidades
 {
     /// <summary>
-    ///     Esta es la clase del escenario donde se controla 
+    ///     Esta es la clase del esenario donde se controla 
     /// </summary>
-
-    
-    //cambio de endidad full primitiva a entidad full
-    public class ERoca : Entidades.EntidadFull
+     
+     
+    public class ESkyBox : Entidades.EntidadGrafica
     {
-        public ERoca(){}
+        public ESkyBox(){}
         public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
-            this._modelo = new Rocas.ORoca();
-            this._tipo = TipoEntidad.Obstaculo;
-            //TODO: Crear Bounding Volume
-            base.Initialize(Graphics,Mundo,View,Projection,Content, escenario);
+            this._modelo = new SkyBox.OSkyBox();
+            this._tipo = TipoEntidad.Otro;//TODO - Actualizar
+            base.Initialize(Graphics,Mundo,View,Projection,Content,escenario);
         }
+
+
     }
 }

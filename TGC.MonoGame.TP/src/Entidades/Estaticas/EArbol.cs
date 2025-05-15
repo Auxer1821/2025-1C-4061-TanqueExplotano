@@ -11,11 +11,14 @@ namespace TGC.MonoGame.TP.src.Entidades
     /// <summary>
     ///     Esta es la clase del escenario donde se controla 
     /// </summary>
-    public class EArbol : Entidades.EntidadFullPrimitiva
+     
+     
+    //cambio de endidad full primitiva a entidad full
+    public class EArbol : Entidades.EntidadFull
     {
         public EArbol(){}
         public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
-            this._objeto = new Arboles.OArbol();
+            this._modelo = new Arboles.OArbol();
             this._tipo = TipoEntidad.Obstaculo;
             //TODO: Crear Bounding Volume
             base.Initialize(Graphics,Mundo,View,Projection,Content, escenario);

@@ -11,67 +11,95 @@ namespace TGC.MonoGame.TP.src.Casas
     /// <summary>
     ///     Esta es la clase del escenario donde se controla 
     /// </summary>
-    public class OCasa : Objetos.Objeto
+    public class OCasa : Modelos.Modelo
     {
         
-        // Variables
+        // Variables   
+        Texture2D paredTexture;
+        Texture2D techoTexture;
+        Texture2D chimeneaTexture;
+        string[] meshes;
         //  En Clase Abstracta
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
-        public OCasa(){}
-        public override void Initialize (GraphicsDevice Graphics)
-        {
-            //Configuración de matrices
-            this._matrixMundo = Matrix.Identity;
-            this._matrixView = Matrix.CreateLookAt(Vector3.UnitZ * 150, Vector3.Zero, Vector3.Up);
-            this._matrixProyection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, Graphics.Viewport.AspectRatio, 1, 250);
-
-            base.Initialize(Graphics);
-
-        }
-
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
         {
             this._Color = Color.DarkRed.ToVector3();
             base.Initialize(Graphics, Mundo, View, Projection, Content);
         }
 
+        protected override void ConfigurarModelo(ContentManager Content){
+            this._modelo = Content.Load<Model>("Models/house/cartoon_house1");
+            chimeneaTexture = Content.Load<Texture2D>("Models/house/techo");
+            paredTexture = Content.Load<Texture2D>("Models/house/tablasMadera");
+            techoTexture = Content.Load<Texture2D>("Models/house/techo2");
+
+            //obtenemos los meshes del modelo
+            int count = 0;
+            int meshCount = _modelo.Meshes.Count;
+            meshes = new string[meshCount];
+            foreach (var mesh in _modelo.Meshes)
+            {
+                if (!string.IsNullOrEmpty(mesh.Name))
+                {
+                    meshes[count] = mesh.Name;
+                    //Console.WriteLine($"Mesh {count}: {mesh.Name}");
+                }
+                else
+                {
+                    // Asignar nombre genérico si no tiene
+                    mesh.Name = $"Mesh_{count}";
+                    meshes[count] = mesh.Name;
+                    //Console.WriteLine($"Mesh {count}: {mesh.Name}");
+                }
+                count++;
+            }
+
+        }
+        protected override void AjustarModelo(){
+            _matrixMundo = Matrix.CreateScale(0.03f) * _matrixMundo;
+        }
+
+        public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
+        {
+            return Content.Load<Effect>("Effects/shaderTextura");
+        }
+
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta
 
         //----------------------------------------------Dibujado--------------------------------------------------//
-        
+        public override void Dibujar(GraphicsDevice Graphics)
+        {
+            // Seteo de textura
+            _effect2.Parameters["View"].SetValue(this._matrixView);
+            _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
+            _effect2.Parameters["World"].SetValue(this._matrixMundo);
+
+            foreach (var mesh in _modelo.Meshes)
+            {
+                if (mesh.Name == meshes[2])
+                {
+                    _effect2.Parameters["Texture"].SetValue(techoTexture);
+                }
+                else if (mesh.Name == meshes[3])
+                {
+                    _effect2.Parameters["Texture"].SetValue(paredTexture);
+                }
+                else if (mesh.Name == meshes[1])
+                {
+                    _effect2.Parameters["Texture"].SetValue(paredTexture);
+                }
+                else if (mesh.Name == meshes[0])
+                {
+                    _effect2.Parameters["Texture"].SetValue(chimeneaTexture);
+                }
+                _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
+                mesh.Draw();
+            }
+        }
 
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------//
-        protected override void ConfigPuntos(GraphicsDevice Graphics){
-
-            VertexPositionColor[] puntos = new VertexPositionColor[]
-            {
-                new VertexPositionColor(new Vector3(0f, 0f, 0f), Color.Red),
-                new VertexPositionColor(new Vector3(7f, 0f, 0f), Color.Red),
-                new VertexPositionColor(new Vector3(0f, 7f, 0f), Color.Red),
-                new VertexPositionColor(new Vector3(7f, 7f, 0f), Color.Red),
-                new VertexPositionColor(new Vector3(0f, 0f, 7f), Color.Red),
-                new VertexPositionColor(new Vector3(7f, 0f, 7f), Color.Red),
-                new VertexPositionColor(new Vector3(0f, 7f, 7f), Color.Red),
-                new VertexPositionColor(new Vector3(7f, 7f, 7f), Color.Red)
-            };
-
-            _vertices = new VertexBuffer(Graphics, VertexPositionColor.VertexDeclaration, puntos.Length , BufferUsage.WriteOnly);
-            _vertices.SetData(puntos);
-
-            ushort[] Indices = new ushort[]
-            {
-                0,1,2, 1,2,3, //Cara Trasera
-                4,5,6, 5,6,7, //Cara delantera
-                0,4,5, 0,1,5, //Cara abajo
-                2,6,7, 2,3,7, //Cara superior
-                7,5,1, 1,7,3, //Cara derecha
-                0,4,6, 0,6,2  //Cara izquierda
-            };
-
-            _indices = new IndexBuffer(Graphics, IndexElementSize.SixteenBits, 36 , BufferUsage.None);
-            _indices.SetData(Indices);
-        }
+       
 
         //Configuración de efectos tomados desde la clase padre
         
