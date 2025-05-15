@@ -15,10 +15,12 @@ namespace TGC.MonoGame.TP.src.Terrenos
     {
         // Variables
         Texture2D heightMap;
+        Texture2D terrenoTexture;
         float[,] heightData;
         VertexPositionNormalTexture[] vertices;
         int[] indices;
         VertexBuffer terrainVertexBuffer;
+        IndexBuffer terrainIndexBuffer;
         int width;
         int height;
         //  Todas en Clase Abstracta
@@ -38,25 +40,45 @@ namespace TGC.MonoGame.TP.src.Terrenos
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
         {
             heightMap = Content.Load<Texture2D>("Models/heightmap/crater2");
+            terrenoTexture = Content.Load<Texture2D>("Models/heightmap/pasto");
             heightData = LoadHeightData(heightMap);
-            this._Color = Color.SandyBrown.ToVector3();
+            //this._Color = Color.SandyBrown.ToVector3();
+            Graphics.SamplerStates[0] = SamplerState.LinearWrap;
             base.Initialize(Graphics, Matrix.CreateScale(5) * Mundo * Matrix.CreateTranslation(Vector3.Down * 10), View, Projection, Content);
+        }
+
+        protected override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
+        {
+            return Content.Load<Effect>("Effects/shaderTerreno");
         }
 
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta
 
         //----------------------------------------------Dibujado--------------------------------------------------//
-        
+
         public override void Dibujar(GraphicsDevice Graphics)
         {
             Graphics.SetVertexBuffer(terrainVertexBuffer);
-            Graphics.Indices = new IndexBuffer(Graphics, IndexElementSize.ThirtyTwoBits, (width - 1) * (height - 1) * 6, BufferUsage.WriteOnly);
-            Graphics.Indices.SetData(indices);
+            if (terrainIndexBuffer == null || terrainIndexBuffer.IsDisposed)
+            {
+                terrainIndexBuffer = new IndexBuffer(Graphics, IndexElementSize.ThirtyTwoBits, indices.Length, BufferUsage.WriteOnly);
+                terrainIndexBuffer.SetData(indices);
+            }
+            Graphics.Indices = terrainIndexBuffer;
 
             _effect2.Parameters["View"].SetValue(this._matrixView);
             _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
-            _effect2.Parameters["DiffuseColor"].SetValue(this._Color);
+            _effect2.Parameters["Texture"].SetValue(terrenoTexture);
+
+            Graphics.SamplerStates[0] = new SamplerState
+            {
+                AddressU = TextureAddressMode.Wrap,
+                AddressV = TextureAddressMode.Wrap,
+                Filter = TextureFilter.Anisotropic,
+                MaxAnisotropy = 16, // Valor típico para buen equilibrio calidad/rendimiento
+                MipMapLevelOfDetailBias = -0.5f // Ajusta este valor según necesites
+            };
 
             foreach (EffectPass pass in _effect2.CurrentTechnique.Passes)
             {
@@ -102,12 +124,17 @@ namespace TGC.MonoGame.TP.src.Terrenos
             {
                 for (int x = 0; x < width; x++)
                 {
+                    //posicion 3d
                     Vector3 position = new Vector3(
                         x - width / 2,
                         heightData[x, y],
                         y - height / 2
                     );
-                    Vector2 texCoord = new Vector2(x / (float)width, y / (float)height);
+                    // Coordenadas de textura (ajusta textureRepeatFactor según necesites)
+                    float textureRepeatFactor = 0.1f;
+                    Vector2 texCoord = new Vector2(
+                        x * textureRepeatFactor,
+                        y * textureRepeatFactor);
                     vertices[y * width + x] = new VertexPositionNormalTexture(position, Vector3.Up, texCoord);
                 }
             }
@@ -133,11 +160,45 @@ namespace TGC.MonoGame.TP.src.Terrenos
                 }
             }
 
+            // Calcular normales
+            CalculateNormals(vertices, indices);
+
             // Crear el vertex buffer
 
             terrainVertexBuffer = new VertexBuffer(Graphics, typeof(VertexPositionNormalTexture), width * height, BufferUsage.WriteOnly);
             terrainVertexBuffer.SetData(vertices);
            
+        }
+
+        protected void CalculateNormals(VertexPositionNormalTexture[] vertices, int[] indices)
+        {
+            // Resetear normales
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                vertices[i].Normal = Vector3.Zero;
+            }
+
+            // Calcular normales por triángulo
+            for (int i = 0; i < indices.Length; i += 3)
+            {
+                int index1 = indices[i];
+                int index2 = indices[i + 1];
+                int index3 = indices[i + 2];
+
+                Vector3 side1 = vertices[index2].Position - vertices[index1].Position;
+                Vector3 side2 = vertices[index3].Position - vertices[index1].Position;
+                Vector3 normal = Vector3.Cross(side1, side2);
+
+                vertices[index1].Normal += normal;
+                vertices[index2].Normal += normal;
+                vertices[index3].Normal += normal;
+            }
+
+            // Normalizar
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                vertices[i].Normal.Normalize();
+            }
         }
         //Configuración de efectos tomados desde la clase padre
 
