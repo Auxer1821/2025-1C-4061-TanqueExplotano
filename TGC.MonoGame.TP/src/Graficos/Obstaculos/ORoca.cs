@@ -33,7 +33,7 @@ namespace TGC.MonoGame.TP.src.Rocas
             rocaTexture = Content.Load<Texture2D>("Models/Stone/roca3");
         }
         protected override void AjustarModelo(){
-            _matrixMundo = Matrix.CreateScale(0.01f) * _matrixMundo;
+            _matixBase = Matrix.CreateScale(0.01f);
         }
 
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)

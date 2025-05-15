@@ -38,7 +38,7 @@ namespace TGC.MonoGame.TP.src.SkyBox
             skyBoxTexture = Content.Load<Texture2D>("Models/skybox/skyTexture");
         }
         protected override void AjustarModelo(){
-            _matrixMundo = Matrix.CreateScale(1500.0f) * _matrixMundo * Matrix.CreateRotationX(MathHelper.Pi + MathHelper.PiOver2) * Matrix.CreateTranslation(Vector3.UnitY * 10);
+            _matixBase = Matrix.CreateScale(1500.0f) * Matrix.CreateRotationX(MathHelper.Pi + MathHelper.PiOver2) * Matrix.CreateTranslation(Vector3.UnitY * 10);
         }
 
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta

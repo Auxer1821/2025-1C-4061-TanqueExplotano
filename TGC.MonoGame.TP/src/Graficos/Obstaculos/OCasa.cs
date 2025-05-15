@@ -57,7 +57,7 @@ namespace TGC.MonoGame.TP.src.Casas
 
         }
         protected override void AjustarModelo(){
-            _matrixMundo = Matrix.CreateScale(0.03f) * _matrixMundo;
+            _matixBase = Matrix.CreateScale(0.03f);
         }
 
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)

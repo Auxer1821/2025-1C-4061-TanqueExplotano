@@ -29,7 +29,15 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         //----------------------------------------------Metodos--------------------------------------------------//
 
-        public override void Dibujar(GraphicsDevice graphics){
+        public override bool PuedeChocar(){
+            return false;
+        }
+        public override bool PuedeSerChocado(){
+            return false;
+        }
+
+        public override void Dibujar(GraphicsDevice graphics)
+        {
             this._modelo.Dibujar(graphics);
         }
         public override void ActualizarVistaProyeccion(Matrix Vista, Matrix Proyeccion){

@@ -60,7 +60,7 @@ namespace TGC.MonoGame.TP.src.Arboles
 
         protected override void AjustarModelo()
         {
-            _matrixMundo = Matrix.CreateScale(0.004f) * _matrixMundo;
+            _matixBase = Matrix.CreateScale(0.004f);
         }
 
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
