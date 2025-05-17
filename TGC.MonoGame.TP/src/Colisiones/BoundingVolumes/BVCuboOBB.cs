@@ -12,11 +12,19 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         public Vector3 Tamaño; // Half extents (es decir, la mitad del tamaño en cada eje)
         public Matrix Orientacion; // Rotación
 
+        public Vector3 _OCentro;
+        public Vector3 _OTamaño; // Half extents (es decir, la mitad del tamaño en cada eje)
+        public Matrix _OOrientacion; // Rotación
+
         public BVCuboOBB(Vector3 centro, Vector3 tamaño, Matrix orientacion)
         {
             Centro = centro;
             Tamaño = tamaño;
             Orientacion = orientacion;
+
+            _OCentro = Centro;
+            _OTamaño = Tamaño;
+            _OOrientacion = Orientacion;
         }
 
         public BVCuboOBB(Vector3 tamaño, Matrix orientacion)
@@ -24,6 +32,10 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             Centro = Vector3.Zero;
             Tamaño = tamaño;
             Orientacion = orientacion;
+
+            _OCentro = Centro;
+            _OTamaño = Tamaño;
+            _OOrientacion = Orientacion;
         }
 
         public override void Transformar(Vector3 nuevaPosicion, Vector3 rotacionEuler, float escala)
@@ -31,7 +43,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             // 1. Aplicar la Escala Uniforme al Tamaño (Half Extents)
             // La escala se aplica directamente al tamaño del OBB.
             
-            this.Tamaño *= escala;
+            this.Tamaño = _OTamaño * escala;
 
             // 2. Crear la Matriz de Rotación a partir de los ángulos de Euler
             // El orden de las rotaciones puede ser importante (ej. ZYX, XYZ, etc.).

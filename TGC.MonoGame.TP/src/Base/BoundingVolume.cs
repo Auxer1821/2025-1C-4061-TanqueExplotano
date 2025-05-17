@@ -12,7 +12,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
     /// </summary>
     public abstract class BoundingVolume
     {
-        public abstract void Transformar(Vector3 nuevaPosicion, Vector3 rotacionEuler, float escala);
+        public virtual void Transformar(Vector3 nuevaPosicion, Vector3 rotacionEuler, float escala){}
         
     }
 }
