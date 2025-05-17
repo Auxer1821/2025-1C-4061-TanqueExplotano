@@ -19,6 +19,12 @@
 /processorParam:DebugMode=Auto
 /build:Effects/BasicShader.fx
 
+#begin Effects/shaderRuedas.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/shaderRuedas.fx
+
 #begin Effects/shaderT90.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -380,6 +386,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Models/tgc-tanks/T90/textures_mod/hullC.jpg
+
+#begin Models/tgc-tanks/T90/textures_mod/treadmills.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/tgc-tanks/T90/textures_mod/treadmills.png
 
 #begin Models/tree/light-green-texture.jpg
 /importer:TextureImporter
