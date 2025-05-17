@@ -37,12 +37,6 @@
 /processorParam:DebugMode=Auto
 /build:Effects/shaderTextura.fx
 
-#begin Effects/shaderTree.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Effects/shaderTree.fx
-
 #begin Models/heightmap/crater2.png
 /importer:TextureImporter
 /processor:TextureProcessor

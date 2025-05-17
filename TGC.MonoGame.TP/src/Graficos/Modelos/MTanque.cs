@@ -13,10 +13,11 @@ namespace TGC.MonoGame.TP.src.Tanques
     /// </summary>
     public class MTanque : Modelos.Modelo
     {
-        
+
         //----------------------------------------------Variables--------------------------------------------------//
         private TipoTanque _tipoTanque;
         Texture2D tanqueTexture;
+        float giroTorrreta = 5f;
         string[] meshes;
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -45,22 +46,23 @@ namespace TGC.MonoGame.TP.src.Tanques
                 if (!string.IsNullOrEmpty(mesh.Name))
                 {
                     meshes[count] = mesh.Name;
-                    //Console.WriteLine($"Mesh {count}: {mesh.Name}");
+                    Console.WriteLine($"Mesh {count}: {mesh.Name}");
                 }
                 else
                 {
                     // Asignar nombre genérico si no tiene
                     mesh.Name = $"Mesh_{count}";
                     meshes[count] = mesh.Name;
-                    //Console.WriteLine($"Mesh {count}: {mesh.Name}");
+                    Console.WriteLine($"Mesh {count}: {mesh.Name}");
                 }
                 count++;
             }
 
         }
-        
-        protected override void AjustarModelo(){
-            this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo()) * Matrix.CreateRotationY(MathF.PI) ;//TODO - SOLO ROTA EN X. Si queres hacerlo hermoso, cambiar. Escala de modelo no amerita.
+
+        protected override void AjustarModelo()
+        {
+            this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo()) * Matrix.CreateRotationY(MathF.PI);//TODO - SOLO ROTA EN X. Si queres hacerlo hermoso, cambiar. Escala de modelo no amerita.
         }
 
         //----------------------------------------------Dibujado--------------------------------------------------//
@@ -74,7 +76,15 @@ namespace TGC.MonoGame.TP.src.Tanques
 
             foreach (var mesh in _modelo.Meshes)
             {
-                _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
+                if (mesh.Name == "Turret" || mesh.Name == "Cannon")
+                {
+                    //posiblemente de problemas al calcular con las normales del mapa
+                    _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorrreta) * _matrixMundo);
+                }
+                else
+                {
+                    _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
+                }
                 mesh.Draw();
             }
         }
@@ -83,6 +93,19 @@ namespace TGC.MonoGame.TP.src.Tanques
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
         {
             return Content.Load<Effect>("Effects/shaderT90");
+        }
+
+        public void rotarTorreta(float giro)
+        {
+            giroTorrreta += giro;
+            if (giroTorrreta > MathHelper.PiOver2)
+            {
+                giroTorrreta = MathHelper.PiOver2;
+            }
+            else if (giroTorrreta < -MathHelper.PiOver2)
+            {
+                giroTorrreta = -MathHelper.PiOver2;
+            }
         }
 
     }

@@ -45,14 +45,14 @@ namespace TGC.MonoGame.TP.src.Arboles
                 if (!string.IsNullOrEmpty(mesh.Name))
                 {
                     meshes[count] = mesh.Name;
-                    Console.WriteLine($"Mesh {count}: {mesh.Name}");
+                    //Console.WriteLine($"Mesh {count}: {mesh.Name}");
                 }
                 else
                 {
                     // Asignar nombre genérico si no tiene
                     mesh.Name = $"Mesh_{count}";
                     meshes[count] = mesh.Name;
-                    Console.WriteLine($"Mesh {count}: {mesh.Name}");
+                    //Console.WriteLine($"Mesh {count}: {mesh.Name}");
                 }
                 count++;
             }
@@ -65,7 +65,7 @@ namespace TGC.MonoGame.TP.src.Arboles
 
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
         {
-            return Content.Load<Effect>("Effects/shaderTree");
+            return Content.Load<Effect>("Effects/shaderTextura");
         }
 
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta
