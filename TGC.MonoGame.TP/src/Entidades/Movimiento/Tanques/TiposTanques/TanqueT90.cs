@@ -18,8 +18,9 @@ namespace TGC.MonoGame.TP.src.Tanques
         public float velocidad(){return 10f;}
         public float danio(){return 90f;}
         public string directorioModelo(){return "/T90/T90";}
+        public string directorioTextura(){return "/T90/textures_mod/hullB";}
         public float angulo(){return 4.71f;}
-        public float escala(){return 0.1f;}
+        public float escala(){return 4f;}
         public float cooldown(){return 10f;}
 
         //---------------------------Constructor----------------------//

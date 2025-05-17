@@ -24,7 +24,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public Etanque(){}
         public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
-            this._tipoTanque = new TanquePanzer(); 
+            this._tipoTanque = new TanqueT90(); 
             this._modelo = new Tanques.MTanque(_tipoTanque);
             this._tipo = TipoEntidad.Tanque;
             this._activo = true;

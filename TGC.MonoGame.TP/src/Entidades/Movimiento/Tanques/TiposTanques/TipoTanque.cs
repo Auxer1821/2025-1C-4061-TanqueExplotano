@@ -18,6 +18,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         float velocidad();
         float danio();
         string directorioModelo();
+        public string directorioTextura();
         float angulo();
         float escala();
         float cooldown();

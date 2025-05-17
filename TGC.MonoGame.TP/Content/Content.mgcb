@@ -19,6 +19,12 @@
 /processorParam:DebugMode=Auto
 /build:Effects/BasicShader.fx
 
+#begin Effects/shaderT90.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/shaderT90.fx
+
 #begin Effects/shaderTerreno.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -30,6 +36,12 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Effects/shaderTextura.fx
+
+#begin Effects/shaderTree.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/shaderTree.fx
 
 #begin Models/heightmap/crater2.png
 /importer:TextureImporter
@@ -164,6 +176,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Models/house/techo2.jpg
+
+#begin Models/house/textura-roja.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/house/textura-roja.jpg
 
 #begin Models/skybox/skybox.fbx
 /importer:FbxImporter
@@ -327,7 +351,7 @@
 /processorParam:TextureFormat=Compressed
 /build:Models/tgc-tanks/T90/T90.fbx
 
-#begin Models/tree/hojas1.jpg
+#begin Models/tgc-tanks/T90/textures_mod/hullA.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -337,9 +361,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Models/tree/hojas1.jpg
+/build:Models/tgc-tanks/T90/textures_mod/hullA.jpg
 
-#begin Models/tree/hojas2.jpg
+#begin Models/tgc-tanks/T90/textures_mod/hullB.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -349,7 +373,31 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Models/tree/hojas2.jpg
+/build:Models/tgc-tanks/T90/textures_mod/hullB.jpg
+
+#begin Models/tgc-tanks/T90/textures_mod/hullC.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/tgc-tanks/T90/textures_mod/hullC.jpg
+
+#begin Models/tree/light-green-texture.jpg
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/tree/light-green-texture.jpg
 
 #begin Models/tree/tree.fbx
 /importer:FbxImporter
@@ -369,6 +417,25 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
 /build:Models/tree/tree.fbx
+
+#begin Models/tree/tree2.fbx
+/importer:FbxImporter
+/processor:ModelProcessor
+/processorParam:ColorKeyColor=0,0,0,0
+/processorParam:ColorKeyEnabled=True
+/processorParam:DefaultEffect=BasicEffect
+/processorParam:GenerateMipmaps=True
+/processorParam:GenerateTangentFrames=False
+/processorParam:PremultiplyTextureAlpha=True
+/processorParam:PremultiplyVertexColors=True
+/processorParam:ResizeTexturesToPowerOfTwo=False
+/processorParam:RotationX=0
+/processorParam:RotationY=0
+/processorParam:RotationZ=0
+/processorParam:Scale=1
+/processorParam:SwapWindingOrder=False
+/processorParam:TextureFormat=Compressed
+/build:Models/tree/tree2.fbx
 
 #begin Models/tree/tronco1.jpg
 /importer:TextureImporter
