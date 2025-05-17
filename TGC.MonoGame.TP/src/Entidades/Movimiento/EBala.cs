@@ -41,8 +41,9 @@ namespace TGC.MonoGame.TP.src.Entidades
             return false;
         }
 
-        public override void Chocar(DataChoque dataChoque, Entidad entidadEstatica){
-            this._escenario.EliminarEntidad(this);   
+        public override void Chocar(DataChoque dataChoque, Entidad entidadEstatica)
+        {
+            this._escenario.AgregarAEliminar(this);
         }
     }
 }

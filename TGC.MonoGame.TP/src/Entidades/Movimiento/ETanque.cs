@@ -28,10 +28,10 @@ namespace TGC.MonoGame.TP.src.Entidades
         public Etanque() { }
         public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
             this._tipoTanque = new TanquePanzer(); 
-            this._modelo = new Tanques.MTanque(_tipoTanque);
+            this._modelo = new MTanque(_tipoTanque);
             this._tipo = TipoEntidad.Tanque;
             this._activo = true;
-            //Crear Bounding Volume
+            //TODO - Crear Bounding Volume especializados // Eliminarlo de EntidadFull
             base.Initialize(Graphics,Mundo,View,Projection,Content, escenario);
         }
 
@@ -106,8 +106,9 @@ namespace TGC.MonoGame.TP.src.Entidades
             // Lógica de destrucción:  explosionar, etc.
             this._activo = false;
             // CrearEfectoExplosion(this._modelo.Posicion);
-            this._escenario.EliminarEntidad(this);
-            this._escenario.AgregarEntidad(this);
+            this._escenario.AgregarAEliminar(this);
+            this._modelo.ActualizarColor(Color.DarkRed);
+            this._escenario.AgregarACrear(this);
         }
 
 //---------------------------------------------MOVIMIENTO-Y-APUNTADO---------------------------------------------------//
@@ -137,7 +138,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         public void Disparar(Vector3 apuntado){
             EBala bala = new EBala();
             bala.ActualizarDatos(this._dirApuntado,this._posicion); //TODO - Cambiar lugar de disparo para que no se autodestruya
-            this._escenario.AgregarEntidad(bala);//temporal
+            this._escenario.AgregarACrear(bala); //temporal
         }
 
         //

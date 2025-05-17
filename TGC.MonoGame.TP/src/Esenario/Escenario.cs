@@ -15,7 +15,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
     /// <summary>
     ///     Esta es la clase del escenario donde se controla los managers
     /// </summary>
-    public class Escenario 
+    public class Escenario
     {
 
         // Variables
@@ -23,72 +23,77 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private ManagerGrafico _managerGrafico;
         private ManagerColisiones _managerColision;
         private ManagerGameplay _managerGameplay;
+        private List<Entidad> _entidadesEliminar;
+        private bool _faltaEliminar;
+        private List<Entidad> _entidadesCrear;
+        private bool _faltaCrear;
 
         private Camaras.Camara _camara;
-        private Entidades.ESkyBox _skyBox;
-            //TODO: Que sea el primero en ser dibujado
+        private ESkyBox _skyBox;
+        //TODO: Que sea el primero en ser dibujado
 
-        
+
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public Escenario()
         {
             _managerGrafico = new ManagerGrafico();
             _managerColision = new ManagerColisiones();
             _managerGameplay = new ManagerGameplay();
-        }
-
-        public void AgregarEntidad(Entidades.Entidad entidad){
-            _managerGrafico.AgregarEntidad(entidad);
-            _managerColision.AgregarEntidad(entidad);
+            _entidadesEliminar = new List<Entidad>();
+            _entidadesCrear = new List<Entidad>();
+            _faltaEliminar = false;
+            _faltaCrear = false;
         }
 
         public void Initialize(GraphicsDevice graphicsDevice, Matrix world, ContentManager content)
         {
-            _camara = new Camaras.Camara(Vector3.UnitZ * 150, Vector3.Zero , graphicsDevice.Viewport.AspectRatio);
+            _camara = new Camaras.Camara(Vector3.UnitZ * 150, Vector3.Zero, graphicsDevice.Viewport.AspectRatio);
             Matrix view = _camara.Vista;
             Matrix projection = _camara.Proyeccion;
-            //inicializar el skybox
-            _skyBox = new Entidades.ESkyBox();
-            _skyBox.Initialize(graphicsDevice, world, view, projection, content, this);
-            this.AgregarEntidad(_skyBox);
 
-            // Inicializar terreno
+            //-----------------Inicializar el skybox-------------------//
+            _skyBox = new ESkyBox();
+            _skyBox.Initialize(graphicsDevice, world, view, projection, content, this);
+            this.AgregarACrear(_skyBox);
+
+            //-----------------Inicializar terreno--------------------//
             _terreno = new Terrenos.Terreno();
-            _terreno.Initialize(graphicsDevice, world, view, projection,  content);
-            
-            //Posiciones usadas
+            _terreno.Initialize(graphicsDevice, world, view, projection, content);
+
+            //-----------------Posiciones usadas----------------------//
             List<Vector3> posicionesUsadas = new List<Vector3>();
 
-            // Crear un pequeño pueblo (casas y cajas)
+            //-------Crear un pequeño pueblo (casas y cajas)-----------//
             for (int x = -50; x <= 50; x += 20)
             {
                 for (int z = -50; z <= 50; z += 20)
                 {
-                    var casa = new Entidades.ECasa();
+                    var casa = new ECasa();
                     casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content, this);
-                    this.AgregarEntidad(casa);
-                    posicionesUsadas.Add(new Vector3(x,z,4));
+                    this.AgregarACrear(casa);
+                    posicionesUsadas.Add(new Vector3(x, z, 4));
 
-                    var caja = new Entidades.ECaja();
+                    var caja = new ECaja();
                     caja.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x + 8, 0, z + 8), view, projection, content, this);
-                    this.AgregarEntidad(caja);
-                    posicionesUsadas.Add(new Vector3(x+8,z+8,2));
+                    this.AgregarACrear(caja);
+                    posicionesUsadas.Add(new Vector3(x + 8, z + 8, 2));
                 }
             }
-            
-            // Crear un bosque (árboles)
+
+            //--------Crear un bosque (árboles)---------------//
             Random random = new Random(0);
             for (int i = 0; i < 500; i++)
             {
-                var arbol = new Entidades.EArbol();
+                var arbol = new EArbol();
                 float x = random.Next(-300, 300);
                 float z = random.Next(100, 500);
-                var pos = new Vector2(x,z); 
+                var pos = new Vector2(x, z);
 
-                if(PosicionesLibre(pos, posicionesUsadas, 1)){
+                if (PosicionesLibre(pos, posicionesUsadas, 1))
+                {
                     arbol.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content, this);
-                    this.AgregarEntidad(arbol);
-                    posicionesUsadas.Add(new Vector3(x,z,1));
+                    this.AgregarACrear(arbol);
+                    posicionesUsadas.Add(new Vector3(x, z, 1));
                 }
                 else
                 {
@@ -96,17 +101,18 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 }
             }
 
-            // Crear algunas rocas dispersas
+            //-------Crear algunas rocas dispersas----------//
             for (int i = 0; i < 120; i++)
             {
-                var roca = new Entidades.ERoca();
+                var roca = new ERoca();
                 float x = random.Next(-300, 300);
                 float z = random.Next(-300, 300);
-                var pos = new Vector2(x,z); 
-                 if(PosicionesLibre(pos, posicionesUsadas,1)){
+                var pos = new Vector2(x, z);
+                if (PosicionesLibre(pos, posicionesUsadas, 1))
+                {
                     roca.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content, this);
-                    this.AgregarEntidad(roca);
-                    posicionesUsadas.Add(new Vector3(x,z,1));
+                    this.AgregarACrear(roca);
+                    posicionesUsadas.Add(new Vector3(x, z, 1));
                 }
                 else
                 {
@@ -114,25 +120,26 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 }
             }
 
-            // Crear Coordillera
-            for(int i = 0; i< 5; i++){
+            //---------Crear Coordillera--------//
+            for (int i = 0; i < 5; i++)
+            {
                 //IZQUIERDA
-                var montana = new Entidades.EMontana();
+                var montana = new EMontana();
                 montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(-400, 0, -400 + 200 * i), view, projection, content, this);
-                this.AgregarEntidad(montana);
-                    //DERECHA
-                montana = new Entidades.EMontana();
+                this.AgregarACrear(montana);
+                //DERECHA
+                montana = new EMontana();
                 montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(400, 0, -400 + 200 * i), view, projection, content, this);
-                this.AgregarEntidad(montana);
+                this.AgregarACrear(montana);
             }
 
-            // crear tanks
-            
-            var jugador = new Entidades.EJugador();
+            //-------------------Crear tanks--------------------//
+            //---Jugador---//
+            var jugador = new EJugador();
             float Jx = random.Next(-150, 150);
             float Jz = random.Next(-150, 150);
-            var Jpos = new Vector2(Jx,Jz);
-        
+            var Jpos = new Vector2(Jx, Jz);
+
             while (!PosicionesLibre(Jpos, posicionesUsadas, 10))    //ENCONTRAR UNA POS LIBRE
             {
                 Jx = random.Next(-150, 150);
@@ -141,20 +148,21 @@ namespace TGC.MonoGame.TP.src.Escenarios
             }
 
             jugador.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Jx, 0, Jz), view, projection, content, this);
-            this.AgregarEntidad(jugador);
+            this.AgregarACrear(jugador);
             this._managerGameplay.AgregarJugador(jugador);
-            posicionesUsadas.Add(new Vector3(Jx,Jz,10));
-            
+            posicionesUsadas.Add(new Vector3(Jx, Jz, 10));
+
+            //----IA---//
             for (int i = 0; i < 4; i++)
             {
-                var tank = new Entidades.Etanque();
+                var tank = new Etanque();
                 float Ax = random.Next(-150, 150);
                 float Az = random.Next(-150, 150);
                 var pos = new Vector2(Ax, Az);
                 if (PosicionesLibre(pos, posicionesUsadas, 10))
                 {
                     tank.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Ax, 0, Az), view, projection, content, this);
-                    this.AgregarEntidad(tank);
+                    this.AgregarACrear(tank);
                     this._managerGameplay.AgregarEnemigo(tank);
                     posicionesUsadas.Add(new Vector3(Ax, Az, 10));
                 }
@@ -171,34 +179,68 @@ namespace TGC.MonoGame.TP.src.Escenarios
             _terreno.Dibujar(graphicsDevice);
         }
 
-        public void ActualizarCamara(GameTime gameTime){
+        public void ActualizarCamara(GameTime gameTime)
+        {
             _camara.Actualizar(gameTime);
             _managerGrafico.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
             _terreno.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
         }
 
-        public void Update(GameTime gameTime){
-            
+        public void AgregarAEliminar(Entidad entidad)
+        {
+            this._entidadesEliminar.Add(entidad);
+            this._faltaEliminar = true;
+        }
+
+        public void AgregarACrear(Entidad entidad)
+        {
+            this._entidadesCrear.Add(entidad);
+            this._faltaCrear = true;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+
             _managerGameplay.Update(gameTime);
             _managerColision.VerificarColisiones();
             this.ActualizarCamara(gameTime);
+            if (_faltaEliminar) this.EliminarEntidades();
+            if (_faltaCrear) this.CrearEntidades();
+
         }
 
 
         //----------------------------------Funciones-auxiliares--------------------------------------------//
-        private bool PosicionesLibre( Vector2 newPos, List<Vector3> usadas, float distancia){
-            foreach (var pos in usadas){
-                if(Vector2.Distance(new Vector2(pos.X,pos.Y), newPos) < (distancia+pos.Z) )
-                return false;
+        private bool PosicionesLibre(Vector2 newPos, List<Vector3> usadas, float distancia)
+        {
+            foreach (var pos in usadas)
+            {
+                if (Vector2.Distance(new Vector2(pos.X, pos.Y), newPos) < (distancia + pos.Z))
+                    return false;
             }
             return true;
         }
 
-        internal void EliminarEntidad(Entidad entidad)
+        internal void EliminarEntidades()
         {
-            _managerGrafico.RemoverEntidad(entidad);
-            _managerColision.RemoverEntidad(entidad);
+            foreach (var entidad in _entidadesEliminar)
+            {
+                _managerGrafico.RemoverEntidad(entidad);
+                _managerColision.RemoverEntidad(entidad);
+            }
+            this._faltaEliminar = false;
         }
+
+        internal void CrearEntidades()
+        {
+            foreach (var entidad in _entidadesCrear)
+            {
+                _managerGrafico.AgregarEntidad(entidad);
+                _managerColision.AgregarEntidad(entidad);
+            }
+            this._faltaCrear = false;
+        }
+        
     }
 
 }

@@ -24,7 +24,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         }
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
         {
-            this._Color = Color.Gray.ToVector3();
+            ActualizarColor(Color.Gray);
             base.Initialize(Graphics, Mundo, View, Projection, Content);
         }
 
@@ -38,8 +38,7 @@ namespace TGC.MonoGame.TP.src.Tanques
             this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo().X) * Matrix.CreateRotationY(this._tipoTanque.angulo().Y) * Matrix.CreateRotationZ(this._tipoTanque.angulo().Z) ;
         }
 
-        //----------------------------------------------Dibujado--------------------------------------------------//
-        
+        //----------------------------------------------Dibujado--------------------------------------------------//        
 
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------//
         

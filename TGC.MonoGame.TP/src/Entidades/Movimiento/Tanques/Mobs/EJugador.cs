@@ -48,16 +48,20 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._velocidadActual *= mseg;
 
             this._anguloActual = 0.0f; //cuanto rota segun su direcion
-            if (teclado.IsKeyDown(Keys.A))
-            {
-                this._anguloActual -= this._tipoTanque.anguloRotacionMovimiento();
-            }
 
-            if (teclado.IsKeyDown(Keys.D))
+            if (_velocidadActual != 0)
             {
-                this._anguloActual += this._tipoTanque.anguloRotacionMovimiento();
+                if (teclado.IsKeyDown(Keys.A))
+                {
+                    this._anguloActual -= this._tipoTanque.anguloRotacionMovimiento();
+                }
+
+                if (teclado.IsKeyDown(Keys.D))
+                {
+                    this._anguloActual += this._tipoTanque.anguloRotacionMovimiento();
+                }
+                this._anguloActual *= mseg;
             }
-            this._anguloActual *= mseg;
 
             //TODO camara y disparo
             base.Update(gameTime);
