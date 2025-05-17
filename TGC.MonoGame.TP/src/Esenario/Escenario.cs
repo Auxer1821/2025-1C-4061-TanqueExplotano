@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Entidades;
 using TGC.MonoGame.TP.src.Objetos;
+using TGC.MonoGame.TP.src.Managers;
 
 
 
@@ -19,8 +20,9 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
         // Variables
         private Terrenos.Terreno _terreno;
-        private Managers.ManagerGrafico _managerGrafico;
-        private Managers.ManagerColisiones _managerColision;
+        private ManagerGrafico _managerGrafico;
+        private ManagerColisiones _managerColision;
+        private ManagerGameplay _managerGameplay;
 
         private Camaras.Camara _camara;
         private Entidades.ESkyBox _skyBox;
@@ -30,8 +32,9 @@ namespace TGC.MonoGame.TP.src.Escenarios
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public Escenario()
         {
-            _managerGrafico = new Managers.ManagerGrafico();
-            _managerColision = new Managers.ManagerColisiones();
+            _managerGrafico = new ManagerGrafico();
+            _managerColision = new ManagerColisiones();
+            _managerGameplay = new ManagerGameplay();
         }
 
         public void AgregarEntidad(Entidades.Entidad entidad){
@@ -122,19 +125,38 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(400, 0, -400 + 200 * i), view, projection, content, this);
                 this.AgregarEntidad(montana);
             }
-            
+
             // crear tanks
             
-            for (int i = 0; i < 5; i++)
+            var jugador = new Entidades.EJugador();
+            float Jx = random.Next(-150, 150);
+            float Jz = random.Next(-150, 150);
+            var Jpos = new Vector2(Jx,Jz);
+        
+            while (!PosicionesLibre(Jpos, posicionesUsadas, 10))    //ENCONTRAR UNA POS LIBRE
+            {
+                Jx = random.Next(-150, 150);
+                Jz = random.Next(-150, 150);
+                Jpos = new Vector2(Jx, Jz);
+            }
+
+            jugador.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Jx, 0, Jz), view, projection, content, this);
+            this.AgregarEntidad(jugador);
+            this._managerGameplay.AgregarJugador(jugador);
+            posicionesUsadas.Add(new Vector3(Jx,Jz,10));
+            
+            for (int i = 0; i < 4; i++)
             {
                 var tank = new Entidades.Etanque();
                 float Ax = random.Next(-150, 150);
                 float Az = random.Next(-150, 150);
-                var pos = new Vector2(Ax,Az); 
-                if(PosicionesLibre(pos, posicionesUsadas, 10)){
+                var pos = new Vector2(Ax, Az);
+                if (PosicionesLibre(pos, posicionesUsadas, 10))
+                {
                     tank.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Ax, 0, Az), view, projection, content, this);
                     this.AgregarEntidad(tank);
-                    posicionesUsadas.Add(new Vector3(Ax,Az,10));
+                    this._managerGameplay.AgregarEnemigo(tank);
+                    posicionesUsadas.Add(new Vector3(Ax, Az, 10));
                 }
                 else
                 {
@@ -157,7 +179,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
         public void Update(GameTime gameTime){
             
-            //manager gamplay
+            _managerGameplay.Update(gameTime);
             _managerColision.VerificarColisiones();
             this.ActualizarCamara(gameTime);
         }

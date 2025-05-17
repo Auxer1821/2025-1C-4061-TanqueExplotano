@@ -25,6 +25,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._boundingVolume = new BoundingsVolumes.BVEsfera(3.0f, this._posicion);
             this._modelo.Initialize(Graphics, Mundo, View, Projection, Content);
             this._escenario = escenario;
+            this._boundingVolume.Transformar(this._posicion, Vector3.Zero, 1f);
         }
 
         public override void Dibujar(GraphicsDevice graphics)

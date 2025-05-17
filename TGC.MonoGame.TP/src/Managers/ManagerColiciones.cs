@@ -29,7 +29,7 @@ namespace TGC.MonoGame.TP.src.Managers
         {
             if(entidad.PuedeChocar())
                 _movimientos.Add(entidad);
-            if(entidad.PuedeSerChocado())
+            else if(entidad.PuedeSerChocado())
                 _estaticas.Add(entidad);
         }
 
@@ -48,7 +48,7 @@ namespace TGC.MonoGame.TP.src.Managers
                     if(CalculadorasChoque.DetectarColisiones(EntidadMovimeinto._boundingVolume, EntidadEstatica._boundingVolume))
                     {
                         EntidadMovimeinto.Chocar(CalculadorasChoque.ParametrosChoque(EntidadMovimeinto._boundingVolume, EntidadEstatica._boundingVolume), EntidadEstatica);
-                        EntidadMovimeinto.Chocar(CalculadorasChoque.ParametrosChoque(EntidadEstatica._boundingVolume, EntidadMovimeinto._boundingVolume), EntidadMovimeinto);
+                        EntidadEstatica.Chocar(CalculadorasChoque.ParametrosChoque(EntidadEstatica._boundingVolume, EntidadMovimeinto._boundingVolume), EntidadMovimeinto);
                     }   
                 }
                 foreach (Entidades.Entidad EntidadMovimeinto2 in _movimientos)

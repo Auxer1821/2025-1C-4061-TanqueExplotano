@@ -17,9 +17,10 @@ namespace TGC.MonoGame.TP.src.Tanques
 
         public float vida = 60f;
         public float velocidad(){return 30f;}
+        public float anguloRotacionMovimiento(){return 10f;}
         public float danio(){return 100f;}
         public string directorioModelo(){return "/Panzer/Panzer";}
-        public float angulo(){return 0f;}
+        public Vector3 angulo(){return new Vector3(0.0f, -4.71f, 0.0f);}
         public float escala(){return 0.02f;}
         public float cooldown(){return 10f;}
         public float Vida(){return vida;}

@@ -17,12 +17,15 @@ namespace TGC.MonoGame.TP.src.Entidades
         
         // Variables
         private bool _activo;
-        private TipoTanque _tipoTanque;
-        private Vector2 _dirMovimiento = Vector2.UnitX;
-        private Vector3 _dirApuntado = Vector3.UnitX;
+        protected TipoTanque _tipoTanque;
+        protected Vector2 _dirMovimiento = Vector2.UnitX;
+        protected Vector3 _dirApuntado = Vector3.UnitX;
+        
+        protected float _velocidadActual;
+        protected float _anguloActual;
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
-        public Etanque(){}
+        public Etanque() { }
         public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
             this._tipoTanque = new TanquePanzer(); 
             this._modelo = new Tanques.MTanque(_tipoTanque);
@@ -62,7 +65,8 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         public override void Update(GameTime gameTime)
         {
-            this.ActualizarMatrizMundo();
+            this.ActualizarDireccion();
+            this.Mover();
         }
         
 
@@ -111,8 +115,13 @@ namespace TGC.MonoGame.TP.src.Entidades
         // Función que actualiza los valores de posición y ángulo
         // Para luego usarlos y crear la matriz mundo
         public void Mover(){
-            this._posicion += new Vector3(_dirMovimiento.X, 0, _dirMovimiento.Y);
-            this._angulo += new Vector3(0f, (float) Math.Atan2(_dirMovimiento.Y, _dirMovimiento.X), 0f); // confia (es inocente hasta que se pruebe lo contrario)
+            this._posicion += new Vector3(_dirMovimiento.X, 0, _dirMovimiento.Y) * _velocidadActual;
+            //this._angulo += new Vector3(0f, (float) Math.Atan2(_dirMovimiento.Y, _dirMovimiento.X), 0f); // confia (es inocente hasta que se pruebe lo contrario)
+
+            var angulo = this._angulo;
+            angulo.Z -= _anguloActual;            
+            this._angulo = angulo;
+
             this.ActualizarMatrizMundo(); // Puntual para la grafica
             this._boundingVolume.Transformar(_posicion, _angulo, 1.0f); // Puntual para la colision
         }
@@ -120,13 +129,10 @@ namespace TGC.MonoGame.TP.src.Entidades
         //Función llamada gameplay para que actualice los valores de la matriz dirección.
         // Valores de 1, -1, 0
         // Luego será multiplicado por su respectiva velocidad
-        public void ActualizarMovimiento(float x, float y){
-            this._dirMovimiento.X = x;
-            this._dirMovimiento.Y = y;
-            this._dirMovimiento *= this._tipoTanque.velocidad();
+        public void ActualizarDireccion(){
+            _dirMovimiento = Vector2.Rotate(_dirMovimiento, _anguloActual);
+            //TODO: direccion de la mira
         }
-        
-        
         // 
         public void Disparar(Vector3 apuntado){
             EBala bala = new EBala();

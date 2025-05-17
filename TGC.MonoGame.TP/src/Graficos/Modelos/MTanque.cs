@@ -35,7 +35,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         }
         
         protected override void AjustarModelo(){
-            this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo()) ;//TODO - SOLO ROTA EN X. Si queres hacerlo hermoso, cambiar. Escala de modelo no amerita.
+            this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo().X) * Matrix.CreateRotationY(this._tipoTanque.angulo().Y) * Matrix.CreateRotationZ(this._tipoTanque.angulo().Z) ;
         }
 
         //----------------------------------------------Dibujado--------------------------------------------------//
