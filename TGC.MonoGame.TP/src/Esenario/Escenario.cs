@@ -225,9 +225,10 @@ namespace TGC.MonoGame.TP.src.Escenarios
         {
             foreach (var entidad in _entidadesEliminar)
             {
-                _managerGrafico.RemoverEntidad(entidad);
-                _managerColision.RemoverEntidad(entidad);
+                this._managerGrafico.RemoverEntidad(entidad);
+                this._managerColision.RemoverEntidad(entidad);
             }
+            this._entidadesEliminar.Clear();
             this._faltaEliminar = false;
         }
 
@@ -235,9 +236,10 @@ namespace TGC.MonoGame.TP.src.Escenarios
         {
             foreach (var entidad in _entidadesCrear)
             {
-                _managerGrafico.AgregarEntidad(entidad);
-                _managerColision.AgregarEntidad(entidad);
+                this._managerGrafico.AgregarEntidad(entidad);
+                this._managerColision.AgregarEntidad(entidad);
             }
+            this._entidadesCrear.Clear();
             this._faltaCrear = false;
         }
         

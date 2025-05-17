@@ -20,8 +20,8 @@ namespace TGC.MonoGame.TP.src.Entidades
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public EJugador(){}
         public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
-            //Capaz hace algo qcy
             base.Initialize(Graphics,Mundo,View,Projection,Content, escenario);
+            this._modelo.ActualizarColor(Color.RoyalBlue);
         }
 
         //----------------------------------------------Metodos-Logica--------------------------------------------------//

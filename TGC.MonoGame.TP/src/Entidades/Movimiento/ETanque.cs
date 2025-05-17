@@ -52,6 +52,8 @@ namespace TGC.MonoGame.TP.src.Entidades
                     break;
 
                 case TipoEntidad.Tanque:
+                    this.AplicarColisionMovimiento(dataChoque);
+                    break;
                 case TipoEntidad.Obstaculo:
                     this.AplicarColisionMovimiento(dataChoque);
                     break;
@@ -68,7 +70,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             this.ActualizarDireccion();
             this.Mover();
         }
-        
+
 
         //Metodos propios
         private void AplicarColisionMovimiento(DataChoque choque)
@@ -77,13 +79,14 @@ namespace TGC.MonoGame.TP.src.Entidades
             Vector3 correccion = choque._normal * choque._penetracion;
 
             // Corregir posición
-            //this.ubicacion += correccion;
+            this._posicion += correccion;
 
             // Cancelar velocidad en dirección del impacto (variable de velocidad / movimiento)
             // this.Velocidad -= Vector3.Dot(this.Velocidad, choque._normal) * choque._normal;
 
             // También podrías anular el movimiento completamente, si es más simple
-            // this.Velocidad = Vector3.Zero;
+            // Prefiero esto: El Jugador setea su velocidad a 0 todos los frames; Los Tanques pueden seguir rotando y cuando dejen de chocar se moveran nuevamente
+            this._velocidadActual = 0.0f;
         }
 
         private void RecibirDaño(DataChoque choque,  EBala bala)
@@ -117,7 +120,6 @@ namespace TGC.MonoGame.TP.src.Entidades
         // Para luego usarlos y crear la matriz mundo
         public void Mover(){
             this._posicion += new Vector3(_dirMovimiento.X, 0, _dirMovimiento.Y) * _velocidadActual;
-            //this._angulo += new Vector3(0f, (float) Math.Atan2(_dirMovimiento.Y, _dirMovimiento.X), 0f); // confia (es inocente hasta que se pruebe lo contrario)
 
             var angulo = this._angulo;
             angulo.Z -= _anguloActual;            
