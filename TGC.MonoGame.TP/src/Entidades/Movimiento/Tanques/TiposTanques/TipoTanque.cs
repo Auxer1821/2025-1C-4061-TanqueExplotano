@@ -1,4 +1,5 @@
 using System;
+using System.Dynamic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,14 +14,19 @@ namespace TGC.MonoGame.TP.src.Tanques
     /// </summary>
     public interface TipoTanque
     {
+
         //----------------------------metodos------------------------//
-        float vida();
         float velocidad();
         float danio();
         string directorioModelo();
         float angulo();
         float escala();
         float cooldown();
+
+        float Vida();
+        void RecibirDanio(float danio);
+
+        bool EstaVivo();
 
     }
 }

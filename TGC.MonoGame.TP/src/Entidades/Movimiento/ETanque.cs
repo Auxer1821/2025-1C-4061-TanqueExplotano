@@ -45,12 +45,12 @@ namespace TGC.MonoGame.TP.src.Entidades
             switch (entidadEstatica._tipo)
             {
                 case TipoEntidad.Bala:
-                    this.RecibirDaño(dataChoque);
+                    this.RecibirDaño(dataChoque, (EBala) entidadEstatica);
                     break;
 
                 case TipoEntidad.Tanque:
                 case TipoEntidad.Obstaculo:
-                    this.AplicarColisionEstructural(dataChoque);
+                    this.AplicarColisionMovimiento(dataChoque);
                     break;
 
                 default:
@@ -67,7 +67,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         
 
         //Metodos propios
-        private void AplicarColisionEstructural(DataChoque choque)
+        private void AplicarColisionMovimiento(DataChoque choque)
         {
             // Empuja al tanque hacia afuera para que no quede dentro del obstáculo
             Vector3 correccion = choque._normal * choque._penetracion;
@@ -82,10 +82,10 @@ namespace TGC.MonoGame.TP.src.Entidades
             // this.Velocidad = Vector3.Zero;
         }
 
-        private void RecibirDaño(DataChoque choque)
+        private void RecibirDaño(DataChoque choque,  EBala bala)
         {
             // Restar vida (suponiendo que existe una propiedad 'Vida')
-            //this.Vida -= CalcularDaño(choque);
+            this._tipoTanque.RecibirDanio(bala._danio);
 
             // Efectos visuales
             // MostrarChispa(choque._puntoContacto);
@@ -93,8 +93,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             // Modificar la mesh del modelo para simular el impacto (Entrega 4)
 
             // Chequear destrucción
-            //if (this.Vida <= 0)
-            //  Destruir();
+            if (this._tipoTanque.EstaVivo()) this.Destruir();
         }
         
 
@@ -113,8 +112,9 @@ namespace TGC.MonoGame.TP.src.Entidades
         // Para luego usarlos y crear la matriz mundo
         public void Mover(){
             this._posicion += new Vector3(_dirMovimiento.X, 0, _dirMovimiento.Y);
-            this._angulo += new Vector3(0f, (float) Math.Atan2(_dirMovimiento.Y, _dirMovimiento.X), 0f);
-            this.ActualizarMatrizMundo();
+            this._angulo += new Vector3(0f, (float) Math.Atan2(_dirMovimiento.Y, _dirMovimiento.X), 0f); // confia (es inocente hasta que se pruebe lo contrario)
+            this.ActualizarMatrizMundo(); // Puntual para la grafica
+            this._boundingVolume.Transformar(_posicion, _angulo, 1.0f); // Puntual para la colision
         }
 
         //Función llamada gameplay para que actualice los valores de la matriz dirección.

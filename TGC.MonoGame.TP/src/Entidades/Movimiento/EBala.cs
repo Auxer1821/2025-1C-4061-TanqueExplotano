@@ -17,6 +17,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         
         // Variables
         private Vector3 _direccion;
+        public float _danio {get; set;}
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public EBala(){}
