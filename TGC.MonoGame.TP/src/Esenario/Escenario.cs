@@ -155,7 +155,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             //----IA---//
             for (int i = 0; i < 4; i++)
             {
-                var tank = new Etanque();
+                var tank = new ETanqueIA();
                 float Ax = random.Next(-150, 150);
                 float Az = random.Next(-150, 150);
                 var pos = new Vector2(Ax, Az);
