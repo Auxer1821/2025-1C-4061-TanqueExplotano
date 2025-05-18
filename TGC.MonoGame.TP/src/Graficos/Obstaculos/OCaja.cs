@@ -33,7 +33,7 @@ namespace TGC.MonoGame.TP.src.Cajas
         
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
         {
-            this._Color = Color.Brown.ToVector3();
+            //this._Color = new Vector2(0,0).ToVector3();
             cajaTexture = Content.Load<Texture2D>("Models/house/tablasMadera");
             base.Initialize(Graphics, Mundo, View, Projection, Content);
 
@@ -69,19 +69,19 @@ namespace TGC.MonoGame.TP.src.Cajas
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------//
         protected override void ConfigPuntos(GraphicsDevice Graphics){
 
-            VertexPositionColor[] puntos = new VertexPositionColor[]
+            VertexPositionTexture[] puntos = new VertexPositionTexture[]
             {
-                new VertexPositionColor(new Vector3(0f, 0f, 0f), Color.Brown),
-                new VertexPositionColor(new Vector3(1f, 0f, 0f), Color.Brown),
-                new VertexPositionColor(new Vector3(0f, 1f, 0f), Color.Brown),
-                new VertexPositionColor(new Vector3(1f, 1f, 0f), Color.Brown),
-                new VertexPositionColor(new Vector3(0f, 0f, 1f), Color.Brown),
-                new VertexPositionColor(new Vector3(1f, 0f, 1f), Color.Brown),
-                new VertexPositionColor(new Vector3(0f, 1f, 1f), Color.Brown),
-                new VertexPositionColor(new Vector3(1f, 1f, 1f), Color.Brown)
+                new VertexPositionTexture(new Vector3(0f, 0f, 0f), new Vector2(0,0)),
+                new VertexPositionTexture(new Vector3(1f, 0f, 0f), new Vector2(1,0)),
+                new VertexPositionTexture(new Vector3(0f, 1f, 0f), new Vector2(0,1)),
+                new VertexPositionTexture(new Vector3(1f, 1f, 0f), new Vector2(1,1)),
+                new VertexPositionTexture(new Vector3(0f, 0f, 1f), new Vector2(0,0)),
+                new VertexPositionTexture(new Vector3(1f, 0f, 1f), new Vector2(1,0)),
+                new VertexPositionTexture(new Vector3(0f, 1f, 1f), new Vector2(0,1)),
+                new VertexPositionTexture(new Vector3(1f, 1f, 1f), new Vector2(1,1))
             };
 
-            _vertices = new VertexBuffer(Graphics, VertexPositionColor.VertexDeclaration, puntos.Length , BufferUsage.WriteOnly);
+            _vertices = new VertexBuffer(Graphics, VertexPositionTexture.VertexDeclaration, puntos.Length , BufferUsage.WriteOnly);
             _vertices.SetData(puntos);
 
             ushort[] Indices = new ushort[]
