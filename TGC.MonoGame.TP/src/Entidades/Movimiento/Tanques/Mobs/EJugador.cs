@@ -34,6 +34,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             //setear los valores de movimiento y disparo
             float mseg = (float) gameTime.ElapsedGameTime.TotalSeconds;
             var teclado = Keyboard.GetState();
+            var raton = Mouse.GetState();
 
             this._velocidadActual = 0; // cuantsdo se mueve segun su direccion
             if (teclado.IsKeyDown(Keys.W))
@@ -63,6 +64,12 @@ namespace TGC.MonoGame.TP.src.Entidades
                 this._anguloActual *= mseg;
             }
 
+
+            this._dirApuntado = new Vector3(this._dirMovimiento.X , 0.0f , this._dirMovimiento.Y);
+            if (raton.LeftButton == ButtonState.Pressed)
+            {
+                this.Disparar(_dirApuntado);
+            }
             //TODO camara y disparo
             base.Update(gameTime);
         }

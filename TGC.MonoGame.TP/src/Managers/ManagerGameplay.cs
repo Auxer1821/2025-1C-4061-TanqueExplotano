@@ -20,10 +20,11 @@ namespace TGC.MonoGame.TP.src.Managers
     {
         private List<Etanque> _enemigos;
         private Etanque _player;
+         private List<EBala> _balas;
         public ManagerGameplay()
         {
             _enemigos = new List<Etanque>();
-            _player=  new Etanque();
+            _player = new Etanque();
         }
 
         public void AgregarEnemigo(Etanque entidad)

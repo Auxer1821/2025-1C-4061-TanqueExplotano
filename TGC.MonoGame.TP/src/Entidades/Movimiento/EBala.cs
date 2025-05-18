@@ -35,15 +35,15 @@ namespace TGC.MonoGame.TP.src.Entidades
         //----------------------------------------------Metodos-Logica--------------------------------------------------//
 
         public override bool PuedeChocar(){
-            return true;
+            return false;
         }
         public override bool PuedeSerChocado(){
-            return false;
+            return true;
         }
 
         public override void Chocar(DataChoque dataChoque, Entidad entidadEstatica)
         {
-            this._escenario.AgregarAEliminar(this);
+            //this._escenario.AgregarAEliminar(this);
         }
     }
 }

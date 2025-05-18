@@ -35,6 +35,10 @@ namespace TGC.MonoGame.TP.src.Entidades
         public override bool PuedeSerChocado(){
             return false;
         }
+        public override bool PuedeDibujar()
+        {
+            return true;
+        }
 
         public override void Dibujar(GraphicsDevice graphics)
         {

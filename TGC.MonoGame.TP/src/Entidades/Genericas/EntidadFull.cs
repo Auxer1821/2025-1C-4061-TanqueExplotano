@@ -45,6 +45,10 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             return true;
         }
+        public override bool PuedeDibujar()
+        {
+            return true;
+        }
 
         public virtual void ActualizarMatrizMundo()
         {

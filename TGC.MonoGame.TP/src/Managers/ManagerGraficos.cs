@@ -26,8 +26,8 @@ namespace TGC.MonoGame.TP.src.Managers
 
         public void AgregarEntidad(Entidades.Entidad entidad)
         {
-            //Agregar chequeo para que verifique que sea grafica
-            _entidades.Add(entidad);
+            if (entidad.PuedeDibujar())
+                _entidades.Add(entidad);
         }
         public void RemoverEntidad(Entidades.Entidad entidad)
         {

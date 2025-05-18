@@ -59,7 +59,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         }
 
         // ----------------------------- Coliciones entre / Rayo - Esfera --------------------------------------------- //
-
+        public static Boolean DetectarColisiones (BoundingVolume rayoMovimento, BVRayo esferaChocada){ return false; }
         public static Boolean DetectarColisiones (BVRayo rayoMovimento, BVEsfera esferaChocada){
             
             float Cx = rayoMovimento._PuntoPartda.X - esferaChocada._centro.X;

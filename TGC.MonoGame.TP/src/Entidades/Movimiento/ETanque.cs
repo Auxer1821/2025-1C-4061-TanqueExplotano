@@ -93,6 +93,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             // Restar vida (suponiendo que existe una propiedad 'Vida')
             this._tipoTanque.RecibirDanio(bala._danio);
+            this._modelo.ActualizarColor(Color.Tomato);
 
             // Efectos visuales
             // MostrarChispa(choque._puntoContacto);

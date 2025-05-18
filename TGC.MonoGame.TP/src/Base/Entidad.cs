@@ -41,7 +41,11 @@ namespace TGC.MonoGame.TP.src.Entidades
         public virtual bool PuedeSerChocado(){
             throw new NotImplementedException();
         }
-        public virtual void Dibujar(GraphicsDevice graphics){
+        public virtual bool PuedeDibujar(){
+            throw new NotImplementedException();
+        }
+        public virtual void Dibujar(GraphicsDevice graphics)
+        {
             throw new NotImplementedException();
         }
 
