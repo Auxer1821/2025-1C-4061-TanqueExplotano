@@ -119,8 +119,6 @@ namespace TGC.MonoGame.TP.src.Objetos
         public virtual void ActualizarMatrizMundo(Matrix mundo){
             this._matrixMundo= mundo;
         }
-
-
         
     }
 }

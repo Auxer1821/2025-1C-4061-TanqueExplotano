@@ -32,9 +32,9 @@ namespace TGC.MonoGame.TP.src.Arboles
 
         protected override void ConfigurarModelo(ContentManager Content)
         {
-            this._modelo = Content.Load<Model>("Models/tree/tree");
+            this._modelo = Content.Load<Model>("Models/tree/tree2");
             troncoTexture = Content.Load<Texture2D>("Models/tree/tronco2");
-            hojasTexture = Content.Load<Texture2D>("Models/heightmap/pasto2");
+            hojasTexture = Content.Load<Texture2D>("Models/tree/light-green-texture");
 
             //obtenemos los meshes del modelo
             int count = 0;
@@ -60,7 +60,7 @@ namespace TGC.MonoGame.TP.src.Arboles
 
         protected override void AjustarModelo()
         {
-            _matixBase = Matrix.CreateScale(0.004f);
+            _matixBase = Matrix.CreateScale(0.008f);
         }
 
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
@@ -80,11 +80,10 @@ namespace TGC.MonoGame.TP.src.Arboles
             _effect2.Parameters["View"].SetValue(this._matrixView);
             _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
-            //_effect2.Parameters["Texture"].SetValue(troncoTexture);
 
             foreach (var mesh in _modelo.Meshes)
             {
-                if (mesh.Name == meshes[0])
+                if (mesh.Name == meshes[4])
                 {
                     _effect2.Parameters["Texture"].SetValue(troncoTexture);
                 }
@@ -94,7 +93,6 @@ namespace TGC.MonoGame.TP.src.Arboles
                 }
                 _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
                 mesh.Draw();
-                //_effect2.Parameters["Texture"].SetValue(hojasTexture);
             }
         }
  

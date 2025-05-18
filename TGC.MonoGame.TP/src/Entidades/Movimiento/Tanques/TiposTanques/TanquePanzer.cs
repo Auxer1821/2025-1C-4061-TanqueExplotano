@@ -21,6 +21,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         public float danio(){return 20f;} //100
         public string directorioModelo(){return "/Panzer/Panzer";}
         public Vector3 angulo(){return new Vector3(0.0f, -4.71f, 0.0f);}
+        public string directorioTextura(){return "/T90/textures_mod/hullA";}
         public float escala(){return 0.02f;}
         public float cooldown(){return 0.0f;} //10
         public float Vida(){return vida;}

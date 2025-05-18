@@ -19,9 +19,10 @@ namespace TGC.MonoGame.TP.src.Tanques
         public float anguloRotacionMovimiento(){return 10f;}
         public float danio(){return 90f;}
         public string directorioModelo(){return "/T90/T90";}
-        public Vector3 angulo(){return new Vector3(4.71f, 0.0f, 0.0f);}
-        public float escala(){return 0.1f;}
-        public float cooldown(){return 10f;}
+        public Vector3 angulo(){return new Vector3(4.71f, 4.71f, 0.0f);}
+        public float escala(){return 4.0f;} //Posible 0.1f
+        public string directorioTextura(){return "/T90/textures_mod/hullB";}
+        public float cooldown(){return 0.5f;}
         public float Vida(){return vida;}
         public void RecibirDanio(float danio){this.vida -= danio;}
         public bool EstaVivo(){ return vida > 0; }

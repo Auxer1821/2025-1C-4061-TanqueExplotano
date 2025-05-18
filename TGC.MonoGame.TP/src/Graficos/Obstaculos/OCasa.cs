@@ -18,6 +18,7 @@ namespace TGC.MonoGame.TP.src.Casas
         Texture2D paredTexture;
         Texture2D techoTexture;
         Texture2D chimeneaTexture;
+        Texture2D marcoTexture;
         string[] meshes;
         //  En Clase Abstracta
 
@@ -30,9 +31,10 @@ namespace TGC.MonoGame.TP.src.Casas
 
         protected override void ConfigurarModelo(ContentManager Content){
             this._modelo = Content.Load<Model>("Models/house/cartoon_house1");
-            chimeneaTexture = Content.Load<Texture2D>("Models/house/techo");
-            paredTexture = Content.Load<Texture2D>("Models/house/tablasMadera");
+            chimeneaTexture = Content.Load<Texture2D>("Models/house/paredPiedra");
+            paredTexture = Content.Load<Texture2D>("Models/house/textura-roja");
             techoTexture = Content.Load<Texture2D>("Models/house/techo2");
+            marcoTexture = Content.Load<Texture2D>("Models/house/tablasMadera");
 
             //obtenemos los meshes del modelo
             int count = 0;
@@ -83,7 +85,7 @@ namespace TGC.MonoGame.TP.src.Casas
                 }
                 else if (mesh.Name == meshes[3])
                 {
-                    _effect2.Parameters["Texture"].SetValue(paredTexture);
+                    _effect2.Parameters["Texture"].SetValue(marcoTexture);
                 }
                 else if (mesh.Name == meshes[1])
                 {
