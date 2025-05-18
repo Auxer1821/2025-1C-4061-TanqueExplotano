@@ -15,8 +15,8 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
     public static class CalculadorasChoque
     {
         //funciones aux
-        public static float sqr (float x) {return x * x;}
-        
+        public static float sqr(float x) { return x * x; }
+
         /*
             Supuestos:
              - 1er objeto (movil) CHOCA al 2do objeto (estatico)
@@ -27,41 +27,44 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             // Usa despacho dinámico para elegir la sobrecarga correcta en tiempo de ejecución
             return DetectarColisiones((dynamic)Movimiento, (dynamic)Chocada);
         }
-        public static DataChoque ParametrosChoque (BoundingVolume Movimiento, BoundingVolume Chocada){
+        public static DataChoque ParametrosChoque(BoundingVolume Movimiento, BoundingVolume Chocada)
+        {
             return ParametrosChoque((dynamic)Movimiento, (dynamic)Chocada);
         }
 
         // ----------------------------- Coliciones entre Esferas / Esfera - Esfera --------------------------------------------- //
 
-        public static Boolean DetectarColisiones (BVEsfera esferaMovimento, BVEsfera esferaChocada){
-            float x = (esferaMovimento._centro.X- esferaChocada._centro.X);
-            float y = (esferaMovimento._centro.Y- esferaChocada._centro.Y);
-            float z = (esferaMovimento._centro.Z- esferaChocada._centro.Z);
-            float radios = esferaMovimento._radio + esferaChocada._radio;
-            
-            return (x*x + y*y + z*z)<= radios*radios ;
-        }
-        public static DataChoque ParametrosChoque (BVEsfera esferaMovimento, BVEsfera esferaChocada)
+        public static Boolean DetectarColisiones(BVEsfera esferaMovimento, BVEsfera esferaChocada)
         {
-            float x = (esferaMovimento._centro.X- esferaChocada._centro.X);
-            float y = (esferaMovimento._centro.Y- esferaChocada._centro.Y);
-            float z = (esferaMovimento._centro.Z- esferaChocada._centro.Z);
-            
-            float distCentros = (float) Math.Sqrt(x*x + y*y + z*z);
-            
-            float penetracion = esferaMovimento._radio+esferaChocada._radio-distCentros;
+            float x = (esferaMovimento._centro.X - esferaChocada._centro.X);
+            float y = (esferaMovimento._centro.Y - esferaChocada._centro.Y);
+            float z = (esferaMovimento._centro.Z - esferaChocada._centro.Z);
+            float radios = esferaMovimento._radio + esferaChocada._radio;
 
-            Vector3 normal = new Vector3(x,y,z) / distCentros;
+            return (x * x + y * y + z * z) <= radios * radios;
+        }
+        public static DataChoque ParametrosChoque(BVEsfera esferaMovimento, BVEsfera esferaChocada)
+        {
+            float x = (esferaMovimento._centro.X - esferaChocada._centro.X);
+            float y = (esferaMovimento._centro.Y - esferaChocada._centro.Y);
+            float z = (esferaMovimento._centro.Z - esferaChocada._centro.Z);
+
+            float distCentros = (float)Math.Sqrt(x * x + y * y + z * z);
+
+            float penetracion = esferaMovimento._radio + esferaChocada._radio - distCentros;
+
+            Vector3 normal = new Vector3(x, y, z) / distCentros;
 
             Vector3 puntoContacto = esferaChocada._centro + normal * esferaChocada._radio;
-            
+
             return new DataChoque(puntoContacto, penetracion, normal);
         }
 
         // ----------------------------- Coliciones entre / Rayo - Esfera --------------------------------------------- //
-        public static Boolean DetectarColisiones (BoundingVolume rayoMovimento, BVRayo esferaChocada){ return false; }
-        public static Boolean DetectarColisiones (BVRayo rayoMovimento, BVEsfera esferaChocada){
-            
+        public static Boolean DetectarColisiones(BVEsfera esferaChocada, BVRayo rayoMovimento) { return DetectarColisiones(rayoMovimento, esferaChocada); }
+        public static Boolean DetectarColisiones(BVRayo rayoMovimento, BVEsfera esferaChocada)
+        {
+
             float Cx = rayoMovimento._PuntoPartda.X - esferaChocada._centro.X;
             float Cy = rayoMovimento._PuntoPartda.Y - esferaChocada._centro.Y;
             float Cz = rayoMovimento._PuntoPartda.Z - esferaChocada._centro.Z;
@@ -71,20 +74,22 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             float Bz = Cz * rayoMovimento._Direccion.Z;
 
             Cx = sqr(Cx);
-            Cy = sqr (Cy);
-            Cz = sqr (Cz);
-            
-            float B = 2*(Bx + By + Bz);
+            Cy = sqr(Cy);
+            Cz = sqr(Cz);
+
+            float B = 2 * (Bx + By + Bz);
             float C = Cx + Cy + Cz - sqr(esferaChocada._radio);
 
-            if( C <= 0) return true;
+            if (C <= 0) return true;
 
-            if ( B>= 0) return false;
+            if (B >= 0) return false;
 
-            return ( sqr(B)- 4*C ) >= 0;
+            return (sqr(B) - 4 * C) >= 0;
         }
 
-        public static DataChoque ParametrosChoque (BVRayo rayoMovimento, BVEsfera esferaChocada){
+        public static DataChoque ParametrosChoque(BVEsfera esferaChocada, BVRayo rayoMovimento) { return ParametrosChoque(rayoMovimento, esferaChocada); }
+        public static DataChoque ParametrosChoque(BVRayo rayoMovimento, BVEsfera esferaChocada)
+        {
 
 
             // c 000   p 000  d 100  r 1
@@ -97,24 +102,24 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             float Bz = Cz * rayoMovimento._Direccion.Z; //0
 
             Cx = sqr(Cx); //0
-            Cy = sqr (Cy); //0
-            Cz = sqr (Cz); // 0
-            
+            Cy = sqr(Cy); //0
+            Cz = sqr(Cz); // 0
+
             float B = 2 * (Bx + By + Bz); // 0
             float C = Cx + Cy + Cz - sqr(esferaChocada._radio); // -1
 
-            float determinante = (float) Math.Sqrt(sqr(B) - 4*C ); // 2
+            float determinante = (float)Math.Sqrt(sqr(B) - 4 * C); // 2
 
             float raiz1 = (-B - determinante) * 0.5f; // -1
             float raiz2 = (-B + determinante) * 0.5f; // 1
 
             float lamda = 0.0f;
 
-            if (raiz1 > 0 && raiz2 > 0) 
+            if (raiz1 > 0 && raiz2 > 0)
                 lamda = Math.Min(raiz1, raiz2);
-            else if (raiz1 > 0) 
+            else if (raiz1 > 0)
                 lamda = raiz1;
-            else 
+            else
                 lamda = raiz2;
 
 
@@ -124,14 +129,15 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         }
 
         // ----------------------------- Coliciones entre CubosAABB / CuboAAABB - CuboAABB --------------------------------------------- //
-        public static bool DetectarColisiones (BVCuboAABB cuboMovimiento, BVCuboAABB cuboChocado){
+        public static bool DetectarColisiones(BVCuboAABB cuboMovimiento, BVCuboAABB cuboChocado)
+        {
             if (cuboMovimiento._minimo.X > cuboChocado._maximo.X || cuboChocado._minimo.X > cuboMovimiento._maximo.X) return false;
             if (cuboMovimiento._minimo.Y > cuboChocado._maximo.Y || cuboChocado._minimo.Y > cuboMovimiento._maximo.Y) return false;
             if (cuboMovimiento._minimo.Z > cuboChocado._maximo.Z || cuboChocado._minimo.Z > cuboMovimiento._maximo.Z) return false;
             return true;
 
         }
-        public static DataChoque ParametrosChoque (BVCuboAABB cuboMovimiento, BVCuboAABB cuboChocado)
+        public static DataChoque ParametrosChoque(BVCuboAABB cuboMovimiento, BVCuboAABB cuboChocado)
         {
             float dif_centros_x = cuboChocado.Centro().X - cuboMovimiento.Centro().X;
             float dif_centros_y = cuboChocado.Centro().Y - cuboMovimiento.Centro().Y;
@@ -140,25 +146,26 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             float pen_x = ((cuboChocado.LadoX() + cuboMovimiento.LadoX()) / 2) - Math.Abs(dif_centros_x);
             float pen_y = ((cuboChocado.LadoY() + cuboMovimiento.LadoY()) / 2) - Math.Abs(dif_centros_y);
             float pen_z = ((cuboChocado.LadoZ() + cuboMovimiento.LadoZ()) / 2) - Math.Abs(dif_centros_z);
-            
-            float penetracion =  Math.Min(Math.Min(pen_x, pen_y),pen_z);
-            Vector3 normal = Vector3.Zero;
-            
-            if ( penetracion == pen_x)
-            normal = Vector3.UnitX * Math.Sign(dif_centros_x);
-            else if ( penetracion == pen_y)
-            normal = Vector3.UnitZ * Math.Sign(dif_centros_y);
-            else if ( penetracion == pen_z)
-            normal = Vector3.UnitZ * Math.Sign(dif_centros_z);
 
-            Vector3 puntoContacto = (cuboMovimiento.Centro() + cuboChocado.Centro())/2;
+            float penetracion = Math.Min(Math.Min(pen_x, pen_y), pen_z);
+            Vector3 normal = Vector3.Zero;
+
+            if (penetracion == pen_x)
+                normal = Vector3.UnitX * Math.Sign(dif_centros_x);
+            else if (penetracion == pen_y)
+                normal = Vector3.UnitZ * Math.Sign(dif_centros_y);
+            else if (penetracion == pen_z)
+                normal = Vector3.UnitZ * Math.Sign(dif_centros_z);
+
+            Vector3 puntoContacto = (cuboMovimiento.Centro() + cuboChocado.Centro()) / 2;
 
             return new DataChoque(puntoContacto, penetracion, normal);
         }
-        
+
         // ----------------------------- Coliciones entre CuboAABB - Esfera / Esfera - CuboAABB --------------------------------------------- //
-        public static bool DetectarColisiones (BVCuboAABB cuboMovimento, BVEsfera esferaChocada){
-            
+        public static bool DetectarColisiones(BVCuboAABB cuboMovimento, BVEsfera esferaChocada)
+        {
+
             float distancia2 = 0.0f;
 
             if (esferaChocada._centro.X < cuboMovimento._minimo.X) distancia2 += sqr(esferaChocada._centro.X - cuboMovimento._minimo.X);
@@ -167,19 +174,21 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             if (esferaChocada._centro.Y < cuboMovimento._minimo.Y) distancia2 += sqr(esferaChocada._centro.Y - cuboMovimento._minimo.Y);
             else if (esferaChocada._centro.Y > cuboMovimento._minimo.Y) distancia2 += sqr(esferaChocada._centro.Y - cuboMovimento._minimo.Y);
 
-            if (esferaChocada._centro.Z< cuboMovimento._minimo.Z) distancia2 += sqr(esferaChocada._centro.Z- cuboMovimento._minimo.Z);
-            else if (esferaChocada._centro.Z> cuboMovimento._maximo.Z) distancia2 += sqr(esferaChocada._centro.Z- cuboMovimento._maximo.Z);
+            if (esferaChocada._centro.Z < cuboMovimento._minimo.Z) distancia2 += sqr(esferaChocada._centro.Z - cuboMovimento._minimo.Z);
+            else if (esferaChocada._centro.Z > cuboMovimento._maximo.Z) distancia2 += sqr(esferaChocada._centro.Z - cuboMovimento._maximo.Z);
 
             return distancia2 <= esferaChocada._radio * esferaChocada._radio;
         }
 
-        public static bool DetectarColisiones (BVEsfera esferaMovimento, BVCuboAABB cuboChocado){
-            return CalculadorasChoque.DetectarColisiones(cuboChocado,esferaMovimento);
+        public static bool DetectarColisiones(BVEsfera esferaMovimento, BVCuboAABB cuboChocado)
+        {
+            return CalculadorasChoque.DetectarColisiones(cuboChocado, esferaMovimento);
         }
 
 
 
-        public static DataChoque ParametrosChoque (BVCuboAABB cuboMovimento, BVEsfera esferaChocada){
+        public static DataChoque ParametrosChoque(BVCuboAABB cuboMovimento, BVEsfera esferaChocada)
+        {
             // 1. Punto más cercano del cubo al centro de la esfera
             Vector3 puntoMasCercano = new Vector3(
             Math.Clamp(esferaChocada._centro.X, cuboMovimento._minimo.X, cuboMovimento._maximo.X),
@@ -209,10 +218,11 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
 
             // 5. Penetración: cuánto se metió la esfera
             float penetracion = esferaChocada._radio - distancia;
-            return new DataChoque(puntoContacto,penetracion,normal);
+            return new DataChoque(puntoContacto, penetracion, normal);
         }
 
-        public static DataChoque ParametrosChoque (BVEsfera esferaMovimento, BVCuboAABB cuboChocado){
+        public static DataChoque ParametrosChoque(BVEsfera esferaMovimento, BVCuboAABB cuboChocado)
+        {
             //TODO: Optimizar pq hacen lo mismo 
             //TODO: Entrega 3
             // 1. Punto más cercano del cubo al centro de la esfera
@@ -240,7 +250,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
 
             // 5. Penetración: cuánto se metió la esfera
             float penetracion = esferaMovimento._radio - distancia;
-            return new DataChoque(puntoContacto,penetracion,normal);
+            return new DataChoque(puntoContacto, penetracion, normal);
         }
 
 
@@ -369,17 +379,17 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         {
             // Transformamos el centro de la esfera al espacio local del OBB
             Vector3 centroLocal = Vector3.Transform(esferaMovimento._centro - cuboChocado.Centro, Matrix.Invert(cuboChocado.Orientacion));
-            
+
             // Encontramos el punto más cercano en el OBB al centro de la esfera
             Vector3 puntoMasCercano = new Vector3(
                 MathHelper.Clamp(centroLocal.X, -cuboChocado.Tamaño.X, cuboChocado.Tamaño.X),
                 MathHelper.Clamp(centroLocal.Y, -cuboChocado.Tamaño.Y, cuboChocado.Tamaño.Y),
                 MathHelper.Clamp(centroLocal.Z, -cuboChocado.Tamaño.Z, cuboChocado.Tamaño.Z)
             );
-            
+
             // Calculamos la distancia entre el centro y el punto más cercano
             float distancia = (centroLocal - puntoMasCercano).Length();
-            
+
             return distancia <= esferaMovimento._radio;
         }
 
@@ -387,28 +397,28 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         {
             // Transformamos el centro de la esfera al espacio local del OBB
             Vector3 centroLocal = Vector3.Transform(esferaMovimento._centro - cuboChocado.Centro, Matrix.Invert(cuboChocado.Orientacion));
-            
+
             // Encontramos el punto más cercano en el OBB al centro de la esfera
             Vector3 puntoMasCercanoLocal = new Vector3(
                 MathHelper.Clamp(centroLocal.X, -cuboChocado.Tamaño.X, cuboChocado.Tamaño.X),
                 MathHelper.Clamp(centroLocal.Y, -cuboChocado.Tamaño.Y, cuboChocado.Tamaño.Y),
                 MathHelper.Clamp(centroLocal.Z, -cuboChocado.Tamaño.Z, cuboChocado.Tamaño.Z)
             );
-            
+
             // Calculamos la distancia y la normal en espacio local
             Vector3 direccionLocal = centroLocal - puntoMasCercanoLocal;
             float distancia = direccionLocal.Length();
             Vector3 normalLocal = distancia > 0 ? direccionLocal / distancia : Vector3.UnitX;
-            
+
             // Convertimos la normal y el punto de contacto al espacio mundial
             Vector3 normal = Vector3.TransformNormal(normalLocal, cuboChocado.Orientacion);
             normal.Normalize();
-            
+
             Vector3 puntoContactoLocal = puntoMasCercanoLocal;
             Vector3 puntoContacto = Vector3.Transform(puntoContactoLocal, cuboChocado.Orientacion) + cuboChocado.Centro;
-            
+
             float penetracion = esferaMovimento._radio - distancia;
-            
+
             return new DataChoque(puntoContacto, penetracion, normal);
         }
 
@@ -418,15 +428,15 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             // Proyectamos la esfera en el eje Y del cilindro (AABB)
             float distanciaY = Math.Abs(esferaMovimento._centro.Y - cilindroChocado._centro.Y);
             float sumaAlturas = esferaMovimento._radio + cilindroChocado._alto / 2;
-            
+
             if (distanciaY > sumaAlturas)
                 return false;
-            
+
             // Proyectamos en el plano XZ
             Vector2 centroEsferaXZ = new Vector2(esferaMovimento._centro.X, esferaMovimento._centro.Z);
             Vector2 centroCilindroXZ = new Vector2(cilindroChocado._centro.X, cilindroChocado._centro.Z);
             float distanciaXZ = Vector2.Distance(centroEsferaXZ, centroCilindroXZ);
-            
+
             return distanciaXZ <= (esferaMovimento._radio + cilindroChocado._radio);
         }
 
@@ -435,19 +445,19 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             // Primero chequeamos colisión en Y (altura)
             float distanciaY = esferaMovimento._centro.Y - cilindroChocado._centro.Y;
             float penetracionY = (cilindroChocado._alto / 2 + esferaMovimento._radio) - Math.Abs(distanciaY);
-            
+
             // Chequeamos colisión en XZ (radio)
             Vector2 centroEsferaXZ = new Vector2(esferaMovimento._centro.X, esferaMovimento._centro.Z);
             Vector2 centroCilindroXZ = new Vector2(cilindroChocado._centro.X, cilindroChocado._centro.Z);
             Vector2 direccionXZ = centroEsferaXZ - centroCilindroXZ;
             float distanciaXZ = direccionXZ.Length();
             float penetracionXZ = (cilindroChocado._radio + esferaMovimento._radio) - distanciaXZ;
-            
+
             // Determinamos el eje principal de colisión
             Vector3 normal;
             float penetracion;
             Vector3 puntoContacto;
-            
+
             if (penetracionXZ < penetracionY)
             {
                 // Colisión lateral (XZ)
@@ -455,7 +465,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
                     direccionXZ /= distanciaXZ;
                 else
                     direccionXZ = Vector2.UnitX;
-                    
+
                 normal = new Vector3(direccionXZ.X, 0, direccionXZ.Y);
                 penetracion = penetracionXZ;
                 puntoContacto = new Vector3(
@@ -473,7 +483,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
                     cilindroChocado._centro.Y + (cilindroChocado._alto / 2) * Math.Sign(distanciaY),
                     esferaMovimento._centro.Z);
             }
-            
+
             return new DataChoque(puntoContacto, penetracion, normal);
         }
 
@@ -482,42 +492,42 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         {
             // Vector del centro del cilindro al centro de la esfera
             Vector3 centroACentro = esferaMovimento._centro - cilindroChocado._centro;
-            
+
             // Proyectamos en el eje del cilindro
             float proyeccionEje = Vector3.Dot(centroACentro, cilindroChocado._direccion);
             float distanciaEje = Math.Abs(proyeccionEje);
             float sumaAlturas = esferaMovimento._radio + cilindroChocado._alto / 2;
-            
+
             if (distanciaEje > sumaAlturas)
                 return false;
-            
+
             // Proyectamos en el plano perpendicular al eje del cilindro
             Vector3 proyeccionEjeVector = cilindroChocado._direccion * proyeccionEje;
             Vector3 centroEsferaPlano = centroACentro - proyeccionEjeVector;
             float distanciaPlano = centroEsferaPlano.Length();
-            
+
             return distanciaPlano <= (esferaMovimento._radio + cilindroChocado._radio);
         }
 
         public static DataChoque ParametrosChoque(BVEsfera esferaMovimento, BVCilindroOBB cilindroChocado)
         {
             Vector3 centroACentro = esferaMovimento._centro - cilindroChocado._centro;
-            
+
             // Proyección en el eje del cilindro
             float proyeccionEje = Vector3.Dot(centroACentro, cilindroChocado._direccion);
             float distanciaEje = Math.Abs(proyeccionEje);
             float penetracionEje = (cilindroChocado._alto / 2 + esferaMovimento._radio) - distanciaEje;
-            
+
             // Proyección en el plano perpendicular
             Vector3 proyeccionEjeVector = cilindroChocado._direccion * proyeccionEje;
             Vector3 centroEsferaPlano = centroACentro - proyeccionEjeVector;
             float distanciaPlano = centroEsferaPlano.Length();
             float penetracionPlano = (cilindroChocado._radio + esferaMovimento._radio) - distanciaPlano;
-            
+
             Vector3 normal;
             float penetracion;
             Vector3 puntoContacto;
-            
+
             if (penetracionPlano < penetracionEje)
             {
                 // Colisión lateral
@@ -525,7 +535,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
                     centroEsferaPlano /= distanciaPlano;
                 else
                     centroEsferaPlano = Vector3.Cross(cilindroChocado._direccion, Vector3.UnitX);
-                    
+
                 normal = centroEsferaPlano;
                 penetracion = penetracionPlano;
                 puntoContacto = cilindroChocado._centro + proyeccionEjeVector + centroEsferaPlano * cilindroChocado._radio;
@@ -537,7 +547,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
                 penetracion = penetracionEje;
                 puntoContacto = cilindroChocado._centro + cilindroChocado._direccion * (cilindroChocado._alto / 2 * Math.Sign(proyeccionEje));
             }
-            
+
             return new DataChoque(puntoContacto, penetracion, normal);
         }
 
@@ -548,7 +558,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             Vector3 centroAABB = (cuboMovimiento._minimo + cuboMovimiento._maximo) * 0.5f;
             Vector3 tamañoAABB = (cuboMovimiento._maximo - cuboMovimiento._minimo) * 0.5f;
             BVCuboOBB obbAABB = new BVCuboOBB(centroAABB, tamañoAABB, Matrix.Identity);
-            
+
             return DetectarColisiones(obbAABB, cuboChocado);
         }
 
@@ -556,49 +566,49 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         {
             // Implementación similar a OBB-OBB pero considerando que uno no está rotado
             // Esta es una versión simplificada
-            
+
             Vector3 centroAABB = (cuboMovimiento._minimo + cuboMovimiento._maximo) * 0.5f;
             Vector3 tamañoAABB = (cuboMovimiento._maximo - cuboMovimiento._minimo) * 0.5f;
-            
+
             Vector3 centroDiff = cuboChocado.Centro - centroAABB;
-            
+
             // Ejes de prueba: los 3 del AABB y los 3 del OBB
             Vector3[] ejes = {
                 Vector3.UnitX, Vector3.UnitY, Vector3.UnitZ,
                 cuboChocado.Orientacion.Right, cuboChocado.Orientacion.Up, cuboChocado.Orientacion.Backward
             };
-            
+
             float minPenetracion = float.MaxValue;
             Vector3 ejeColision = Vector3.Zero;
-            
+
             foreach (Vector3 eje in ejes)
             {
                 if (eje.LengthSquared() < 0.001f) continue;
-                
+
                 Vector3 ejeNormalizado = Vector3.Normalize(eje);
-                
+
                 // Proyectamos ambos cubos en el eje
                 float proyAABB = ProyectarAABB(cuboMovimiento, ejeNormalizado);
                 float proyOBB = ProyectarOBB(cuboChocado, ejeNormalizado);
-                
+
                 // Proyectamos la distancia entre centros
                 float distancia = Math.Abs(Vector3.Dot(centroDiff, ejeNormalizado));
-                
+
                 // Calculamos la penetración en este eje
                 float penetracion = (proyAABB + proyOBB) - distancia;
-                
+
                 if (penetracion <= 0) return new DataChoque(Vector3.Zero, 0, Vector3.Zero); // No hay colisión
-                
+
                 if (penetracion < minPenetracion)
                 {
                     minPenetracion = penetracion;
                     ejeColision = ejeNormalizado * Math.Sign(Vector3.Dot(centroDiff, ejeNormalizado));
                 }
             }
-            
+
             // Punto de contacto aproximado (podría mejorarse)
             Vector3 puntoContacto = (centroAABB + cuboChocado.Centro) * 0.5f;
-            
+
             return new DataChoque(puntoContacto, minPenetracion, ejeColision);
         }
 
@@ -620,10 +630,10 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
                     cilindroChocado._centro.Z + cilindroChocado._radio
                 )
             );
-            
+
             if (!DetectarColisiones(cuboMovimiento, aabbCilindro))
                 return false;
-            
+
             // Comprobación más precisa
             Vector3 centroCubo = (cuboMovimiento._minimo + cuboMovimiento._maximo) * 0.5f;
             Vector3 puntoMasCercano = new Vector3(
@@ -631,7 +641,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
                 MathHelper.Clamp(centroCubo.Y, cilindroChocado._centro.Y - cilindroChocado._alto / 2, cilindroChocado._centro.Y + cilindroChocado._alto / 2),
                 MathHelper.Clamp(centroCubo.Z, cilindroChocado._centro.Z - cilindroChocado._radio, cilindroChocado._centro.Z + cilindroChocado._radio)
             );
-            
+
             return Vector3.DistanceSquared(centroCubo, puntoMasCercano) <= 0;
         }
 
@@ -640,22 +650,22 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             // Implementación similar a la de esfera-cilindro pero adaptada para AABB
             Vector3 centroCubo = (cuboMovimiento._minimo + cuboMovimiento._maximo) * 0.5f;
             Vector3 tamañoCubo = (cuboMovimiento._maximo - cuboMovimiento._minimo) * 0.5f;
-            
+
             // Comprobación en Y (altura)
             float distanciaY = centroCubo.Y - cilindroChocado._centro.Y;
             float penetracionY = (cilindroChocado._alto / 2 + tamañoCubo.Y) - Math.Abs(distanciaY);
-            
+
             // Comprobación en XZ (radio)
             Vector2 centroCuboXZ = new Vector2(centroCubo.X, centroCubo.Z);
             Vector2 centroCilindroXZ = new Vector2(cilindroChocado._centro.X, cilindroChocado._centro.Z);
             Vector2 direccionXZ = centroCuboXZ - centroCilindroXZ;
             float distanciaXZ = direccionXZ.Length();
             float penetracionXZ = (cilindroChocado._radio + Math.Max(tamañoCubo.X, tamañoCubo.Z)) - distanciaXZ;
-            
+
             Vector3 normal;
             float penetracion;
             Vector3 puntoContacto;
-            
+
             if (penetracionXZ < penetracionY)
             {
                 // Colisión lateral
@@ -663,7 +673,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
                     direccionXZ /= distanciaXZ;
                 else
                     direccionXZ = Vector2.UnitX;
-                    
+
                 normal = new Vector3(direccionXZ.X, 0, direccionXZ.Y);
                 penetracion = penetracionXZ;
                 puntoContacto = new Vector3(
@@ -681,11 +691,12 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
                     cilindroChocado._centro.Y + (cilindroChocado._alto / 2) * Math.Sign(distanciaY),
                     centroCubo.Z);
             }
-            
+
             return new DataChoque(puntoContacto, penetracion, normal);
         }
 
         // ----------------------------- Colisiones Rayo - CuboAABB --------------------------------------------- //
+        public static bool DetectarColisiones(BVCuboAABB cuboChocado, BVRayo rayoMovimiento) { return DetectarColisiones(rayoMovimiento, cuboChocado); }
         public static bool DetectarColisiones(BVRayo rayoMovimiento, BVCuboAABB cuboChocado)
         {
             Vector3 dirFrac = new Vector3(
@@ -693,26 +704,27 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
                 1.0f / rayoMovimiento._Direccion.Y,
                 1.0f / rayoMovimiento._Direccion.Z
             );
-            
+
             float t1 = (cuboChocado._minimo.X - rayoMovimiento._PuntoPartda.X) * dirFrac.X;
             float t2 = (cuboChocado._maximo.X - rayoMovimiento._PuntoPartda.X) * dirFrac.X;
             float t3 = (cuboChocado._minimo.Y - rayoMovimiento._PuntoPartda.Y) * dirFrac.Y;
             float t4 = (cuboChocado._maximo.Y - rayoMovimiento._PuntoPartda.Y) * dirFrac.Y;
             float t5 = (cuboChocado._minimo.Z - rayoMovimiento._PuntoPartda.Z) * dirFrac.Z;
             float t6 = (cuboChocado._maximo.Z - rayoMovimiento._PuntoPartda.Z) * dirFrac.Z;
-            
+
             float tmin = Math.Max(Math.Max(Math.Min(t1, t2), Math.Min(t3, t4)), Math.Min(t5, t6));
             float tmax = Math.Min(Math.Min(Math.Max(t1, t2), Math.Max(t3, t4)), Math.Max(t5, t6));
-            
+
             // Si tmax < 0, el rayo está intersectando pero en la dirección opuesta
             if (tmax < 0) return false;
-            
+
             // Si tmin > tmax, no hay intersección
             if (tmin > tmax) return false;
-            
+
             return true;
         }
 
+        public static DataChoque ParametrosChoque(BVCuboAABB cuboChocado, BVRayo rayoMovimiento) { return ParametrosChoque(rayoMovimiento, cuboChocado); }
         public static DataChoque ParametrosChoque(BVRayo rayoMovimiento, BVCuboAABB cuboChocado)
         {
             Vector3 dirFrac = new Vector3(
@@ -720,24 +732,24 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
                 1.0f / rayoMovimiento._Direccion.Y,
                 1.0f / rayoMovimiento._Direccion.Z
             );
-            
+
             float t1 = (cuboChocado._minimo.X - rayoMovimiento._PuntoPartda.X) * dirFrac.X;
             float t2 = (cuboChocado._maximo.X - rayoMovimiento._PuntoPartda.X) * dirFrac.X;
             float t3 = (cuboChocado._minimo.Y - rayoMovimiento._PuntoPartda.Y) * dirFrac.Y;
             float t4 = (cuboChocado._maximo.Y - rayoMovimiento._PuntoPartda.Y) * dirFrac.Y;
             float t5 = (cuboChocado._minimo.Z - rayoMovimiento._PuntoPartda.Z) * dirFrac.Z;
             float t6 = (cuboChocado._maximo.Z - rayoMovimiento._PuntoPartda.Z) * dirFrac.Z;
-            
+
             float tmin = Math.Max(Math.Max(Math.Min(t1, t2), Math.Min(t3, t4)), Math.Min(t5, t6));
             float tmax = Math.Min(Math.Min(Math.Max(t1, t2), Math.Max(t3, t4)), Math.Max(t5, t6));
-            
+
             if (tmax < 0 || tmin > tmax)
                 return new DataChoque(Vector3.Zero, 0, Vector3.Zero);
-            
+
             // Calculamos el punto de contacto y la normal
             Vector3 puntoContacto = rayoMovimiento._PuntoPartda + rayoMovimiento._Direccion * tmin;
             Vector3 normal = Vector3.Zero;
-            
+
             // Determinamos la normal según la cara con la que chocó
             if (tmin == t1) normal = -Vector3.UnitX;
             else if (tmin == t2) normal = Vector3.UnitX;
@@ -745,50 +757,52 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             else if (tmin == t4) normal = Vector3.UnitY;
             else if (tmin == t5) normal = -Vector3.UnitZ;
             else if (tmin == t6) normal = Vector3.UnitZ;
-            
+
             return new DataChoque(puntoContacto, 0, normal);
         }
 
         // ----------------------------- Colisiones Rayo - CuboOBB --------------------------------------------- //
+        public static bool DetectarColisiones(BVCuboOBB cuboChocado, BVRayo rayoMovimiento) { return DetectarColisiones(rayoMovimiento, cuboChocado); }
         public static bool DetectarColisiones(BVRayo rayoMovimiento, BVCuboOBB cuboChocado)
         {
             // Transformamos el rayo al espacio local del OBB
             Matrix invOrientacion = Matrix.Invert(cuboChocado.Orientacion);
             Vector3 origenLocal = Vector3.Transform(rayoMovimiento._PuntoPartda - cuboChocado.Centro, invOrientacion);
             Vector3 direccionLocal = Vector3.TransformNormal(rayoMovimiento._Direccion, invOrientacion);
-            
+
             // Ahora tratamos como un AABB
             BVCuboAABB aabbLocal = new BVCuboAABB(
                 -cuboChocado.Tamaño,
                 cuboChocado.Tamaño
             );
-            
+
             BVRayo rayoLocal = new BVRayo(direccionLocal, origenLocal);
             return DetectarColisiones(rayoLocal, aabbLocal);
         }
 
+        public static DataChoque ParametrosChoque(BVCuboOBB cuboChocado, BVRayo rayoMovimiento) { return ParametrosChoque(rayoMovimiento, cuboChocado); }
         public static DataChoque ParametrosChoque(BVRayo rayoMovimiento, BVCuboOBB cuboChocado)
         {
             Matrix invOrientacion = Matrix.Invert(cuboChocado.Orientacion);
             Vector3 origenLocal = Vector3.Transform(rayoMovimiento._PuntoPartda - cuboChocado.Centro, invOrientacion);
             Vector3 direccionLocal = Vector3.TransformNormal(rayoMovimiento._Direccion, invOrientacion);
-            
+
             BVCuboAABB aabbLocal = new BVCuboAABB(
                 -cuboChocado.Tamaño,
                 cuboChocado.Tamaño
             );
-            
+
             BVRayo rayoLocal = new BVRayo(direccionLocal, origenLocal);
             DataChoque choqueLocal = ParametrosChoque(rayoLocal, aabbLocal);
-            
+
             if (choqueLocal._penetracion <= 0)
                 return new DataChoque(Vector3.Zero, 0, Vector3.Zero);
-            
+
             // Convertimos los datos de vuelta al espacio mundial
             Vector3 puntoContacto = Vector3.Transform(choqueLocal._puntoContacto, cuboChocado.Orientacion) + cuboChocado.Centro;
             Vector3 normal = Vector3.TransformNormal(choqueLocal._normal, cuboChocado.Orientacion);
             normal.Normalize();
-            
+
             return new DataChoque(puntoContacto, 0, normal);
         }
 
@@ -824,12 +838,12 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             float sumaAlturas = cilindro1._alto / 2 + cilindro2._alto / 2;
             if (distanciaY > sumaAlturas)
                 return false;
-            
+
             // Comprobación en XZ (radio)
             Vector2 centro1XZ = new Vector2(cilindro1._centro.X, cilindro1._centro.Z);
             Vector2 centro2XZ = new Vector2(cilindro2._centro.X, cilindro2._centro.Z);
             float distanciaXZ = Vector2.Distance(centro1XZ, centro2XZ);
-            
+
             return distanciaXZ <= (cilindro1._radio + cilindro2._radio);
         }
 
@@ -838,18 +852,18 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             // Comprobación en Y
             float distanciaY = cilindro1._centro.Y - cilindro2._centro.Y;
             float penetracionY = (cilindro1._alto / 2 + cilindro2._alto / 2) - Math.Abs(distanciaY);
-            
+
             // Comprobación en XZ
             Vector2 centro1XZ = new Vector2(cilindro1._centro.X, cilindro1._centro.Z);
             Vector2 centro2XZ = new Vector2(cilindro2._centro.X, cilindro2._centro.Z);
             Vector2 direccionXZ = centro1XZ - centro2XZ;
             float distanciaXZ = direccionXZ.Length();
             float penetracionXZ = (cilindro1._radio + cilindro2._radio) - distanciaXZ;
-            
+
             Vector3 normal;
             float penetracion;
             Vector3 puntoContacto;
-            
+
             if (penetracionXZ < penetracionY)
             {
                 // Colisión lateral
@@ -857,7 +871,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
                     direccionXZ /= distanciaXZ;
                 else
                     direccionXZ = Vector2.UnitX;
-                    
+
                 normal = new Vector3(direccionXZ.X, 0, direccionXZ.Y);
                 penetracion = penetracionXZ;
                 puntoContacto = new Vector3(
@@ -875,8 +889,103 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
                     cilindro2._centro.Y + (cilindro2._alto / 2) * Math.Sign(distanciaY),
                     (cilindro1._centro.Z + cilindro2._centro.Z) * 0.5f);
             }
-            
+
             return new DataChoque(puntoContacto, penetracion, normal);
+        }
+        
+
+        // ----------------------------- Colisiones Rayo - Rayo --------------------------------------------- //
+        public static bool DetectarColisiones(BVRayo rayo1, BVRayo rayo2)
+        {
+            // Vector entre los puntos de partida de los rayos
+            Vector3 w0 = rayo1._PuntoPartda - rayo2._PuntoPartda;
+            
+            // Productos escalares para la fórmula
+            float a = Vector3.Dot(rayo1._Direccion, rayo1._Direccion);
+            float b = Vector3.Dot(rayo1._Direccion, rayo2._Direccion);
+            float c = Vector3.Dot(rayo2._Direccion, rayo2._Direccion);
+            float d = Vector3.Dot(rayo1._Direccion, w0);
+            float e = Vector3.Dot(rayo2._Direccion, w0);
+            
+            // Determinante - si es 0, los rayos son paralelos
+            float determinante = a * c - b * b;
+            
+            // Si los rayos son casi paralelos
+            if (Math.Abs(determinante) < 1e-6f)
+            {
+                // Los rayos son paralelos - verificamos si son colineales
+                // Calculamos la distancia entre las líneas
+                float distancia = Vector3.Cross(rayo1._Direccion, w0).Length() / rayo1._Direccion.Length();
+                return distancia < 1e-6f; // Consideramos colisión si son esencialmente la misma línea
+            }
+            
+            // Calculamos parámetros de intersección
+            float s = (b * e - c * d) / determinante;
+            float t = (a * e - b * d) / determinante;
+            
+            // Puntos de intersección en cada rayo
+            Vector3 puntoEnRayo1 = rayo1._PuntoPartda + rayo1._Direccion * s;
+            Vector3 puntoEnRayo2 = rayo2._PuntoPartda + rayo2._Direccion * t;
+            
+            // Verificamos si los puntos de intersección coinciden (dentro de un margen de error)
+            return Vector3.DistanceSquared(puntoEnRayo1, puntoEnRayo2) < 1e-6f;
+        }
+
+        public static DataChoque ParametrosChoque(BVRayo rayo1, BVRayo rayo2)
+        {
+            Vector3 w0 = rayo1._PuntoPartda - rayo2._PuntoPartda;
+            
+            float a = Vector3.Dot(rayo1._Direccion, rayo1._Direccion);
+            float b = Vector3.Dot(rayo1._Direccion, rayo2._Direccion);
+            float c = Vector3.Dot(rayo2._Direccion, rayo2._Direccion);
+            float d = Vector3.Dot(rayo1._Direccion, w0);
+            float e = Vector3.Dot(rayo2._Direccion, w0);
+            
+            float determinante = a * c - b * b;
+            
+            if (Math.Abs(determinante) < 1e-6f)
+            {
+                // Rayos paralelos o colineales
+                if (Vector3.Cross(rayo1._Direccion, w0).LengthSquared() < 1e-6f)
+                {
+                    // Rayos colineales - devolvemos un punto arbitrario (el punto de partida del primer rayo)
+                    // La normal es perpendicular a la dirección del rayo
+                    Vector3 normalN = Vector3.Normalize(Vector3.Cross(rayo1._Direccion, 
+                        Math.Abs(rayo1._Direccion.X) > 0.1f ? Vector3.UnitY : Vector3.UnitX));
+                    
+                    return new DataChoque(rayo1._PuntoPartda, 0, normalN);
+                }
+                
+                // Rayos paralelos pero no colineales - no hay colisión
+                return new DataChoque(Vector3.Zero, 0, Vector3.Zero);
+            }
+            
+            float s = (b * e - c * d) / determinante;
+            float t = (a * e - b * d) / determinante;
+            
+            Vector3 puntoEnRayo1 = rayo1._PuntoPartda + rayo1._Direccion * s;
+            Vector3 puntoEnRayo2 = rayo2._PuntoPartda + rayo2._Direccion * t;
+            
+            if (Vector3.DistanceSquared(puntoEnRayo1, puntoEnRayo2) > 1e-6f)
+            {
+                // Los rayos no se intersectan realmente
+                return new DataChoque(Vector3.Zero, 0, Vector3.Zero);
+            }
+            
+            // Calculamos la normal como el producto cruz de las direcciones de los rayos
+            Vector3 normal = Vector3.Normalize(Vector3.Cross(rayo1._Direccion, rayo2._Direccion));
+            
+            // Si el producto cruz es cero (rayos paralelos pero ya manejado antes), usamos un vector perpendicular
+            if (normal.LengthSquared() < 1e-6f)
+            {
+                normal = Vector3.Normalize(Vector3.Cross(rayo1._Direccion, 
+                    Math.Abs(rayo1._Direccion.X) > 0.1f ? Vector3.UnitY : Vector3.UnitX));
+            }
+            
+            // El punto de contacto es el punto medio entre los dos puntos calculados
+            Vector3 puntoContacto = (puntoEnRayo1 + puntoEnRayo2) * 0.5f;
+            
+            return new DataChoque(puntoContacto, 0, normal);
         }
 
         

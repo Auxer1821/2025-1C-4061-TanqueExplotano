@@ -27,9 +27,9 @@ namespace TGC.MonoGame.TP.src.Managers
 
         public void AgregarEntidad(Entidades.Entidad entidad)
         {
-            if(entidad.PuedeChocar())
+            if (entidad.PuedeChocar())
                 _movimientos.Add(entidad);
-            else if(entidad.PuedeSerChocado())
+            else if (entidad.PuedeSerChocado())
                 _estaticas.Add(entidad);
         }
 

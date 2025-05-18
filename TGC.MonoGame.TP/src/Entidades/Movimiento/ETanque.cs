@@ -89,7 +89,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._velocidadActual = 0.0f;
         }
 
-        private void RecibirDaño(DataChoque choque,  EBala bala)
+        protected virtual void RecibirDaño(DataChoque choque,  EBala bala)
         {
             // Restar vida (suponiendo que existe una propiedad 'Vida')
             this._tipoTanque.RecibirDanio(bala._danio);
@@ -140,6 +140,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         // 
         public void Disparar(Vector3 apuntado){
             EBala bala = new EBala();
+            bala.Initialize(this._escenario);
             bala.ActualizarDatos(this._dirApuntado,this._posicion); //TODO - Cambiar lugar de disparo para que no se autodestruya
             this._escenario.AgregarACrear(bala); //temporal
         }

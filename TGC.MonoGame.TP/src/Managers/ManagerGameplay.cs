@@ -25,6 +25,7 @@ namespace TGC.MonoGame.TP.src.Managers
         {
             _enemigos = new List<Etanque>();
             _player = new Etanque();
+            _balas = new List<EBala>();
         }
 
         public void AgregarEnemigo(Etanque entidad)
@@ -55,7 +56,26 @@ namespace TGC.MonoGame.TP.src.Managers
             {
                 tanque.Update(gameTime);
             }
+            foreach (EBala bala in _balas)
+            {
+                bala.Update(gameTime);
+            }
         }
 
+        internal void AgregarEntidad(Entidad entidad)
+        {
+            if (entidad._tipo == TipoEntidad.Bala)
+            {
+                this._balas.Add((EBala)entidad);
+            }
+        }
+
+        internal void RemoverEntidad(Entidad entidad)
+        {
+            if (entidad._tipo == TipoEntidad.Bala)
+            {
+                this._balas.Remove((EBala)entidad);
+            }
+        }
     }
 }

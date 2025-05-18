@@ -12,27 +12,28 @@ namespace TGC.MonoGame.TP.src.Entidades
     /// <summary>
     ///     Clase Abstracta para todos los objetos
     /// </summary>
-    public class EJugador:Etanque
+    public class EJugador : Etanque
     {
-        
-        
+
+
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
-        public EJugador(){}
-        public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
-            base.Initialize(Graphics,Mundo,View,Projection,Content, escenario);
+        public EJugador() { }
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario)
+        {
+            base.Initialize(Graphics, Mundo, View, Projection, Content, escenario);
             this._modelo.ActualizarColor(Color.RoyalBlue);
         }
 
         //----------------------------------------------Metodos-Logica--------------------------------------------------//
 
-    
+
 
 
         public override void Update(GameTime gameTime)
         {
             //setear los valores de movimiento y disparo
-            float mseg = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            float mseg = (float)gameTime.ElapsedGameTime.TotalSeconds;
             var teclado = Keyboard.GetState();
             var raton = Mouse.GetState();
 
@@ -65,7 +66,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             }
 
 
-            this._dirApuntado = new Vector3(this._dirMovimiento.X , 0.0f , this._dirMovimiento.Y);
+            this._dirApuntado = new Vector3(this._dirMovimiento.X, 0.0f, this._dirMovimiento.Y);
             if (raton.LeftButton == ButtonState.Pressed)
             {
                 this.Disparar(_dirApuntado);
@@ -73,6 +74,8 @@ namespace TGC.MonoGame.TP.src.Entidades
             //TODO camara y disparo
             base.Update(gameTime);
         }
+        
+        protected override void RecibirDaño(DataChoque choque,  EBala bala){}
         
 
 
