@@ -1,4 +1,5 @@
 using System;
+using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -67,12 +68,23 @@ namespace TGC.MonoGame.TP.src.Entidades
 
 
             this._dirApuntado = new Vector3(this._dirMovimiento.X, 0.0f, this._dirMovimiento.Y);
-            if (raton.LeftButton == ButtonState.Pressed)
+            if (this.PuedeDisparar())
             {
-                this.Disparar(_dirApuntado);
+                this._modelo.ActualizarColor(Color.RoyalBlue);
+                if (raton.LeftButton == ButtonState.Pressed)
+                {
+                    this.Disparar(_dirApuntado);
+                    this._modelo.ActualizarColor(Color.DarkGoldenrod);
+                    this._cooldownActual = 0;
+                }
             }
+            else
+            {
+                this._cooldownActual += 1*mseg;
+            }
+            
             //TODO camara y disparo
-            base.Update(gameTime);
+                base.Update(gameTime);
         }
         
         protected override void RecibirDaño(DataChoque choque,  EBala bala){}

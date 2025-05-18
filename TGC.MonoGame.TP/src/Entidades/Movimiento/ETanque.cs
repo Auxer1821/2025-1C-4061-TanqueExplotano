@@ -20,7 +20,8 @@ namespace TGC.MonoGame.TP.src.Entidades
         protected TipoTanque _tipoTanque;
         protected Vector2 _dirMovimiento = Vector2.UnitX;
         protected Vector3 _dirApuntado = Vector3.UnitX;
-        
+        protected EBala _bala;
+        protected float _cooldownActual;
         protected float _velocidadActual;
         protected float _anguloActual;
 
@@ -31,6 +32,8 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._modelo = new MTanque(_tipoTanque);
             this._tipo = TipoEntidad.Tanque;
             this._activo = true;
+            this._bala = new EBala();
+            this._cooldownActual = 0.0f;
             //TODO - Crear Bounding Volume especializados // Eliminarlo de EntidadFull
             base.Initialize(Graphics,Mundo,View,Projection,Content, escenario);
         }
@@ -93,7 +96,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             // Restar vida (suponiendo que existe una propiedad 'Vida')
             this._tipoTanque.RecibirDanio(bala._danio);
-            this._modelo.ActualizarColor(Color.Tomato);
+            this._modelo.ActualizarColor(Color.DarkOrange);
 
             // Efectos visuales
             // MostrarChispa(choque._puntoContacto);
@@ -101,7 +104,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             // Modificar la mesh del modelo para simular el impacto (Entrega 4)
 
             // Chequear destrucción
-            if (this._tipoTanque.EstaVivo()) this.Destruir();
+            if (! this._tipoTanque.EstaVivo()) this.Destruir();
         }
         
 
@@ -115,15 +118,21 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._escenario.AgregarACrear(this);
         }
 
+        protected bool PuedeDisparar()
+        {
+            return this._cooldownActual > this._tipoTanque.cooldown();
+        }
+
 //---------------------------------------------MOVIMIENTO-Y-APUNTADO---------------------------------------------------//
 
         // Función que actualiza los valores de posición y ángulo
         // Para luego usarlos y crear la matriz mundo
-        public void Mover(){
+        public void Mover()
+        {
             this._posicion += new Vector3(_dirMovimiento.X, 0, _dirMovimiento.Y) * _velocidadActual;
 
             var angulo = this._angulo;
-            angulo.Z -= _anguloActual;            
+            angulo.Z -= _anguloActual;
             this._angulo = angulo;
 
             this.ActualizarMatrizMundo(); // Puntual para la grafica
@@ -139,10 +148,9 @@ namespace TGC.MonoGame.TP.src.Entidades
         }
         // 
         public void Disparar(Vector3 apuntado){
-            EBala bala = new EBala();
-            bala.Initialize(this._escenario);
-            bala.ActualizarDatos(this._dirApuntado,this._posicion); //TODO - Cambiar lugar de disparo para que no se autodestruya
-            this._escenario.AgregarACrear(bala); //temporal
+            this._bala.Initialize(this._escenario, this._tipoTanque.danio());
+            this._bala.ActualizarDatos(this._dirApuntado,this._posicion); //TODO - Cambiar lugar de disparo para que no se autodestruya
+            this._escenario.AgregarACrear(this._bala); //temporal
         }
 
         //

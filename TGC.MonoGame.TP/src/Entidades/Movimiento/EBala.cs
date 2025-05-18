@@ -30,8 +30,9 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._tipo = TipoEntidad.Bala;
             base.Initialize(Graphics, Mundo, View, Projection, Content, escenario);
         }
-        public void Initialize(Escenarios.Escenario escenario)
+        public void Initialize(Escenarios.Escenario escenario, float danio)
         {
+            this._danio = danio;
             this._tipo = TipoEntidad.Bala;
             this._escenario = escenario;
         }
