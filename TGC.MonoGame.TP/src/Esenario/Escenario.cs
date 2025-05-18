@@ -23,8 +23,9 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private Managers.ManagerColisiones _managerColision;
 
         private Camaras.Camara _camara;
+        //TODO: Que sea el primero en ser dibujado
         private Entidades.ESkyBox _skyBox;
-            //TODO: Que sea el primero en ser dibujado
+        private Entidades.EPasto[] pastos = new Entidades.EPasto[100];
 
         
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -52,6 +53,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             // Inicializar terreno
             _terreno = new Terrenos.Terreno();
             _terreno.Initialize(graphicsDevice, world, view, projection,  content);
+            
             
             //Posiciones usadas
             List<Vector3> posicionesUsadas = new List<Vector3>();
@@ -111,6 +113,25 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 }
             }
 
+            // crear pasto
+            for (int i = 0; i < 100; i++)
+            {
+                var pasto = new Entidades.EPasto();
+                float x = random.Next(-300, 300);
+                float z = random.Next(-300, 300);
+                var pos = new Vector2(x,z); 
+                 if(PosicionesLibre(pos, posicionesUsadas,1)){
+                    pasto.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content, this);
+                    pastos[i] = pasto;
+                    posicionesUsadas.Add(new Vector3(x,z,1));
+                }
+                else
+                {
+                    i--;
+                }
+
+            }
+
             // Crear Coordillera
             for(int i = 0; i< 5; i++){
                 //IZQUIERDA
@@ -147,20 +168,37 @@ namespace TGC.MonoGame.TP.src.Escenarios
         {
             _managerGrafico.DibujarObjetos(graphicsDevice);
             _terreno.Dibujar(graphicsDevice);
+            //pasto debe ser dibujado al final por la transparencia
+            foreach (var pasto in pastos)
+            {
+                if (pasto != null)
+                {
+                    pasto.Dibujar(graphicsDevice);
+                }
+            }
         }
 
         public void ActualizarCamara(GameTime gameTime){
             _camara.Actualizar(gameTime);
             _managerGrafico.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
             _terreno.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
+            //TODO pasto dentro de manager grafico
+            foreach (var pasto in pastos)
+            {
+                if (pasto != null)
+                {
+                    pasto.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
+                }
+            }
         }
 
-        public void Update(GameTime gameTime){
-            
+        public void Update(GameTime gameTime)
+        {
+
             //manager gamplay
             _managerColision.VerificarColisiones();
             this.ActualizarCamara(gameTime);
-        }
+            }
 
 
         //----------------------------------Funciones-auxiliares--------------------------------------------//

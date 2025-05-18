@@ -19,6 +19,12 @@
 /processorParam:DebugMode=Auto
 /build:Effects/BasicShader.fx
 
+#begin Effects/shaderPasto.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/shaderPasto.fx
+
 #begin Effects/shaderRuedas.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -42,6 +48,12 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Effects/shaderTextura.fx
+
+#begin Effects/shaderTransparencia.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/shaderTransparencia.fx
 
 #begin Models/heightmap/crater2.png
 /importer:TextureImporter
@@ -90,6 +102,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Models/heightmap/pasto2.jpg
+
+#begin Models/heightmap/pastoAlto.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/heightmap/pastoAlto.png
 
 #begin Models/heightmap/tierra.jpg
 /importer:TextureImporter
