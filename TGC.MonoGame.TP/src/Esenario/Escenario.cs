@@ -28,7 +28,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private List<Entidad> _entidadesCrear;
         private bool _faltaCrear;
 
-        private Camaras.Camara _camara;
+        private Cameras.FreeCamera _camara;
         //TODO: Que sea el primero en ser dibujado
         private Entidades.ESkyBox _skyBox; //TODO -> Actualizar en el manager Graficos para que se dibujen primeros / ultimos
         private Entidades.EPasto[] pastos = new Entidades.EPasto[100];
@@ -47,7 +47,8 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
         public void Initialize(GraphicsDevice graphicsDevice, Matrix world, ContentManager content)
         {
-            _camara = new Camaras.Camara(Vector3.UnitZ * 150, Vector3.Zero, graphicsDevice.Viewport.AspectRatio);
+            var screenSize = new Point(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2);
+            _camara = new Cameras.FreeCamera(graphicsDevice.Viewport.AspectRatio, Vector3.UnitZ * 150, screenSize);
             Matrix view = _camara.Vista;
             Matrix projection = _camara.Proyeccion;
 
@@ -206,9 +207,8 @@ namespace TGC.MonoGame.TP.src.Escenarios
             }
         }
 
-        public void ActualizarCamara(GameTime gameTime)
-        {
-            _camara.Actualizar(gameTime);
+        public void ActualizarCamara(GameTime gameTime){
+            _camara.Update(gameTime);
             _managerGrafico.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
             _terreno.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
             //TODO pasto dentro de manager grafico
