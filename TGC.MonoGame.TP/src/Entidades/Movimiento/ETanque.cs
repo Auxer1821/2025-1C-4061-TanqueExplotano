@@ -33,6 +33,8 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._tipo = TipoEntidad.Tanque;
             this._activo = true;
             this._bala = new EBala();
+            this._bala.Initialize(Graphics,Mundo,View,Projection,Content, escenario);
+            this._bala.setDanio(this._tipoTanque.danio());
             this._cooldownActual = 0.0f;
             //TODO - Crear Bounding Volume especializados // Eliminarlo de EntidadFull
             base.Initialize(Graphics,Mundo,View,Projection,Content, escenario);
@@ -92,8 +94,9 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._velocidadActual = 0.0f;
         }
 
-        protected virtual void RecibirDaño(DataChoque choque,  EBala bala)
+        protected virtual void RecibirDaño(DataChoque choque, EBala bala)
         {
+            if (!this._tipoTanque.EstaVivo()) return;
             // Restar vida (suponiendo que existe una propiedad 'Vida')
             this._tipoTanque.RecibirDanio(bala._danio);
             this._modelo.ActualizarColor(Color.DarkOrange);
@@ -104,7 +107,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             // Modificar la mesh del modelo para simular el impacto (Entrega 4)
 
             // Chequear destrucción
-            if (! this._tipoTanque.EstaVivo()) this.Destruir();
+            if (!this._tipoTanque.EstaVivo()) this.Destruir();
         }
         
 
@@ -148,7 +151,6 @@ namespace TGC.MonoGame.TP.src.Entidades
         }
         // 
         public void Disparar(Vector3 apuntado){
-            this._bala.Initialize(this._escenario, this._tipoTanque.danio());
             this._bala.ActualizarDatos(this._dirApuntado,this._posicion); //TODO - Cambiar lugar de disparo para que no se autodestruya
             this._escenario.AgregarACrear(this._bala); //temporal
         }

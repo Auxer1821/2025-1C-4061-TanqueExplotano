@@ -52,8 +52,6 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             this._anguloActual = 0.0f; //cuanto rota segun su direcion
 
-            if (_velocidadActual != 0)
-            {
                 if (teclado.IsKeyDown(Keys.A))
                 {
                     this._anguloActual -= this._tipoTanque.anguloRotacionMovimiento();
@@ -64,7 +62,6 @@ namespace TGC.MonoGame.TP.src.Entidades
                     this._anguloActual += this._tipoTanque.anguloRotacionMovimiento();
                 }
                 this._anguloActual *= mseg;
-            }
 
 
             this._dirApuntado = new Vector3(this._dirMovimiento.X, 0.0f, this._dirMovimiento.Y);

@@ -72,10 +72,18 @@ namespace TGC.MonoGame.TP.src.Managers
 
         internal void RemoverEntidad(Entidad entidad)
         {
-            if (entidad._tipo == TipoEntidad.Bala)
+            switch (entidad._tipo)
             {
-                this._balas.Remove((EBala)entidad);
+                case TipoEntidad.Bala:
+                    this._balas.Remove((EBala)entidad);
+                    break;
+                case TipoEntidad.Tanque:
+                    this._enemigos.Remove((Etanque)entidad);
+                    break;
+                default:
+                    break;
             }
+
         }
     }
 }

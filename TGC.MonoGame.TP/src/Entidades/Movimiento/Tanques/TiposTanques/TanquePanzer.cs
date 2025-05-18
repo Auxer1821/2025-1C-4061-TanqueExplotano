@@ -22,7 +22,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         public string directorioModelo(){return "/Panzer/Panzer";}
         public Vector3 angulo(){return new Vector3(0.0f, -4.71f, 0.0f);}
         public float escala(){return 0.02f;}
-        public float cooldown(){return 0.1f;} //10
+        public float cooldown(){return 0.0f;} //10
         public float Vida(){return vida;}
         public void RecibirDanio(float danio){this.vida -= danio;}
         public bool EstaVivo(){ return vida > 0; }
