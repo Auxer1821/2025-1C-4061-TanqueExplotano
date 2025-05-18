@@ -187,25 +187,25 @@ namespace TGC.MonoGame.TP.src.Cameras
             if (keyboardState.IsKeyDown(Keys.LeftShift))
                 currentMovementSpeed *= 5f;
 
-            if (keyboardState.IsKeyDown(Keys.A) || keyboardState.IsKeyDown(Keys.Left))
+            if (keyboardState.IsKeyDown(Keys.Left))
             {
                 Position += -RightDirection * currentMovementSpeed * elapsedTime;
                 _changed = true;
             }
 
-            if (keyboardState.IsKeyDown(Keys.D) || keyboardState.IsKeyDown(Keys.Right))
+            if (keyboardState.IsKeyDown(Keys.Right))
             {
                 Position += RightDirection * currentMovementSpeed * elapsedTime;
                 _changed = true;
             }
 
-            if (keyboardState.IsKeyDown(Keys.W) || keyboardState.IsKeyDown(Keys.Up))
+            if (keyboardState.IsKeyDown(Keys.Up))
             {
                 Position += FrontDirection * currentMovementSpeed * elapsedTime;
                 _changed = true;
             }
 
-            if (keyboardState.IsKeyDown(Keys.S) || keyboardState.IsKeyDown(Keys.Down))
+            if (keyboardState.IsKeyDown(Keys.Down))
             {
                 Position += -FrontDirection * currentMovementSpeed * elapsedTime;
                 _changed = true;
@@ -216,13 +216,13 @@ namespace TGC.MonoGame.TP.src.Cameras
         {
             var mouseState = Mouse.GetState();
 
-            if (mouseState.RightButton.Equals(ButtonState.Pressed))
+            //if (mouseState.RightButton.Equals(ButtonState.Pressed))
             {
                 var mouseDelta = mouseState.Position.ToVector2() - _pastMousePosition;
                 mouseDelta *= MouseSensitivity * elapsedTime;
 
-                _yaw -= mouseDelta.X;
-                _pitch += mouseDelta.Y;
+                _yaw += mouseDelta.X;
+                _pitch -= mouseDelta.Y;
 
                 if (_pitch > 89.0f)
                     _pitch = 89.0f;
