@@ -22,7 +22,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private Managers.ManagerGrafico _managerGrafico;
         private Managers.ManagerColisiones _managerColision;
 
-        private Camaras.Camara _camara;
+        private Cameras.FreeCamera _camara;
         private Entidades.ESkyBox _skyBox;
             //TODO: Que sea el primero en ser dibujado
 
@@ -41,7 +41,8 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
         public void Initialize(GraphicsDevice graphicsDevice, Matrix world, ContentManager content)
         {
-            _camara = new Camaras.Camara(Vector3.UnitZ * 150, Vector3.Zero , graphicsDevice.Viewport.AspectRatio);
+            var screenSize = new Point(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2);
+            _camara = new Cameras.FreeCamera(graphicsDevice.Viewport.AspectRatio, Vector3.UnitZ * 150, screenSize);
             Matrix view = _camara.Vista;
             Matrix projection = _camara.Proyeccion;
             //inicializar el skybox
@@ -150,7 +151,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
         }
 
         public void ActualizarCamara(GameTime gameTime){
-            _camara.Actualizar(gameTime);
+            _camara.Update(gameTime);
             _managerGrafico.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
             _terreno.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
         }
