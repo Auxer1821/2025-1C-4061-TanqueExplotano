@@ -138,8 +138,8 @@ namespace TGC.MonoGame.TP.src.Tanques
                 else if (mesh.Name == "Turret" || mesh.Name == "Cannon")
                 {
                     //posiblemente de problemas al calcular con las normales del mapa
-                    _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta - MathHelper.PiOver2)  * _matrixMundo);
-                    Matrix transform = mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta - MathHelper.PiOver2) * _matrixMundo;
+                    _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta)  * _matrixMundo);
+                    Matrix transform = mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta) * _matrixMundo;
                     if (mesh.Name == "Cannon")
                     {
                         _effect2.Parameters["World"].SetValue(Matrix.CreateRotationX(-alturaTorreta - MathHelper.PiOver2 + 1f) * transform);
@@ -252,8 +252,13 @@ namespace TGC.MonoGame.TP.src.Tanques
             // Calcular ángulo deseado en el plano horizontal (XZ)
             float anguloDeseadoHorizontal = (float)Math.Atan2(dirApuntado.X, dirApuntado.Z);
 
-            // Aplicar el ángulo a la torreta
-            giroTorreta = anguloDeseadoHorizontal;
+
+            // Calcular ángulo de la torreta en el plano horizontal (XZ)
+            float anguloTorretaHorizontal = (float)Math.Atan2(dirMovimiento.X, dirMovimiento.Y);
+
+            // Calcular la diferencia entre los ángulos
+            float diferenciaHorizontal = anguloDeseadoHorizontal - anguloTorretaHorizontal;
+            giroTorreta = MathHelper.WrapAngle(diferenciaHorizontal);
             alturaTorreta = dirApuntado.Y;
 
             // Limitar el rango de movimiento de la torreta

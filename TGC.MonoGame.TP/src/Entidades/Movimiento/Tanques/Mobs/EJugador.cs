@@ -91,7 +91,8 @@ namespace TGC.MonoGame.TP.src.Entidades
             //---------------------Logica-Camara-----------------------//
             
 
-            _Camara.setPosicion(this._posicion, new Vector3(this._dirMovimiento.X, 0.0f, this._dirMovimiento.Y));
+            //cambios para ver el tanque
+            _Camara.setPosicion(this._posicion - new Vector3(_dirMovimiento.X, 0, _dirMovimiento.Y) * 5  , new Vector3(0f, 1.0f, 0f));
             
             
             base.Update(gameTime);
