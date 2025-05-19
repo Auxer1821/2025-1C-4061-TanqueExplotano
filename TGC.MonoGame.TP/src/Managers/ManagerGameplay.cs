@@ -33,7 +33,7 @@ namespace TGC.MonoGame.TP.src.Managers
            _enemigos.Add( entidad );
         }
 
-        public void RemoverEnemigo(Entidad entidad) //TODO - Revisar si intenta borrar algo que no existe ROMPE o no.
+        public void RemoverEnemigo(Entidad entidad)
         {
             if(entidad._tipo == TipoEntidad.Tanque)
             _enemigos.Remove((Etanque)entidad);
@@ -44,7 +44,7 @@ namespace TGC.MonoGame.TP.src.Managers
            _player = entidad;
         }
 
-        public void RemoverJugador(Entidad entidad) //TODO - Revisar si intenta borrar algo que no existe ROMPE o no.
+        public void RemoverJugador(Entidad entidad)
         {
             //TODO: no se, algo  hará
         }

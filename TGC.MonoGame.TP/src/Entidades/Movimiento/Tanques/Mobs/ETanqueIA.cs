@@ -39,9 +39,6 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             //2. Setear giro = giro.angulo
             this._anguloActual = this._tipoTanque.anguloRotacionMovimiento() * mseg /4;
-
-
-            //TODO camara y disparo
             base.Update(gameTime);
         }
         

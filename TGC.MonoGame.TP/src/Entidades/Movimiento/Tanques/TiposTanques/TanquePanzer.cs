@@ -25,6 +25,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         public float escala(){return 0.02f;}
         public float cooldown(){return 0.0f;} //10
         public float Vida(){return vida;}
+        public float VidaMaxima(){return 60f;}
         public void RecibirDanio(float danio){this.vida -= danio;}
         public bool EstaVivo(){ return vida > 0; }
 

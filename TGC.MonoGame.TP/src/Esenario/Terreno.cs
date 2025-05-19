@@ -29,7 +29,7 @@ namespace TGC.MonoGame.TP.src.Terrenos
         public override void Initialize (GraphicsDevice Graphics)
         {
             //Configuración de matrices
-            this._matrixMundo = Matrix.Identity * Matrix.CreateScale(0.1f);
+            this._matrixMundo = Matrix.Identity ;
             this._matrixView = Matrix.CreateLookAt(new Vector3(0, 50, 150), Vector3.Zero, Vector3.Up);
             this._matrixProyection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, Graphics.Viewport.AspectRatio, 1, 2500);
 
@@ -91,6 +91,7 @@ namespace TGC.MonoGame.TP.src.Terrenos
 
         private float[,] LoadHeightData(Texture2D heightMap)
         {
+            
             width = heightMap.Width;
             height = heightMap.Height;
             float[,] data = new float[width, height];
@@ -109,7 +110,60 @@ namespace TGC.MonoGame.TP.src.Terrenos
                 }
             }
             return data;
+            
+           
         }
+
+        public float GetHeightAt(float X, float Y)
+        {
+            /*
+            
+            int width = heightData.GetLength(0);
+    int height = heightData.GetLength(1);
+    
+    // Estos valores deben coincidir con la escala de tu terreno en el mundo
+    float terrainWidth = (width - 1) * 0.1f * 5f; // Considerando tu escala de 0.1 y luego 5
+    float terrainHeight = (height - 1) * 0.1f * 5f;
+    
+    // Convertir coordenadas del mundo a coordenadas del heightmap
+    float normalizedX = (x + terrainWidth / 2f) / terrainWidth;
+    float normalizedZ = (z + terrainHeight / 2f) / terrainHeight;
+    
+    // Asegurarse de que estén en el rango [0, 1]
+    normalizedX = MathHelper.Clamp(normalizedX, 0f, 1f);
+    normalizedZ = MathHelper.Clamp(normalizedZ, 0f, 1f);
+    
+    // Convertir a coordenadas del heightmap
+    int xIndex = (int)(normalizedX * (width - 1));
+    int zIndex = (int)(normalizedZ * (height - 1));
+    
+    // Devolver la altura
+    return heightData[xIndex, zIndex];
+            */
+
+    // 1. Obtener dimensiones del heightmap
+    int heightmapWidth = heightData.GetLength(0);
+    int heightmapHeight = heightData.GetLength(1);
+    
+    // 2. Calcular dimensiones REALES del terreno (considerando escalas 0.1f y 5f)
+    float terrainWorldWidth = (heightmapWidth - 1) *5f;  // Escala total: 0.5f
+    float terrainWorldHeight = (heightmapHeight - 1) *5f;
+    
+    // 3. Convertir coordenadas del mundo a coordenadas del heightmap
+    float normalizedX = (X + terrainWorldWidth / 2f) / terrainWorldWidth;
+    float normalizedZ = (Y + terrainWorldHeight / 2f) / terrainWorldHeight;
+    
+    // 4. Asegurarse de que están en el rango [0, 1]
+    normalizedX = MathHelper.Clamp(normalizedX, 0f, 1f);
+    normalizedZ = MathHelper.Clamp(normalizedZ, 0f, 1f);
+    
+    // 5. Convertir a índices del heightmap
+    int xIndex = (int)(normalizedX * (heightmapWidth - 1));
+    int zIndex = (int)(normalizedZ * (heightmapHeight - 1));
+    
+    // 6. Devolver la altura, RESTANDO el desplazamiento hacia abajo (10 unidades)
+    return heightData[xIndex, zIndex] * 5f -10f;  // Ajuste clave aquí
+}
         
 
         protected override void ConfigPuntos(GraphicsDevice Graphics)

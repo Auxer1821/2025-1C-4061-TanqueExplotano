@@ -29,6 +29,7 @@ float4x4 View;
 float4x4 Projection;
 
 float3 DiffuseColor;
+float Opaco = 1.0;
 
 float Time = 0;
 
@@ -62,7 +63,9 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-    return tex2D(TextureSampler, input.TexCoord);
+	float4 color = tex2D(TextureSampler, input.TexCoord);
+	color.xyz *= Opaco;
+    return color;
 }
 
 technique BasicColorDrawing

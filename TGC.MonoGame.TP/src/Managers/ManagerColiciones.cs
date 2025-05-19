@@ -33,7 +33,7 @@ namespace TGC.MonoGame.TP.src.Managers
                 _estaticas.Add(entidad);
         }
 
-        public void RemoverEntidad(Entidades.Entidad entidad) //TODO - Revisar si intenta borrar algo que no existe ROMPE o no.
+        public void RemoverEntidad(Entidades.Entidad entidad)
         {
             _movimientos.Remove(entidad);
             _estaticas.Remove(entidad);

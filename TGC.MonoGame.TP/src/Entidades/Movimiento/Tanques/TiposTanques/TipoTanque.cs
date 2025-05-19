@@ -26,6 +26,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         float cooldown();
 
         float Vida();
+        float VidaMaxima();
         void RecibirDanio(float danio);
 
         bool EstaVivo();

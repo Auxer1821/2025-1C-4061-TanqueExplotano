@@ -70,12 +70,12 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 for (int z = -50; z <= 50; z += 20)
                 {
                     var casa = new ECasa();
-                    casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content, this);
+                    casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), view, projection, content, this);
                     this.AgregarACrear(casa);
                     posicionesUsadas.Add(new Vector3(x, z, 4));
 
                     var caja = new ECaja();
-                    caja.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x + 8, 0, z + 8), view, projection, content, this);
+                    caja.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x + 8, _terreno.GetHeightAt(x,z), z + 8), view, projection, content, this);
                     this.AgregarACrear(caja);
                     posicionesUsadas.Add(new Vector3(x + 8, z + 8, 2));
                 }
@@ -89,10 +89,9 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 float x = random.Next(-300, 300);
                 float z = random.Next(100, 500);
                 var pos = new Vector2(x, z);
-
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
-                    arbol.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content, this);
+                    arbol.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), view, projection, content, this);
                     this.AgregarACrear(arbol);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
                 }
@@ -111,7 +110,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
-                    roca.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content, this);
+                    roca.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), view, projection, content, this);
                     this.AgregarACrear(roca);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
                 }
@@ -129,7 +128,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 float z = random.Next(-300, 300);
                 var pos = new Vector2(x,z); 
                  if(PosicionesLibre(pos, posicionesUsadas,1)){
-                    pasto.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, 0, z), view, projection, content, this);
+                    pasto.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), view, projection, content, this);
                     pastos[i] = pasto;
                     posicionesUsadas.Add(new Vector3(x,z,1));
                 }
@@ -167,7 +166,8 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 Jpos = new Vector2(Jx, Jz);
             }
 
-            jugador.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Jx, 0, Jz), view, projection, content, this);
+            jugador.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Jx, 0f, Jz), view, projection, content, this);
+            jugador.setCamara(_camara);
             this.AgregarACrear(jugador);
             this._managerGameplay.AgregarJugador(jugador);
             posicionesUsadas.Add(new Vector3(Jx, Jz, 10));
@@ -181,7 +181,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var pos = new Vector2(Ax, Az);
                 if (PosicionesLibre(pos, posicionesUsadas, 10))
                 {
-                    tank.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Ax, 0, Az), view, projection, content, this);
+                    tank.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Ax, _terreno.GetHeightAt(Ax,Az), Az), view, projection, content, this);
                     this.AgregarACrear(tank);
                     this._managerGameplay.AgregarEnemigo(tank);
                     posicionesUsadas.Add(new Vector3(Ax, Az, 10));
@@ -279,7 +279,11 @@ namespace TGC.MonoGame.TP.src.Escenarios
             this._entidadesCrear.Clear();
             this._faltaCrear = false;
         }
-        
+
+        internal float getAltura(Vector3 pos)
+        {
+            return _terreno.GetHeightAt(pos.X, pos.Z);
+        }
     }
 
 }

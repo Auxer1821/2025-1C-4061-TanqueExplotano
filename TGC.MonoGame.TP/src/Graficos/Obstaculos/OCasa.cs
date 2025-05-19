@@ -59,7 +59,7 @@ namespace TGC.MonoGame.TP.src.Casas
 
         }
         protected override void AjustarModelo(){
-            _matixBase = Matrix.CreateScale(0.03f);
+            _matixBase = Matrix.CreateScale(0.03f)* Matrix.CreateTranslation(Vector3.UnitY * 3f);
         }
 
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)

@@ -14,14 +14,25 @@ namespace TGC.MonoGame.TP.src.Tanques
     public class MTanque : Modelos.Modelo
     {
 
+        public enum Animacion
+        {
+            Detenido,
+            MarchaAdelante,
+            MarchaAtras,
+            giroDer,
+            giroIzq
+        }
+
         //----------------------------------------------Variables--------------------------------------------------//
         private TipoTanque _tipoTanque;
         private Effect effectRueda;
         Texture2D tanqueTexture;
         Texture2D texturaCinta;
-        float giroTorrreta = 5f;
+        float giroTorrreta = 0f;
         Vector2 rotacionRuedas = new Vector2(0f, 0f);
         Vector2 offsetCintas = new Vector2(0f, 0f);
+        float modificadorDanio = 1.0f;
+        float anguloAnctual;
         string[] meshes;
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -43,8 +54,8 @@ namespace TGC.MonoGame.TP.src.Tanques
             tanqueTexture = Content.Load<Texture2D>("Models/tgc-tanks" + this._tipoTanque.directorioTextura());
             texturaCinta = Content.Load<Texture2D>("Models/tgc-tanks/T90/textures_mod/treadmills");
             effectRueda = Content.Load<Effect>("Effects/shaderRuedas");
-            offsetCintas = getAnimacionTanque(0, 0.01f); // esta es la animacion por defecto, 0 = detenido
-            rotacionRuedas = getAnimacionTanque(0, 0.1f); // esta es la animacion por defecto, 0 = detenido
+            offsetCintas = getAnimacionTanque(Animacion.Detenido, 0.01f,offsetCintas); // esta es la animacion por defecto, 0 = detenido
+            rotacionRuedas = getAnimacionTanque(Animacion.Detenido, 0.1f,rotacionRuedas); // esta es la animacion por defecto, 0 = detenido
             //obtenemos los meshes del modelo
             int count = 0;
             int meshCount = _modelo.Meshes.Count;
@@ -80,6 +91,7 @@ namespace TGC.MonoGame.TP.src.Tanques
             _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
             _effect2.Parameters["Texture"].SetValue(tanqueTexture);
+            _effect2.Parameters["Opaco"].SetValue(modificadorDanio);
 
             effectRueda.Parameters["View"].SetValue(this._matrixView);
             effectRueda.Parameters["Projection"].SetValue(this._matrixProyection);
@@ -97,8 +109,8 @@ namespace TGC.MonoGame.TP.src.Tanques
                 offsetCintas.X -= 1.0f;
 
             offsetCintas.Y = -offsetCintas.X;
-
             */
+
             //------------------------------dibujado de los meshes---------------------------------------------------
             //TODO mejorar la lectura del codigo
             foreach (var mesh in _modelo.Meshes)
@@ -185,32 +197,30 @@ namespace TGC.MonoGame.TP.src.Tanques
         // 2 marcha atras
         // 3 giro a la derecha
         // 4 giro a la izquierda
-        public Vector2 getAnimacionTanque(int animacion, float velocidad)
+        public Vector2 getAnimacionTanque(Animacion animacion, float velocidad, Vector2 resultado)
         {
-            if (animacion == 0)
+            switch (animacion)
             {
-                return new Vector2(0, 0);
+                case Animacion.Detenido:
+                    //Que no haga nada así mantiene el valor
+                    break;
+                case Animacion.MarchaAdelante:
+                    resultado += new Vector2(1, 1) * velocidad;
+                    break;
+                case Animacion.MarchaAtras:
+                    resultado += new Vector2(1, 1) * velocidad;
+                    break;
+                case Animacion.giroDer:
+                    resultado += new Vector2(-1, 1) * velocidad;
+                    break;
+                case Animacion.giroIzq:
+                    resultado += new Vector2(1, -1) * velocidad;
+                    break;
+                default:
+                    resultado = new Vector2(0, 0);
+                    break;
             }
-            else if (animacion == 1)
-            {
-                return new Vector2(1, 1) * velocidad;
-            }
-            else if (animacion == 2)
-            {
-                return new Vector2(-1, -1) * velocidad;
-            }
-            else if (animacion == 3)
-            {
-                return new Vector2(1, -1) * velocidad;
-            }
-            else if (animacion == 4)
-            {
-                return new Vector2(-1, 1) * velocidad;
-            }
-            else
-            {
-                return new Vector2(0, 0);
-            }
+            return resultado;
         }
 
         public bool esRuedaDerecha(string nombre)
@@ -224,6 +234,27 @@ namespace TGC.MonoGame.TP.src.Tanques
                 return false;
             }
             
+        }
+
+
+        internal override void EfectoDaño(float porcentajeVida)
+        {
+            modificadorDanio = porcentajeVida;
+        }
+
+        public void ActualizarMovimeinto(float velocidad, float angulo){//update de entidad
+            Animacion animacion = Animacion.Detenido;
+            if(angulo>0) animacion= Animacion.giroDer;
+            else if(angulo<0) animacion=Animacion.giroIzq;
+            else if(velocidad>0) animacion=Animacion.MarchaAdelante;
+            else if(velocidad<0) animacion=Animacion.MarchaAtras;
+            offsetCintas = getAnimacionTanque(animacion, velocidad, offsetCintas); // esta es la animacion por defecto, 0 = detenido
+            rotacionRuedas = getAnimacionTanque(animacion, velocidad, rotacionRuedas); // esta es la animacion por defecto, 0 = detenido
+        }
+
+        internal void ActualizarTorreta(Vector2 dirMovimiento, Vector3 dirApuntado)
+        {
+            //throw new NotImplementedException();
         }
     }
 }

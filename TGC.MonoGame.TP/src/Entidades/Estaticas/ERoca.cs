@@ -20,7 +20,6 @@ namespace TGC.MonoGame.TP.src.Entidades
         public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
             this._modelo = new Rocas.ORoca();
             this._tipo = TipoEntidad.Obstaculo;
-            //TODO: Crear Bounding Volume
             base.Initialize(Graphics,Mundo,View,Projection,Content, escenario);
         }
     }

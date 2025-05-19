@@ -15,6 +15,7 @@ namespace TGC.MonoGame.TP.src.Entidades
     /// </summary>
     public class EJugador : Etanque
     {
+        private Cameras.FreeCamera _Camara;
 
 
 
@@ -26,6 +27,10 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._modelo.ActualizarColor(Color.RoyalBlue);
         }
 
+        public void setCamara(Cameras.FreeCamera Camara){
+            _Camara=Camara;
+        }
+
         //----------------------------------------------Metodos-Logica--------------------------------------------------//
 
 
@@ -33,11 +38,13 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         public override void Update(GameTime gameTime)
         {
-            //setear los valores de movimiento y disparo
+            //------setear los valores de movimiento y disparo-------//
             float mseg = (float)gameTime.ElapsedGameTime.TotalSeconds;
             var teclado = Keyboard.GetState();
             var raton = Mouse.GetState();
 
+            //------------Logica-Movimiento---------------------------//
+            
             this._velocidadActual = 0; // cuantsdo se mueve segun su direccion
             if (teclado.IsKeyDown(Keys.W))
             {
@@ -51,7 +58,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._velocidadActual *= mseg;
 
             this._anguloActual = 0.0f; //cuanto rota segun su direcion
-
+            if(this._velocidadActual != 0.0f){
                 if (teclado.IsKeyDown(Keys.A))
                 {
                     this._anguloActual -= this._tipoTanque.anguloRotacionMovimiento();
@@ -61,17 +68,18 @@ namespace TGC.MonoGame.TP.src.Entidades
                 {
                     this._anguloActual += this._tipoTanque.anguloRotacionMovimiento();
                 }
-                this._anguloActual *= mseg;
+            }
+            this._anguloActual *= mseg;
 
+            //---------------Logica-Disparo---------------------//
+            
 
-            this._dirApuntado = new Vector3(this._dirMovimiento.X, 0.0f, this._dirMovimiento.Y);
+            this._dirApuntado = new Vector3(_Camara.getDireccion().X,0f,_Camara.getDireccion().Z);
             if (this.PuedeDisparar())
             {
-                this._modelo.ActualizarColor(Color.RoyalBlue);
                 if (raton.LeftButton == ButtonState.Pressed)
                 {
-                    this.Disparar(_dirApuntado);
-                    this._modelo.ActualizarColor(Color.DarkGoldenrod);
+                    this.Disparar();
                     this._cooldownActual = 0;
                 }
             }
@@ -79,9 +87,14 @@ namespace TGC.MonoGame.TP.src.Entidades
             {
                 this._cooldownActual += 1*mseg;
             }
+
+            //---------------------Logica-Camara-----------------------//
             
-            //TODO camara y disparo
-                base.Update(gameTime);
+
+            _Camara.setPosicion(this._posicion, new Vector3(this._dirMovimiento.X, 0.0f, this._dirMovimiento.Y));
+            
+            
+            base.Update(gameTime);
         }
         
         protected override void RecibirDaño(DataChoque choque,  EBala bala){}

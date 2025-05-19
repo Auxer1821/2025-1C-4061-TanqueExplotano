@@ -74,6 +74,12 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             this.ActualizarDireccion();
             this.Mover();
+            this.ActualicarModeloTanque();
+        }
+
+        private void ActualicarModeloTanque(){
+            ((MTanque)(this._modelo)).ActualizarMovimeinto(this._velocidadActual,this._anguloActual);
+            ((MTanque)(this._modelo)).ActualizarTorreta(this._dirMovimiento,this._dirApuntado);
         }
 
 
@@ -99,7 +105,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             if (!this._tipoTanque.EstaVivo()) return;
             // Restar vida (suponiendo que existe una propiedad 'Vida')
             this._tipoTanque.RecibirDanio(bala._danio);
-            this._modelo.ActualizarColor(Color.DarkOrange);
+            this._modelo.EfectoDaño(Math.Clamp(this._tipoTanque.Vida()/this._tipoTanque.VidaMaxima(),0.2f,1.0f));
 
             // Efectos visuales
             // MostrarChispa(choque._puntoContacto);
@@ -140,6 +146,13 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             this.ActualizarMatrizMundo(); // Puntual para la grafica
             this._boundingVolume.Transformar(_posicion, _angulo, 1.0f); // Puntual para la colision
+
+
+            var posAux = this._posicion;
+            posAux.Y = this._escenario.getAltura(this._posicion);
+            this._posicion = posAux;
+
+            
         }
 
         //Función llamada gameplay para que actualice los valores de la matriz dirección.
@@ -150,7 +163,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             //TODO: direccion de la mira
         }
         // 
-        public void Disparar(Vector3 apuntado){
+        public void Disparar(){
             this._bala.ActualizarDatos(this._dirApuntado,this._posicion); //TODO - Cambiar lugar de disparo para que no se autodestruya
             this._escenario.AgregarACrear(this._bala); //temporal
         }

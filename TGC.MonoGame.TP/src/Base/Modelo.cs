@@ -110,7 +110,9 @@ namespace TGC.MonoGame.TP.src.Modelos
             this._matrixMundo= this._matixBase * mundo;
         }
 
-
-        
+        internal virtual void EfectoDaño(float v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
