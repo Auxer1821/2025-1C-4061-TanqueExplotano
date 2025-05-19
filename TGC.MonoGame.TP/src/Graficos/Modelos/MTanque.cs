@@ -28,11 +28,11 @@ namespace TGC.MonoGame.TP.src.Tanques
         private Effect effectRueda;
         Texture2D tanqueTexture;
         Texture2D texturaCinta;
-        float giroTorrreta = 0f;
+        float giroTorreta = 0f;
+        float alturaTorreta = 0f;
         Vector2 rotacionRuedas = new Vector2(0f, 0f);
         Vector2 offsetCintas = new Vector2(0f, 0f);
         float modificadorDanio = 1.0f;
-        float anguloAnctual;
         string[] meshes;
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -80,7 +80,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         }
         
         protected override void AjustarModelo(){
-            this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo().X) * Matrix.CreateRotationY(this._tipoTanque.angulo().Y) * Matrix.CreateRotationZ(this._tipoTanque.angulo().Z) ;
+            this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo().X) * Matrix.CreateRotationY(this._tipoTanque.angulo().Y) * Matrix.CreateRotationZ(this._tipoTanque.angulo().Z) * Matrix.CreateTranslation(new Vector3(0,1,0)); ;
         }
 
         //----------------------------------------------Dibujado--------------------------------------------------//
@@ -138,7 +138,13 @@ namespace TGC.MonoGame.TP.src.Tanques
                 else if (mesh.Name == "Turret" || mesh.Name == "Cannon")
                 {
                     //posiblemente de problemas al calcular con las normales del mapa
-                    _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorrreta) * _matrixMundo);
+                    _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta - MathHelper.PiOver2)  * _matrixMundo);
+                    Matrix transform = mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta - MathHelper.PiOver2) * _matrixMundo;
+                    if (mesh.Name == "Cannon")
+                    {
+                        _effect2.Parameters["World"].SetValue(Matrix.CreateRotationX(-alturaTorreta - MathHelper.PiOver2 + 1f) * transform);
+                    }
+                    
                 }
                 else if (mesh.Name.Contains("Wheel"))
                 {
@@ -181,15 +187,8 @@ namespace TGC.MonoGame.TP.src.Tanques
         // ajustar con delta time
         public void rotarTorreta(float giro)
         {
-            giroTorrreta += giro;
-            if (giroTorrreta > MathHelper.PiOver2)
-            {
-                giroTorrreta = MathHelper.PiOver2;
-            }
-            else if (giroTorrreta < -MathHelper.PiOver2)
-            {
-                giroTorrreta = -MathHelper.PiOver2;
-            }
+            giroTorreta += giro;
+            
         }
 
         // 0 detenido
@@ -225,14 +224,7 @@ namespace TGC.MonoGame.TP.src.Tanques
 
         public bool esRuedaDerecha(string nombre)
         {
-            if (nombre.Contains("9") || nombre.Contains("10") || nombre.Contains("11") || nombre.Contains("12") || nombre.Contains("13") || nombre.Contains("14") || nombre.Contains("15") || nombre.Contains("16"))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return nombre.Contains("9") || nombre.Contains("10") || nombre.Contains("11") || nombre.Contains("12") || nombre.Contains("13") || nombre.Contains("14") || nombre.Contains("15") || nombre.Contains("16");
             
         }
 
@@ -255,6 +247,26 @@ namespace TGC.MonoGame.TP.src.Tanques
         internal void ActualizarTorreta(Vector2 dirMovimiento, Vector3 dirApuntado)
         {
             //throw new NotImplementedException();
+            if (dirMovimiento != Vector2.Zero)
+                dirMovimiento.Normalize();
+            // Calcular ángulo deseado en el plano horizontal (XZ)
+            float anguloDeseadoHorizontal = (float)Math.Atan2(dirApuntado.X, dirApuntado.Z);
+
+            // Aplicar el ángulo a la torreta
+            giroTorreta = anguloDeseadoHorizontal;
+            alturaTorreta = dirApuntado.Y;
+
+            // Limitar el rango de movimiento de la torreta
+            if (alturaTorreta > MathHelper.PiOver2/2)
+                alturaTorreta = MathHelper.PiOver2;
+            else if (alturaTorreta < -MathHelper.PiOver2)
+                alturaTorreta = -MathHelper.PiOver2;
+
+            // Limitar el rango de movimiento de la torreta
+            if (giroTorreta > MathHelper.Pi)
+                giroTorreta = MathHelper.Pi;
+            else if (giroTorreta < -MathHelper.Pi)
+                giroTorreta = -MathHelper.Pi;
         }
     }
 }
