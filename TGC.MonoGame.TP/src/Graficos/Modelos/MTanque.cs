@@ -29,7 +29,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         Texture2D tanqueTexture;
         Texture2D texturaCinta;
         float giroTorreta = 0f;
-        float alturaTorreta = 0f;
+        float alturaTorreta = -0.6f;
         Vector2 rotacionRuedas = new Vector2(0f, 0f);
         Vector2 offsetCintas = new Vector2(0f, 0f);
         float modificadorDanio = 1.0f;
@@ -80,7 +80,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         }
         
         protected override void AjustarModelo(){
-            this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo().X) * Matrix.CreateRotationY(this._tipoTanque.angulo().Y) * Matrix.CreateRotationZ(this._tipoTanque.angulo().Z) * Matrix.CreateTranslation(new Vector3(0,1,0)); ;
+            this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo().X) * Matrix.CreateRotationY(this._tipoTanque.angulo().Y) * Matrix.CreateRotationZ(this._tipoTanque.angulo().Z) * Matrix.CreateTranslation(new Vector3(0,1 * 3,0)); ;
         }
 
         //----------------------------------------------Dibujado--------------------------------------------------//
@@ -142,7 +142,7 @@ namespace TGC.MonoGame.TP.src.Tanques
                     Matrix transform = mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta) * _matrixMundo;
                     if (mesh.Name == "Cannon")
                     {
-                        _effect2.Parameters["World"].SetValue(Matrix.CreateRotationX(-alturaTorreta - MathHelper.PiOver2 + 1f) * transform);
+                        _effect2.Parameters["World"].SetValue(Matrix.CreateRotationX(-alturaTorreta - 0.3f) * transform);
                     }
                     
                 }
