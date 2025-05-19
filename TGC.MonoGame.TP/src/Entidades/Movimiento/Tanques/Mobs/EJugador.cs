@@ -74,7 +74,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             //---------------Logica-Disparo---------------------//
             
 
-            this._dirApuntado = new Vector3(_Camara.getDireccion().X,0f,_Camara.getDireccion().Z);
+            this._dirApuntado = _Camara.getDireccion();
             if (this.PuedeDisparar())
             {
                 if (raton.LeftButton == ButtonState.Pressed)
