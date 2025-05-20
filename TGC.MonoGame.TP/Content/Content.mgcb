@@ -19,6 +19,12 @@
 /processorParam:DebugMode=Auto
 /build:Effects/BasicShader.fx
 
+#begin Effects/shaderArbol.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/shaderArbol.fx
+
 #begin Effects/shaderPasto.fx
 /importer:EffectImporter
 /processor:EffectProcessor
