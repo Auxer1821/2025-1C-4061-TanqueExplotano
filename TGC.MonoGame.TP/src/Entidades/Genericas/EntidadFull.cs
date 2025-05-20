@@ -22,10 +22,8 @@ namespace TGC.MonoGame.TP.src.Entidades
             this.InicializarDataMundo();
 
             this._posicion = Vector3.Transform(Vector3.Zero, Mundo);
-            this._boundingVolume = new BoundingsVolumes.BVEsfera(3.0f, this._posicion);
             this._modelo.Initialize(Graphics, Mundo, View, Projection, Content);
             this._escenario = escenario;
-            this._boundingVolume.Transformar(this._posicion, Vector3.Zero, 1f); //TODO - Eliminar de aquí; Agregar para cada entidad por separado
         }
 
         public override void Dibujar(GraphicsDevice graphics)
@@ -63,7 +61,14 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         public override void Chocar(DataChoque dataChoque, Entidad entidadEstatica)
         {
-            this._escenario.AgregarAEliminar(this);
+            switch (entidadEstatica._tipo)
+            {
+                case TipoEntidad.Bala:
+                    this._escenario.AgregarAEliminar(this);
+                    break;
+                default:
+                    break;
+            }
         }
 
 

@@ -29,7 +29,7 @@ namespace TGC.MonoGame.TP.src.Entidades
     
 
 
-        public override void Update(GameTime gameTime)
+      /*  public override void Update(GameTime gameTime)
         {
             //setear los valores de movimiento y disparo
             float mseg = (float) gameTime.ElapsedGameTime.TotalSeconds;
@@ -41,7 +41,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._anguloActual = this._tipoTanque.anguloRotacionMovimiento() * mseg /4;
             base.Update(gameTime);
         }
-        
+        */
 
 
 

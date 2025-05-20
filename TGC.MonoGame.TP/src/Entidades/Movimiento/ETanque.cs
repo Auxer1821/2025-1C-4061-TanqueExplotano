@@ -27,17 +27,21 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public Etanque() { }
-        public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
-            this._tipoTanque = new TanqueT90(); 
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario)
+        {
+            this._tipoTanque = new TanqueT90();
             this._modelo = new MTanque(_tipoTanque);
             this._tipo = TipoEntidad.Tanque;
             this._activo = true;
             this._bala = new EBala();
-            this._bala.Initialize(Graphics,Mundo,View,Projection,Content, escenario);
+            this._bala.Initialize(Graphics, Mundo, View, Projection, Content, escenario);
             this._bala.setDanio(this._tipoTanque.danio());
             this._cooldownActual = 0.0f;
             //TODO - Crear Bounding Volume especializados // Eliminarlo de EntidadFull
-            base.Initialize(Graphics,Mundo,View,Projection,Content, escenario);
+            base.Initialize(Graphics, Mundo, View, Projection, Content, escenario);
+            //this._boundingVolume = new BVCuboOBB(this.CalcularCentro(_posicion), new Vector3(4.0f, 8.0f, 8.0f) , Matrix.Identity);
+            this._boundingVolume = new BoundingsVolumes.BVEsfera(5.0f, this._posicion);
+
         }
 
         //----------------------------------------------Metodos-Logica--------------------------------------------------//
@@ -49,11 +53,17 @@ namespace TGC.MonoGame.TP.src.Entidades
             return true;
         }
 
-        public override void Chocar(DataChoque dataChoque, Entidad entidadEstatica){
+        private Vector3 CalcularCentro(Vector3 pos)
+        {
+            return new Vector3(pos.X, pos.Y + 1.5f, pos.Z);
+        }
+
+        public override void Chocar(DataChoque dataChoque, Entidad entidadEstatica)
+        {
             switch (entidadEstatica._tipo)
             {
                 case TipoEntidad.Bala:
-                    this.RecibirDaño(dataChoque, (EBala) entidadEstatica);
+                    this.RecibirDaño(dataChoque, (EBala)entidadEstatica);
                     break;
 
                 case TipoEntidad.Tanque:
@@ -67,7 +77,7 @@ namespace TGC.MonoGame.TP.src.Entidades
                     // Quizás no hacer nada, o loguear el caso
                     break;
             }
-            
+
         }
 
         public override void Update(GameTime gameTime)
@@ -75,6 +85,9 @@ namespace TGC.MonoGame.TP.src.Entidades
             this.ActualizarDireccion();
             this.Mover();
             this.ActualicarModeloTanque();
+            
+            float anguloRotacionY = (float)Math.Atan2(_dirMovimiento.X, _dirMovimiento.Y);
+            this._boundingVolume.Transformar(this.CalcularCentro(_posicion), new Vector3(0.0f, anguloRotacionY, 0.0f),1f);
         }
 
         private void ActualicarModeloTanque(){
