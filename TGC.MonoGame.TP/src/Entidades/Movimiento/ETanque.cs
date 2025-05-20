@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.BoundingsVolumes;
 using TGC.MonoGame.TP.src.Tanques;
-
+using Microsoft.Xna.Framework.Audio;
 
 namespace TGC.MonoGame.TP.src.Entidades
 {
@@ -24,20 +24,30 @@ namespace TGC.MonoGame.TP.src.Entidades
         protected float _cooldownActual;
         protected float _velocidadActual;
         protected float _anguloActual;
-
+        private SoundEffect _sonidoDisparo;
+        private SoundEffectInstance _sonidoDisparoInstance;
+        float _volumen = 0.06f;
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public Etanque() { }
-        public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
-            this._tipoTanque = new TanqueT90(); 
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario)
+        {
+            this._tipoTanque = new TanqueT90();
             this._modelo = new MTanque(_tipoTanque);
             this._tipo = TipoEntidad.Tanque;
             this._activo = true;
             this._bala = new EBala();
-            this._bala.Initialize(Graphics,Mundo,View,Projection,Content, escenario);
+            this._bala.Initialize(Graphics, Mundo, View, Projection, Content, escenario);
             this._bala.setDanio(this._tipoTanque.danio());
             this._cooldownActual = 0.0f;
             //TODO - Crear Bounding Volume especializados // Eliminarlo de EntidadFull
-            base.Initialize(Graphics,Mundo,View,Projection,Content, escenario);
+            base.Initialize(Graphics, Mundo, View, Projection, Content, escenario);
+
+
+            this._sonidoDisparo = Content.Load<SoundEffect>("Sounds/disparo2");
+            this._sonidoDisparoInstance = _sonidoDisparo.CreateInstance();
+            _sonidoDisparoInstance.IsLooped = false;
+            _sonidoDisparoInstance.Volume = _volumen;
+            _sonidoDisparoInstance.Pitch = 0.0f;
         }
 
         //----------------------------------------------Metodos-Logica--------------------------------------------------//
@@ -158,14 +168,23 @@ namespace TGC.MonoGame.TP.src.Entidades
         //Función llamada gameplay para que actualice los valores de la matriz dirección.
         // Valores de 1, -1, 0
         // Luego será multiplicado por su respectiva velocidad
-        public void ActualizarDireccion(){
+        public void ActualizarDireccion()
+        {
             _dirMovimiento = Vector2.Rotate(_dirMovimiento, _anguloActual);
             //TODO: direccion de la mira
         }
         // 
-        public void Disparar(){
-            this._bala.ActualizarDatos(this._dirApuntado,this._posicion); //TODO - Cambiar lugar de disparo para que no se autodestruya
+        public void Disparar()
+        {
+            this._bala.ActualizarDatos(this._dirApuntado, this._posicion); //TODO - Cambiar lugar de disparo para que no se autodestruya
             this._escenario.AgregarACrear(this._bala); //temporal
+
+            //sonido disparo
+            if (_sonidoDisparoInstance.State != SoundState.Playing)
+            {
+                _sonidoDisparoInstance.Pitch = new Random().Next(-100, 100) / 100.0f;
+                _sonidoDisparoInstance.Play();
+            }
         }
 
         //

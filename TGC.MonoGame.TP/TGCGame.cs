@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Escenarios;
 using TGC.MonoGame.TP.src.Cameras;
+using Microsoft.Xna.Framework.Audio;
 
 namespace TGC.MonoGame.TP
 {
@@ -24,6 +25,10 @@ namespace TGC.MonoGame.TP
         public const string ContentFolderTextures = "Textures/";
 
         //pruebas
+        private SoundEffect _sonidoFondo;
+        private SoundEffectInstance _sonidoFondoInstance;
+        float _volumen = 0.06f;
+
 
 
         /// <summary>
@@ -100,6 +105,12 @@ namespace TGC.MonoGame.TP
             // Aca es donde deberiamos cargar todos los contenido necesarios antes de iniciar el juego.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
+            //cargamos el sonido de fondo
+            _sonidoFondo = Content.Load<SoundEffect>(@ContentFolderMusic + "epico");
+            _sonidoFondoInstance = _sonidoFondo.CreateInstance();
+            _sonidoFondoInstance.IsLooped = true;
+            _sonidoFondoInstance.Volume = _volumen;
+
             base.LoadContent();
         }
 
@@ -117,6 +128,11 @@ namespace TGC.MonoGame.TP
             {
                 //Salgo del juego.
                 Exit();
+            }
+
+            if (_sonidoFondoInstance.State != SoundState.Playing)
+            {
+                _sonidoFondoInstance.Play();
             }
 
             _escenario.Update(gameTime);

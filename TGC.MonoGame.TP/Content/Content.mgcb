@@ -509,3 +509,21 @@
 /processorParam:TextureFormat=Color
 /build:Models/tree/tronco2.jpg
 
+#begin Music/epico.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/epico.wav
+
+#begin Sounds/disparo.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/disparo.wav
+
+#begin Sounds/disparo2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/disparo2.wav
+
