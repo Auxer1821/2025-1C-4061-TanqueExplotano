@@ -24,10 +24,22 @@ sampler TextureSampler = sampler_state
     AddressU = Wrap;
     AddressV = Wrap;
 };
+texture2D TexturaCinta;
+sampler TextureSampler2 = sampler_state
+{
+    Texture = (TexturaCinta);
+    MagFilter = Linear;
+    MinFilter = Linear;
+    MipFilter = Linear;
+    AddressU = Wrap;
+    AddressV = Wrap;
+};
+
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
+float2 UVOffset = {0, 0};
 float3 DiffuseColor;
 float Opaco = 1.0;
 
@@ -54,8 +66,8 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
     // World space to View space
     float4 viewPosition = mul(worldPosition, View);	
 	// View space to Projection space
-    output.Position = mul(viewPosition, Projection);
 
+    output.Position = mul(viewPosition, Projection);
 	output.TexCoord = input.TexCoord;
 
     return output;
@@ -68,11 +80,42 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     return color;
 }
 
-technique BasicColorDrawing
+VertexShaderOutput RuedasVS(in VertexShaderInput input)
+{
+    // Clear the output
+	VertexShaderOutput output = (VertexShaderOutput)0;
+    // Model space to World space
+    float4 worldPosition = mul(input.Position, World);
+    // World space to View space
+    float4 viewPosition = mul(worldPosition, View);	
+	// View space to Projection space
+    output.Position = mul(viewPosition, Projection);
+	output.TexCoord = input.TexCoord + UVOffset;
+
+    return output;
+}
+
+float4 RuedasPS(VertexShaderOutput input) : COLOR
+{
+ 	float4 color = tex2D(TextureSampler2, input.TexCoord);
+	color.xyz *= Opaco;
+    return color;
+}
+
+technique Main
 {
 	pass P0
 	{
 		VertexShader = compile VS_SHADERMODEL MainVS();
 		PixelShader = compile PS_SHADERMODEL MainPS();
+	}
+};
+
+technique RuedasDrawing
+{
+	pass P0
+	{
+		VertexShader = compile VS_SHADERMODEL RuedasVS();
+		PixelShader = compile PS_SHADERMODEL RuedasPS();
 	}
 };

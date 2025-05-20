@@ -25,7 +25,6 @@ namespace TGC.MonoGame.TP.src.Tanques
 
         //----------------------------------------------Variables--------------------------------------------------//
         private TipoTanque _tipoTanque;
-        private Effect effectRueda;
         Texture2D tanqueTexture;
         Texture2D texturaCinta;
         float giroTorreta = 0f;
@@ -33,7 +32,6 @@ namespace TGC.MonoGame.TP.src.Tanques
         Vector2 rotacionRuedas = new Vector2(0f, 0f);
         Vector2 offsetCintas = new Vector2(0f, 0f);
         float modificadorDanio = 1.0f;
-        string[] meshes;
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public MTanque(TipoTanque tipoTanque)
@@ -53,30 +51,11 @@ namespace TGC.MonoGame.TP.src.Tanques
             this._modelo = Content.Load<Model>("Models/tgc-tanks" + this._tipoTanque.directorioModelo());
             tanqueTexture = Content.Load<Texture2D>("Models/tgc-tanks" + this._tipoTanque.directorioTextura());
             texturaCinta = Content.Load<Texture2D>("Models/tgc-tanks/T90/textures_mod/treadmills");
-            effectRueda = Content.Load<Effect>("Effects/shaderRuedas");
             offsetCintas = getAnimacionTanque(Animacion.Detenido, 0.01f,offsetCintas); // esta es la animacion por defecto, 0 = detenido
             rotacionRuedas = getAnimacionTanque(Animacion.Detenido, 0.1f,rotacionRuedas); // esta es la animacion por defecto, 0 = detenido
-            //obtenemos los meshes del modelo
-            int count = 0;
-            int meshCount = _modelo.Meshes.Count;
-            meshes = new string[meshCount];
-            foreach (var mesh in _modelo.Meshes)
-            {
-                if (!string.IsNullOrEmpty(mesh.Name))
-                {
-                    meshes[count] = mesh.Name;
-                    //Console.WriteLine($"Mesh {count}: {mesh.Name}");
-                }
-                else
-                {
-                    // Asignar nombre genérico si no tiene
-                    mesh.Name = $"Mesh_{count}";
-                    meshes[count] = mesh.Name;
-                    //Console.WriteLine($"Mesh {count}: {mesh.Name}");
-                }
-                count++;
-            }
 
+            _effect2.Parameters["Texture"].SetValue(tanqueTexture);
+            _effect2.Parameters["TexturaCinta"].SetValue(texturaCinta);
         }
         
         protected override void AjustarModelo(){
@@ -90,38 +69,28 @@ namespace TGC.MonoGame.TP.src.Tanques
             _effect2.Parameters["View"].SetValue(this._matrixView);
             _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
-            _effect2.Parameters["Texture"].SetValue(tanqueTexture);
             _effect2.Parameters["Opaco"].SetValue(modificadorDanio);
 
-            effectRueda.Parameters["View"].SetValue(this._matrixView);
-            effectRueda.Parameters["Projection"].SetValue(this._matrixProyection);
-            effectRueda.Parameters["World"].SetValue(this._matrixMundo);
-            effectRueda.Parameters["Texture"].SetValue(tanqueTexture);
 
             //------------------------------dibujado de los meshes---------------------------------------------------
             //TODO mejorar la lectura del codigo
             foreach (var mesh in _modelo.Meshes)
             {
+                _effect2.CurrentTechnique = _effect2.Techniques["Main"];
                 if (mesh.Name.Contains("Treadmill"))
                 {
+                    //setear el efecto de la cinta
+                    _effect2.CurrentTechnique = _effect2.Techniques["RuedasDrawing"];
                     //desplazamiento de la cinta individual
                     if (mesh.Name.Contains("1"))
                     {
-                        effectRueda.Parameters["UVOffset"].SetValue(new Vector2(0, offsetCintas.X));
+                        _effect2.Parameters["UVOffset"].SetValue(new Vector2(0, offsetCintas.X));
                     }
                     else
                     {
-                        effectRueda.Parameters["UVOffset"].SetValue(new Vector2(0, offsetCintas.Y));
+                        _effect2.Parameters["UVOffset"].SetValue(new Vector2(0, offsetCintas.Y));
                     }
-                    effectRueda.Parameters["Texture"].SetValue(texturaCinta);
-
-                    //aplicar el efecto a cada parte de la malla
-                    foreach (ModelMeshPart part in mesh.MeshParts)
-                    {
-                        part.Effect = effectRueda;
-                    }
-
-                    effectRueda.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
+                    _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
 
                 }
                 else if (mesh.Name == "Turret" || mesh.Name == "Cannon")
