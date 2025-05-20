@@ -27,7 +27,7 @@ namespace TGC.MonoGame.TP
         //pruebas
         private SoundEffect _sonidoFondo;
         private SoundEffectInstance _sonidoFondoInstance;
-        float _volumen = 0.06f;
+        float _volumen = 0.3f;
 
 
 

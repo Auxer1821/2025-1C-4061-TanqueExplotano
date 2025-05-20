@@ -26,7 +26,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         protected float _anguloActual;
         private SoundEffect _sonidoDisparo;
         private SoundEffectInstance _sonidoDisparoInstance;
-        float _volumen = 0.06f;
+        float _volumen = 0.3f;
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public Etanque() { }
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario)

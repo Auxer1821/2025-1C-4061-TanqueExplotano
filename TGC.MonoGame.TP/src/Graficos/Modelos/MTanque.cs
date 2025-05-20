@@ -230,7 +230,7 @@ namespace TGC.MonoGame.TP.src.Tanques
             else if(angulo<0) animacion=Animacion.giroIzq;
             else if(velocidad>0) animacion=Animacion.MarchaAdelante;
             else if(velocidad<0) animacion=Animacion.MarchaAtras;
-            offsetCintas = getAnimacionTanque(animacion, velocidad, offsetCintas); // esta es la animacion por defecto, 0 = detenido
+            offsetCintas = getAnimacionTanque(animacion, velocidad/10, offsetCintas); // esta es la animacion por defecto, 0 = detenido
             rotacionRuedas = getAnimacionTanque(animacion, velocidad, rotacionRuedas); // esta es la animacion por defecto, 0 = detenido
         }
 
