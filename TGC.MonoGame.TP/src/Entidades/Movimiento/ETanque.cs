@@ -48,6 +48,9 @@ namespace TGC.MonoGame.TP.src.Entidades
             _sonidoDisparoInstance.IsLooped = false;
             _sonidoDisparoInstance.Volume = _volumen;
             _sonidoDisparoInstance.Pitch = 0.0f;
+            //this._boundingVolume = new BVCuboOBB(this.CalcularCentro(_posicion), new Vector3(4.0f, 8.0f, 8.0f) , Matrix.Identity);
+            this._boundingVolume = new BoundingsVolumes.BVEsfera(5.0f, this._posicion);
+
         }
 
         //----------------------------------------------Metodos-Logica--------------------------------------------------//
@@ -59,11 +62,17 @@ namespace TGC.MonoGame.TP.src.Entidades
             return true;
         }
 
-        public override void Chocar(DataChoque dataChoque, Entidad entidadEstatica){
+        private Vector3 CalcularCentro(Vector3 pos)
+        {
+            return new Vector3(pos.X, pos.Y + 1.5f, pos.Z);
+        }
+
+        public override void Chocar(DataChoque dataChoque, Entidad entidadEstatica)
+        {
             switch (entidadEstatica._tipo)
             {
                 case TipoEntidad.Bala:
-                    this.RecibirDaño(dataChoque, (EBala) entidadEstatica);
+                    this.RecibirDaño(dataChoque, (EBala)entidadEstatica);
                     break;
 
                 case TipoEntidad.Tanque:
@@ -77,7 +86,7 @@ namespace TGC.MonoGame.TP.src.Entidades
                     // Quizás no hacer nada, o loguear el caso
                     break;
             }
-            
+
         }
 
         public override void Update(GameTime gameTime)
@@ -85,6 +94,9 @@ namespace TGC.MonoGame.TP.src.Entidades
             this.ActualizarDireccion();
             this.Mover();
             this.ActualicarModeloTanque();
+            
+            float anguloRotacionY = (float)Math.Atan2(_dirMovimiento.X, _dirMovimiento.Y);
+            this._boundingVolume.Transformar(this.CalcularCentro(_posicion), new Vector3(0.0f, anguloRotacionY, 0.0f),1f);
         }
 
         private void ActualicarModeloTanque(){

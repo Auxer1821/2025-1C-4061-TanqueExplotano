@@ -70,7 +70,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 for (int z = -50; z <= 50; z += 20)
                 {
                     var casa = new ECasa();
-                    casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), view, projection, content, this);
+                    casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), view, projection, content, this, new Vector3 (x, _terreno.GetHeightAt(x,z), z));
                     this.AgregarACrear(casa);
                     posicionesUsadas.Add(new Vector3(x, z, 4));
 
@@ -173,6 +173,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             posicionesUsadas.Add(new Vector3(Jx, Jz, 10));
 
             //----IA---//
+            
             for (int i = 0; i < 4; i++)
             {
                 var tank = new ETanqueIA();
@@ -181,7 +182,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var pos = new Vector2(Ax, Az);
                 if (PosicionesLibre(pos, posicionesUsadas, 10))
                 {
-                    tank.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Ax, _terreno.GetHeightAt(Ax,Az), Az), view, projection, content, this);
+                    tank.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Ax, _terreno.GetHeightAt(Ax, Az), Az), view, projection, content, this);
                     this.AgregarACrear(tank);
                     this._managerGameplay.AgregarEnemigo(tank);
                     posicionesUsadas.Add(new Vector3(Ax, Az, 10));

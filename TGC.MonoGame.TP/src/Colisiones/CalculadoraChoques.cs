@@ -256,7 +256,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
 
 
 
-        //cuboobb
+        //---------------cuboobb----------------------------//
         public static bool DetectarColisiones(BVCuboOBB a, BVCuboOBB b)
         {
             // ---------------------------------------
@@ -372,6 +372,133 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             return proyRight + proyUp + proyForward;
         }
 
+        /*
+                public static DataChoque ParametrosChoque(BVCuboOBB cubo1, BVCuboOBB cubo2)
+                {
+                    // Primero verificamos si hay colisión
+                    if (!DetectarColisiones(cubo1, cubo2))
+                        return new DataChoque(Vector3.Zero, 0, Vector3.Zero);
+
+                    // Implementación del algoritmo GJK/EPA para OBB-OBB
+                    // Para simplificar, usaremos un enfoque basado en ejes de separación (SAT)
+
+                    Vector3 centroDiff = cubo2.Centro - cubo1.Centro;
+
+                    // Ejes de prueba: los 3 de cada OBB (6) + los 9 productos cruzados (15 en total)
+                    Vector3[] ejes = {
+                        cubo1.Orientacion.Right, cubo1.Orientacion.Up, cubo1.Orientacion.Backward,
+                        cubo2.Orientacion.Right, cubo2.Orientacion.Up, cubo2.Orientacion.Backward,
+                        Vector3.Cross(cubo1.Orientacion.Right, cubo2.Orientacion.Right),
+                        Vector3.Cross(cubo1.Orientacion.Right, cubo2.Orientacion.Up),
+                        Vector3.Cross(cubo1.Orientacion.Right, cubo2.Orientacion.Backward),
+                        Vector3.Cross(cubo1.Orientacion.Up, cubo2.Orientacion.Right),
+                        Vector3.Cross(cubo1.Orientacion.Up, cubo2.Orientacion.Up),
+                        Vector3.Cross(cubo1.Orientacion.Up, cubo2.Orientacion.Backward),
+                        Vector3.Cross(cubo1.Orientacion.Backward, cubo2.Orientacion.Right),
+                        Vector3.Cross(cubo1.Orientacion.Backward, cubo2.Orientacion.Up),
+                        Vector3.Cross(cubo1.Orientacion.Backward, cubo2.Orientacion.Backward)
+                    };
+
+                    float minPenetracion = float.MaxValue;
+                    Vector3 ejeColision = Vector3.Zero;
+
+                    foreach (Vector3 eje in ejes)
+                    {
+                        if (eje.LengthSquared() < 0.001f) continue;
+
+                        Vector3 ejeNormalizado = Vector3.Normalize(eje);
+
+                        // Proyectamos ambos cubos en el eje
+                        float proy1 = ProyectarOBB(cubo1, ejeNormalizado);
+                        float proy2 = ProyectarOBB(cubo2, ejeNormalizado);
+
+                        // Proyectamos la distancia entre centros
+                        float distancia = Math.Abs(Vector3.Dot(centroDiff, ejeNormalizado));
+
+                        // Calculamos la penetración en este eje
+                        float penetracion = (proy1 + proy2) - distancia;
+
+                        if (penetracion <= 0)
+                            return new DataChoque(Vector3.Zero, 0, Vector3.Zero); // No debería ocurrir si hay colisión
+
+                        if (penetracion < minPenetracion)
+                        {
+                            minPenetracion = penetracion;
+                            ejeColision = ejeNormalizado * Math.Sign(Vector3.Dot(centroDiff, ejeNormalizado));
+                        }
+                    }
+
+                    // Punto de contacto aproximado (podría mejorarse con Closest Points)
+                    Vector3 puntoContacto = (cubo1.Centro + cubo2.Centro) * 0.5f;
+
+                    // Mejorar el punto de contacto encontrando la cara de colisión
+                    // Esto es una aproximación simple, una implementación más precisa requeriría GJK/EPA
+                    Vector3 direccionCentros = cubo2.Centro - cubo1.Centro;
+                    if (Vector3.Dot(direccionCentros, ejeColision) < 0)
+                    {
+                        ejeColision = -ejeColision;
+                    }
+
+                    return new DataChoque(puntoContacto, minPenetracion, ejeColision);
+                }
+        */
+public static DataChoque ParametrosChoque(BVCuboOBB cubo1, BVCuboOBB cubo2)
+{
+    Vector3 centroDiff = cubo2.Centro - cubo1.Centro;
+    // Ejes de prueba (15)
+        Vector3[] ejes = {
+        cubo1.Orientacion.Right, cubo1.Orientacion.Up, cubo1.Orientacion.Backward,
+        cubo2.Orientacion.Right, cubo2.Orientacion.Up, cubo2.Orientacion.Backward,
+        Vector3.Cross(cubo1.Orientacion.Right, cubo2.Orientacion.Right),
+        Vector3.Cross(cubo1.Orientacion.Right, cubo2.Orientacion.Up),
+        Vector3.Cross(cubo1.Orientacion.Right, cubo2.Orientacion.Backward),
+        Vector3.Cross(cubo1.Orientacion.Up, cubo2.Orientacion.Right),
+        Vector3.Cross(cubo1.Orientacion.Up, cubo2.Orientacion.Up),
+        Vector3.Cross(cubo1.Orientacion.Up, cubo2.Orientacion.Backward),
+        Vector3.Cross(cubo1.Orientacion.Backward, cubo2.Orientacion.Right),
+        Vector3.Cross(cubo1.Orientacion.Backward, cubo2.Orientacion.Up),
+        Vector3.Cross(cubo1.Orientacion.Backward, cubo2.Orientacion.Backward)
+        };
+
+    float minPenetracion = float.MaxValue;
+    Vector3 ejeColision = Vector3.Zero;
+
+    foreach (Vector3 eje in ejes)
+    {
+        if (eje.LengthSquared() < 0.001f)
+            continue;
+
+        Vector3 ejeNormalizado = Vector3.Normalize(eje);
+
+        float proy1 = ProyectarOBB(cubo1, ejeNormalizado);
+        float proy2 = ProyectarOBB(cubo2, ejeNormalizado);
+        float distancia = Math.Abs(Vector3.Dot(centroDiff, ejeNormalizado));
+
+        float penetracion = (proy1 + proy2) - distancia;
+
+        // Si hay un eje de separación, no hay colisión real
+        if (penetracion <= 0)
+            return new DataChoque(Vector3.Zero, 0, Vector3.Zero);
+
+        if (penetracion < minPenetracion)
+        {
+            minPenetracion = penetracion;
+            // Aseguramos que el eje apunte de cubo1 hacia cubo2
+            ejeColision = ejeNormalizado * Math.Sign(Vector3.Dot(centroDiff, ejeNormalizado));
+        }
+    }
+
+    // Si la penetración mínima es negativa o cero, no hay colisión
+    if (minPenetracion <= 0)
+        return new DataChoque(Vector3.Zero, 0, Vector3.Zero);
+
+    // Punto de contacto estimado: proyección del centro de cubo1 hacia cubo2 en la dirección del eje de colisión
+    float distanciaProyectada = Vector3.Dot(centroDiff, ejeColision);
+    Vector3 puntoContacto = cubo1.Centro + ejeColision * (distanciaProyectada * 0.5f);
+
+    return new DataChoque(puntoContacto, minPenetracion, ejeColision);
+}
+
 
 
         // ----------------------------- Colisiones Esfera - OBB --------------------------------------------- //
@@ -420,6 +547,22 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             float penetracion = esferaMovimento._radio - distancia;
 
             return new DataChoque(puntoContacto, penetracion, normal);
+        }
+
+        public static bool DetectarColisiones(BVCuboOBB cuboMovimiento, BVEsfera esferaChocada)
+        {
+            // Simplemente llama a la función existente con los argumentos invertidos
+            return DetectarColisiones(esferaChocada, cuboMovimiento);
+        }
+
+        public static DataChoque ParametrosChoque(BVCuboOBB cuboMovimiento, BVEsfera esferaChocada)
+        {
+            // Llama a la función existente
+            DataChoque choqueOriginal = ParametrosChoque(esferaChocada, cuboMovimiento);
+
+            // Invierte la normal para que sea desde el punto de vista del cubo
+            // El punto de contacto y la penetración siguen siendo los mismos
+            return new DataChoque(choqueOriginal._puntoContacto, choqueOriginal._penetracion, -choqueOriginal._normal);
         }
 
         // ----------------------------- Colisiones Esfera - Cilindro AABB --------------------------------------------- //
@@ -986,6 +1129,193 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             Vector3 puntoContacto = (puntoEnRayo1 + puntoEnRayo2) * 0.5f;
             
             return new DataChoque(puntoContacto, 0, normal);
+        }
+
+        // Método para detectar colisión entre rayo y cilindro AABB
+        public static bool DetectarColisiones(BVCilindroAABB cilindro, BVRayo rayo){return DetectarColisiones( rayo,  cilindro);}
+        public static bool DetectarColisiones(BVRayo rayo, BVCilindroAABB cilindro)
+        {
+            // Convertimos el cilindro a un sistema de coordenadas local donde el centro está en (0,0,0)
+            Vector3 origenLocal = rayo._PuntoPartda - cilindro._centro;
+            Vector3 direccionLocal = rayo._Direccion;
+
+            // Proyectamos en el plano XZ (base del cilindro)
+            Vector2 origenXZ = new Vector2(origenLocal.X, origenLocal.Z);
+            Vector2 direccionXZ = new Vector2(direccionLocal.X, direccionLocal.Z);
+
+            // Ecuación cuadrática para intersección con el cilindro infinito (en XZ)
+            float a = direccionXZ.LengthSquared();
+            float b = 2 * Vector2.Dot(origenXZ, direccionXZ);
+            float c = origenXZ.LengthSquared() - (cilindro._radio * cilindro._radio);
+
+            // Discriminante
+            float discriminante = b * b - 4 * a * c;
+
+            if (discriminante < 0)
+                return false; // No hay intersección con el cilindro infinito
+
+            // Calculamos los posibles puntos de intersección
+            float sqrtDisc = (float)Math.Sqrt(discriminante);
+            float t1 = (-b - sqrtDisc) / (2 * a);
+            float t2 = (-b + sqrtDisc) / (2 * a);
+
+            // Verificamos intersección con las tapas del cilindro
+            float mitadAltura = cilindro._alto / 2;
+            float tMin = Math.Min(t1, t2);
+            float tMax = Math.Max(t1, t2);
+
+            // Verificamos intersección con las tapas (planos y=±mitadAltura)
+            if (Math.Abs(direccionLocal.Y) > 1e-6f)
+            {
+                float tTop = (mitadAltura - origenLocal.Y) / direccionLocal.Y;
+                float tBottom = (-mitadAltura - origenLocal.Y) / direccionLocal.Y;
+
+                // Verificamos si la intersección con las tapas está dentro del radio
+                if (tTop > 0)
+                {
+                    Vector3 puntoTop = origenLocal + direccionLocal * tTop;
+                    if (new Vector2(puntoTop.X, puntoTop.Z).LengthSquared() <= cilindro._radio * cilindro._radio)
+                    {
+                        return true;
+                    }
+                }
+
+                if (tBottom > 0)
+                {
+                    Vector3 puntoBottom = origenLocal + direccionLocal * tBottom;
+                    if (new Vector2(puntoBottom.X, puntoBottom.Z).LengthSquared() <= cilindro._radio * cilindro._radio)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            // Verificamos si la intersección con el cilindro está dentro de la altura
+            if (tMax > 0)
+            {
+                Vector3 puntoMax = origenLocal + direccionLocal * tMax;
+                if (Math.Abs(puntoMax.Y) <= mitadAltura)
+                {
+                    return true;
+                }
+            }
+
+            if (tMin > 0)
+            {
+                Vector3 puntoMin = origenLocal + direccionLocal * tMin;
+                if (Math.Abs(puntoMin.Y) <= mitadAltura)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+         // Método para obtener parámetros de choque entre rayo y cilindro AABB
+        public static DataChoque ParametrosChoque(BVCilindroAABB cilindro, BVRayo rayo) {return ParametrosChoque(rayo,cilindro); }
+        public static DataChoque ParametrosChoque(BVRayo rayo, BVCilindroAABB cilindro)
+        {
+            Vector3 origenLocal = rayo._PuntoPartda - cilindro._centro;
+            Vector3 direccionLocal = rayo._Direccion;
+
+            // Proyectamos en el plano XZ
+            Vector2 origenXZ = new Vector2(origenLocal.X, origenLocal.Z);
+            Vector2 direccionXZ = new Vector2(direccionLocal.X, direccionLocal.Z);
+
+            // Ecuación cuadrática para el cilindro
+            float a = direccionXZ.LengthSquared();
+            float b = 2 * Vector2.Dot(origenXZ, direccionXZ);
+            float c = origenXZ.LengthSquared() - (cilindro._radio * cilindro._radio);
+
+            float discriminante = b * b - 4 * a * c;
+            if (discriminante < 0)
+                return new DataChoque(Vector3.Zero, 0, Vector3.Zero);
+
+            float sqrtDisc = (float)Math.Sqrt(discriminante);
+            float t1 = (-b - sqrtDisc) / (2 * a);
+            float t2 = (-b + sqrtDisc) / (2 * a);
+
+            float mitadAltura = cilindro._alto / 2;
+            float tMin = Math.Min(t1, t2);
+            float tMax = Math.Max(t1, t2);
+
+            // Variables para almacenar el mejor choque encontrado
+            float mejorT = float.MaxValue;
+            Vector3 normal = Vector3.Zero;
+            bool esTapa = false;
+
+            // Verificamos intersección con las tapas
+            if (Math.Abs(direccionLocal.Y) > 1e-6f)
+            {
+                float tTop = (mitadAltura - origenLocal.Y) / direccionLocal.Y;
+                if (tTop > 0 && tTop < mejorT)
+                {
+                    Vector3 puntoTop = origenLocal + direccionLocal * tTop;
+                    if (new Vector2(puntoTop.X, puntoTop.Z).LengthSquared() <= cilindro._radio * cilindro._radio)
+                    {
+                        mejorT = tTop;
+                        normal = Vector3.UnitY;
+                        esTapa = true;
+                    }
+                }
+
+                float tBottom = (-mitadAltura - origenLocal.Y) / direccionLocal.Y;
+                if (tBottom > 0 && tBottom < mejorT)
+                {
+                    Vector3 puntoBottom = origenLocal + direccionLocal * tBottom;
+                    if (new Vector2(puntoBottom.X, puntoBottom.Z).LengthSquared() <= cilindro._radio * cilindro._radio)
+                    {
+                        mejorT = tBottom;
+                        normal = -Vector3.UnitY;
+                        esTapa = true;
+                    }
+                }
+            }
+
+            // Verificamos intersección con el cuerpo del cilindro
+            if (tMax > 0 && tMax < mejorT)
+            {
+                Vector3 puntoMax = origenLocal + direccionLocal * tMax;
+                if (Math.Abs(puntoMax.Y) <= mitadAltura)
+                {
+                    mejorT = tMax;
+                    Vector2 normalXZ = new Vector2(puntoMax.X, puntoMax.Z);
+                    normalXZ.Normalize();
+                    normal = new Vector3(normalXZ.X, 0, normalXZ.Y);
+                    esTapa = false;
+                }
+            }
+
+            if (tMin > 0 && tMin < mejorT)
+            {
+                Vector3 puntoMin = origenLocal + direccionLocal * tMin;
+                if (Math.Abs(puntoMin.Y) <= mitadAltura)
+                {
+                    mejorT = tMin;
+                    Vector2 normalXZ = new Vector2(puntoMin.X, puntoMin.Z);
+                    normalXZ.Normalize();
+                    normal = new Vector3(normalXZ.X, 0, normalXZ.Y);
+                    esTapa = false;
+                }
+            }
+
+            if (mejorT == float.MaxValue)
+                return new DataChoque(Vector3.Zero, 0, Vector3.Zero);
+
+            Vector3 puntoContactoLocal = origenLocal + direccionLocal * mejorT;
+            Vector3 puntoContacto = puntoContactoLocal + cilindro._centro;
+
+            // Para el caso de choque con el cuerpo del cilindro, calculamos la penetración
+            float penetracion = 0;
+            if (!esTapa)
+            {
+                Vector2 proyeccionXZ = new Vector2(puntoContactoLocal.X, puntoContactoLocal.Z);
+                float distanciaAlBorde = cilindro._radio - proyeccionXZ.Length();
+                penetracion = distanciaAlBorde;
+            }
+
+            return new DataChoque(puntoContacto, penetracion, normal);
         }
 
         

@@ -17,10 +17,12 @@ namespace TGC.MonoGame.TP.src.Entidades
     public class ERoca : Entidades.EntidadFull
     {
         public ERoca(){}
-        public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario)
+        {
             this._modelo = new Rocas.ORoca();
             this._tipo = TipoEntidad.Obstaculo;
-            base.Initialize(Graphics,Mundo,View,Projection,Content, escenario);
+            base.Initialize(Graphics, Mundo, View, Projection, Content, escenario);
+            this._boundingVolume = new BoundingsVolumes.BVEsfera(1.0f, this._posicion);
         }
     }
 }
