@@ -527,3 +527,15 @@
 /processorParam:Quality=Best
 /build:Sounds/disparo2.wav
 
+#begin Sounds/tankMove.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/tankMove.wav
+
+#begin Sounds/tankStop.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/tankStop.wav
+

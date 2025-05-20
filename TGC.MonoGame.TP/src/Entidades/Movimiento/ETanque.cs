@@ -24,9 +24,14 @@ namespace TGC.MonoGame.TP.src.Entidades
         protected float _cooldownActual;
         protected float _velocidadActual;
         protected float _anguloActual;
-        private SoundEffect _sonidoDisparo;
+
+        //variables de sonido
         private SoundEffectInstance _sonidoDisparoInstance;
+        private SoundEffectInstance _sonidoMovimientoInstance;
+        private SoundEffectInstance _sonidoDetenidoInstance;
         float _volumen = 0.3f;
+
+
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public Etanque() { }
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario)
@@ -42,20 +47,38 @@ namespace TGC.MonoGame.TP.src.Entidades
             //TODO - Crear Bounding Volume especializados // Eliminarlo de EntidadFull
             base.Initialize(Graphics, Mundo, View, Projection, Content, escenario);
 
+            //this._boundingVolume = new BVCuboOBB(this.CalcularCentro(_posicion), new Vector3(4.0f, 8.0f, 8.0f) , Matrix.Identity);
+            this._boundingVolume = new BoundingsVolumes.BVEsfera(5.0f, this._posicion);
 
-            this._sonidoDisparo = Content.Load<SoundEffect>("Sounds/disparo2");
-            this._sonidoDisparoInstance = _sonidoDisparo.CreateInstance();
+            //Cargar el sonido
+            InstanciarSonidosTanque(Content);
+        }
+
+        private void InstanciarSonidosTanque(ContentManager Content)
+        {
+            SoundEffect sonidoDetenido = Content.Load<SoundEffect>(@"Sounds/tankStop");
+            this._sonidoDetenidoInstance = sonidoDetenido.CreateInstance();
+            _sonidoDetenidoInstance.IsLooped = true;
+            _sonidoDetenidoInstance.Volume = _volumen / 4;
+
+            SoundEffect sonidoMovimiento = Content.Load<SoundEffect>(@"Sounds/tankMove");
+            this._sonidoMovimientoInstance = sonidoMovimiento.CreateInstance();
+            _sonidoMovimientoInstance.IsLooped = true;
+            _sonidoMovimientoInstance.Volume = _volumen / 3;
+
+            SoundEffect sonidoDisparo = Content.Load<SoundEffect>(@"Sounds/disparo2");
+            this._sonidoDisparoInstance = sonidoDisparo.CreateInstance();
             _sonidoDisparoInstance.IsLooped = false;
             _sonidoDisparoInstance.Volume = _volumen;
             _sonidoDisparoInstance.Pitch = 0.0f;
-            //this._boundingVolume = new BVCuboOBB(this.CalcularCentro(_posicion), new Vector3(4.0f, 8.0f, 8.0f) , Matrix.Identity);
-            this._boundingVolume = new BoundingsVolumes.BVEsfera(5.0f, this._posicion);
+
 
         }
 
         //----------------------------------------------Metodos-Logica--------------------------------------------------//
 
-        public override bool PuedeChocar(){
+        public override bool PuedeChocar()
+        {
             return _activo;
         }
         public override bool PuedeSerChocado(){
@@ -154,13 +177,14 @@ namespace TGC.MonoGame.TP.src.Entidades
             return this._cooldownActual > this._tipoTanque.cooldown();
         }
 
-//---------------------------------------------MOVIMIENTO-Y-APUNTADO---------------------------------------------------//
+        //---------------------------------------------MOVIMIENTO-Y-APUNTADO---------------------------------------------------//
 
         // Función que actualiza los valores de posición y ángulo
         // Para luego usarlos y crear la matriz mundo
         public void Mover()
         {
             this._posicion += new Vector3(_dirMovimiento.X, 0, _dirMovimiento.Y) * _velocidadActual;
+
 
             var angulo = this._angulo;
             angulo.Z -= _anguloActual;
@@ -173,6 +197,30 @@ namespace TGC.MonoGame.TP.src.Entidades
             var posAux = this._posicion;
             posAux.Y = this._escenario.getAltura(this._posicion);
             this._posicion = posAux;
+
+            //sonido
+            if (_velocidadActual != 0)
+            {
+                if (_sonidoMovimientoInstance.State != SoundState.Playing)
+                {
+                    _sonidoMovimientoInstance.Play();
+                }
+                if (_sonidoDetenidoInstance.State == SoundState.Playing)
+                {
+                    _sonidoDetenidoInstance.Stop();
+                }
+            }
+            else
+            {
+                if (_sonidoMovimientoInstance.State == SoundState.Playing)
+                {
+                    _sonidoMovimientoInstance.Stop();
+                }
+                if (_sonidoDetenidoInstance.State != SoundState.Playing)
+                {
+                    _sonidoDetenidoInstance.Play();
+                }
+            }
 
             
         }
@@ -194,7 +242,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             //sonido disparo
             if (_sonidoDisparoInstance.State != SoundState.Playing)
             {
-                _sonidoDisparoInstance.Pitch = new Random().Next(-100, 100) / 100.0f;
+                _sonidoDisparoInstance.Pitch = new Random().Next(-90, 100) / 100.0f;
                 _sonidoDisparoInstance.Play();
             }
         }

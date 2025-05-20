@@ -188,6 +188,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         // 4 giro a la izquierda
         public Vector2 getAnimacionTanque(Animacion animacion, float velocidad, Vector2 resultado)
         {
+            //en algun punto agregar dos casos mas, giro sobre el eje a la izquierda y derecha
             switch (animacion)
             {
                 case Animacion.Detenido:
@@ -214,6 +215,8 @@ namespace TGC.MonoGame.TP.src.Tanques
 
         public bool esRuedaDerecha(string nombre)
         {
+            //en caso de agragar el otro tanque cambiar para que el if decida que tanque es
+            //T90
             return nombre.Contains("9") || nombre.Contains("10") || nombre.Contains("11") || nombre.Contains("12") || nombre.Contains("13") || nombre.Contains("14") || nombre.Contains("15") || nombre.Contains("16");
             
         }
