@@ -98,19 +98,6 @@ namespace TGC.MonoGame.TP.src.Tanques
             effectRueda.Parameters["World"].SetValue(this._matrixMundo);
             effectRueda.Parameters["Texture"].SetValue(tanqueTexture);
 
-            //---------------------------- variables prueba--------------------------------------------------------
-            /*
-            // prueba de rotacion de ruedas TODO crear funcion
-            rotacionRuedas += new Vector2(1, 1) * 0.1f;
-
-            //prueba de movimiento de la cinta
-            offsetCintas.X += 0.01f;
-            if (offsetCintas.X > 1.0f)
-                offsetCintas.X -= 1.0f;
-
-            offsetCintas.Y = -offsetCintas.X;
-            */
-
             //------------------------------dibujado de los meshes---------------------------------------------------
             //TODO mejorar la lectura del codigo
             foreach (var mesh in _modelo.Meshes)
@@ -127,6 +114,8 @@ namespace TGC.MonoGame.TP.src.Tanques
                         effectRueda.Parameters["UVOffset"].SetValue(new Vector2(0, offsetCintas.Y));
                     }
                     effectRueda.Parameters["Texture"].SetValue(texturaCinta);
+
+                    //aplicar el efecto a cada parte de la malla
                     foreach (ModelMeshPart part in mesh.MeshParts)
                     {
                         part.Effect = effectRueda;
@@ -138,13 +127,13 @@ namespace TGC.MonoGame.TP.src.Tanques
                 else if (mesh.Name == "Turret" || mesh.Name == "Cannon")
                 {
                     //posiblemente de problemas al calcular con las normales del mapa
-                    _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta)  * _matrixMundo);
+                    _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta) * _matrixMundo);
                     Matrix transform = mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta) * _matrixMundo;
                     if (mesh.Name == "Cannon")
                     {
                         _effect2.Parameters["World"].SetValue(Matrix.CreateRotationX(-alturaTorreta - 0.3f) * transform);
                     }
-                    
+
                 }
                 else if (mesh.Name.Contains("Wheel"))
                 {
@@ -176,6 +165,8 @@ namespace TGC.MonoGame.TP.src.Tanques
                 }
                 mesh.Draw();
             }
+
+            //dibujado de proyextiles
         }
 
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------//
@@ -188,7 +179,6 @@ namespace TGC.MonoGame.TP.src.Tanques
         public void rotarTorreta(float giro)
         {
             giroTorreta += giro;
-            
         }
 
         // 0 detenido
@@ -210,10 +200,10 @@ namespace TGC.MonoGame.TP.src.Tanques
                     resultado += new Vector2(1, 1) * velocidad;
                     break;
                 case Animacion.giroDer:
-                    resultado += new Vector2(-1, 1) * velocidad;
+                    resultado += new Vector2(1, 0.5f) * velocidad;
                     break;
                 case Animacion.giroIzq:
-                    resultado += new Vector2(1, -1) * velocidad;
+                    resultado += new Vector2(0.5f, 1) * velocidad;
                     break;
                 default:
                     resultado = new Vector2(0, 0);
@@ -246,7 +236,6 @@ namespace TGC.MonoGame.TP.src.Tanques
 
         internal void ActualizarTorreta(Vector2 dirMovimiento, Vector3 dirApuntado)
         {
-            //throw new NotImplementedException();
             if (dirMovimiento != Vector2.Zero)
                 dirMovimiento.Normalize();
             // Calcular ángulo deseado en el plano horizontal (XZ)
@@ -262,7 +251,7 @@ namespace TGC.MonoGame.TP.src.Tanques
             alturaTorreta = dirApuntado.Y;
 
             // Limitar el rango de movimiento de la torreta
-            if (alturaTorreta > MathHelper.PiOver2/2)
+            if (alturaTorreta > MathHelper.PiOver2)
                 alturaTorreta = MathHelper.PiOver2;
             else if (alturaTorreta < -MathHelper.PiOver2)
                 alturaTorreta = -MathHelper.PiOver2;
