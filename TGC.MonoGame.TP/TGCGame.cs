@@ -4,9 +4,8 @@ using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using TGC.MonoGame.TP.src.Casa;
-using TGC.MonoGame.TP.src.Esenario;
-using TGC.MonoGame.TP.src.Tanke;
+using TGC.MonoGame.TP.src.Escenarios;
+using TGC.MonoGame.TP.src.Cameras;
 
 namespace TGC.MonoGame.TP
 {
@@ -34,10 +33,10 @@ namespace TGC.MonoGame.TP
         {
             // Maneja la configuracion y la administracion del dispositivo grafico.
             Graphics = new GraphicsDeviceManager(this);
-            
+
             Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width - 100;
             Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 100;
-            
+
             // Para que el juego sea pantalla completa se puede usar Graphics IsFullScreen.
             // Carpeta raiz donde va a estar toda la Media.
             Content.RootDirectory = "Content";
@@ -49,12 +48,12 @@ namespace TGC.MonoGame.TP
         private SpriteBatch SpriteBatch { get; set; }
         private Matrix View { get; set; }
         private Matrix Projection { get; set; }
-        
+
 
         //objetos
-        private Esenario _esenario;
+        private Escenario _escenario;
 
-        private Camara _camara;
+        //private Camara _camara;
 
 
         /// <summary>
@@ -68,12 +67,12 @@ namespace TGC.MonoGame.TP
             // Apago el backface culling.
             // Esto se hace por un problema en el diseno del modelo del logo de la materia.
             // Una vez que empiecen su juego, esto no es mas necesario y lo pueden sacar.
-            
+
             var rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
             GraphicsDevice.RasterizerState = rasterizerState;
             // Seria hasta aca.
-            
+
 
 
             // Configuramos nuestras matrices de la escena.
@@ -81,12 +80,12 @@ namespace TGC.MonoGame.TP
             Projection =
                 Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, GraphicsDevice.Viewport.AspectRatio, 1, 250);
 
-            _camara = new Camara(Vector3.UnitZ * 150, Vector3.Zero , GraphicsDevice.Viewport.AspectRatio);
+            //_camara = new Camara(Vector3.UnitZ * 150, Vector3.Zero , GraphicsDevice.Viewport.AspectRatio);
 
-            //_Esenario = new Esenario(GraphicsDevice);
-            _esenario = new Esenario();
-            //_esenario.Initialize(GraphicsDevice, Matrix.Identity, View, Projection, Content);
-            _esenario.Initialize(GraphicsDevice, Matrix.Identity, _camara.Vista, _camara.Proyeccion, Content);
+            //_Escenario = new Escenario(GraphicsDevice);
+            _escenario = new Escenario();
+            //_escenario.Initialize(GraphicsDevice, Matrix.Identity, View, Projection, Content);
+            _escenario.Initialize(GraphicsDevice, Matrix.Identity, Content);
 
             base.Initialize();
         }
@@ -100,7 +99,7 @@ namespace TGC.MonoGame.TP
         {
             // Aca es donde deberiamos cargar todos los contenido necesarios antes de iniciar el juego.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
-            
+
             base.LoadContent();
         }
 
@@ -120,8 +119,7 @@ namespace TGC.MonoGame.TP
                 Exit();
             }
 
-            _camara.Actualizar(gameTime);
-            _esenario.ActualizarCamara(_camara);
+            _escenario.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -133,8 +131,8 @@ namespace TGC.MonoGame.TP
         {
             // Aca deberiamos poner toda la logia de renderizado del juego.
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            
-            _esenario.Dibujar(GraphicsDevice);
+
+            _escenario.Dibujar(GraphicsDevice);
 
 
         }

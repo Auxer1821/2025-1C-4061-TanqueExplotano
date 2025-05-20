@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using TGC.MonoGame.TP.src.Esenario;
+using TGC.MonoGame.TP.src.Escenario;
 
 namespace TGC.MonoGame.TP
 {
@@ -50,7 +50,7 @@ namespace TGC.MonoGame.TP
     
 
         //objetos
-        private Esenario _Esenario;
+        private Escenario _Escenario;
 
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace TGC.MonoGame.TP
             // Cargo el modelo del logo.
             Model = Content.Load<Model>(ContentFolder3D + "tgc-logo/tgc-logo");
 
-            _Esenario = new Esenario(GraphicsDevice, View, Projection);
+            _Escenario = new Escenario(GraphicsDevice, View, Projection);
 
             // Cargo un efecto basico propio declarado en el Content pipeline.
             // En el juego no pueden usar BasicEffect de MG, deben usar siempre efectos propios.
@@ -159,7 +159,7 @@ namespace TGC.MonoGame.TP
                 mesh.Draw();
             }
 
-            _Esenario.Dibujar(GraphicsDevice);
+            _Escenario.Dibujar(GraphicsDevice);
 
         }
 
