@@ -36,6 +36,12 @@ namespace TGC.MonoGame.TP.src.Casas
             techoTexture = Content.Load<Texture2D>(@"Models/house/techo2");
             marcoTexture = Content.Load<Texture2D>(@"Models/house/tablasMadera");
 
+            //cargar texturas en los parametros del shader
+            _effect2.Parameters["TextureChimenea"].SetValue(chimeneaTexture);
+            _effect2.Parameters["TexturePared"].SetValue(paredTexture);
+            _effect2.Parameters["TextureTecho"].SetValue(techoTexture);
+            _effect2.Parameters["TextureVentana"].SetValue(marcoTexture);
+
             //obtenemos los meshes del modelo
             int count = 0;
             int meshCount = _modelo.Meshes.Count;
@@ -64,7 +70,7 @@ namespace TGC.MonoGame.TP.src.Casas
 
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
         {
-            return Content.Load<Effect>(@"Effects/shaderTextura");
+            return Content.Load<Effect>(@"Effects/shaderCasa");
         }
 
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta
@@ -79,21 +85,21 @@ namespace TGC.MonoGame.TP.src.Casas
 
             foreach (var mesh in _modelo.Meshes)
             {
-                if (mesh.Name == meshes[2])
+                if (mesh.Name.Contains("Roof"))
                 {
-                    _effect2.Parameters["Texture"].SetValue(techoTexture);
+                    _effect2.CurrentTechnique = _effect2.Techniques["Techo"];
                 }
-                else if (mesh.Name == meshes[3])
+                else if (mesh.Name.Contains("Window"))
                 {
-                    _effect2.Parameters["Texture"].SetValue(marcoTexture);
+                    _effect2.CurrentTechnique = _effect2.Techniques["Ventana"];
                 }
-                else if (mesh.Name == meshes[1])
+                else if (mesh.Name.Contains("Cummny"))
                 {
-                    _effect2.Parameters["Texture"].SetValue(paredTexture);
+                    _effect2.CurrentTechnique = _effect2.Techniques["Chimenea"];
                 }
-                else if (mesh.Name == meshes[0])
+                else if (mesh.Name.Contains("Wall"))
                 {
-                    _effect2.Parameters["Texture"].SetValue(chimeneaTexture);
+                    _effect2.CurrentTechnique = _effect2.Techniques["Pared"];
                 }
                 _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
                 mesh.Draw();

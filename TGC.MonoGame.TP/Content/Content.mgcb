@@ -31,6 +31,12 @@
 /processorParam:DebugMode=Auto
 /build:Effects/shaderCaja.fx
 
+#begin Effects/shaderCasa.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/shaderCasa.fx
+
 #begin Effects/shaderMontana.fx
 /importer:EffectImporter
 /processor:EffectProcessor
