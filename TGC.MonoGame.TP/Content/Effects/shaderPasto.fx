@@ -18,7 +18,7 @@ texture2D Texture;
 sampler TextureSampler = sampler_state
 {
     Texture = (Texture);
-    MagFilter = Linear;
+    MagFilter = Anisotropic;
     MinFilter = Linear;
     MipFilter = Linear;
     AddressU = Wrap;
@@ -30,10 +30,10 @@ float4x4 Projection;
 
 float3 DiffuseColor;
 float AlphaThreshold = 0.5f; // Valor de umbral de transparencia
-float WindStrength = 600.0f;
-float WindSpeed = 1.5f;
+float WindStrength = 0.4f;
+float WindSpeed = 1.3f;
 float GrassStiffness = 0.3f;
-float Time;
+float Time = 0;
 
 struct VertexShaderInput
 {
@@ -53,20 +53,17 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 {
     // Clear the output
 	VertexShaderOutput output = (VertexShaderOutput)0;
-
-    // Calcula factor de movimiento basado en coordenada Y (altura)
-    float windFactor = input.Position.y; // Asegura que Y va de 0 (base) a 1 (punta)
-    
     // Movimiento principal (usa posición en X y Z para variación)
     float wave = sin(Time * WindSpeed + input.Position.x + input.Position.z) * WindStrength;
     
     // Aplica movimiento solo a la parte superior
     float4 modifiedPosition = input.Position;
-    modifiedPosition.x += wave * windFactor; // Mueve en X
-    modifiedPosition.z += wave * windFactor * 0.7; // Mueve ligeramente en Z
+    modifiedPosition.x += wave * (1.0f - abs(input.Position.y) * GrassStiffness);
     
     // Transformaciones normales
-    output.Position = mul(modifiedPosition, mul(World, mul(View, Projection)));
+    float4 WorldModificado = mul(modifiedPosition ,World);
+    float4 ViewModificado = mul(WorldModificado, View);
+    output.Position = mul(ViewModificado, Projection);
     output.TexCoord = input.TexCoord;
     
     return output;
@@ -74,7 +71,15 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-	float4 color = tex2D(TextureSampler, input.TexCoord);
+    // Distorsión basada en el tiempo y posición en Y (para que el pasto se mueva desde la base)
+    float windEffect = sin(1 - input.TexCoord.y + Time * WindSpeed) * WindStrength * (1- input.TexCoord.y);
+    windEffect *= (1.0f - input.TexCoord.y) * GrassStiffness; // Aumenta el efecto en la parte superior del pasto
+    
+    // Aplicamos la distorsión solo en X para simular el viento
+    float2 distortedTexCoord = input.TexCoord + float2(windEffect, 0);
+    
+    // Muestreamos la textura con las coordenadas modificadas
+    float4 color = tex2D(TextureSampler, distortedTexCoord);
     if (color.a < AlphaThreshold)
         discard;
     return color;

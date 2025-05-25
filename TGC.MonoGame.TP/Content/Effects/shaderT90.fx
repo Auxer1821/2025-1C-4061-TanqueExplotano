@@ -66,7 +66,7 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
     // World space to View space
     float4 viewPosition = mul(worldPosition, View);	
 	// View space to Projection space
-
+	
     output.Position = mul(viewPosition, Projection);
 	output.TexCoord = input.TexCoord;
 

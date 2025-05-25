@@ -31,7 +31,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private Cameras.FreeCamera _camara;
         //TODO: Que sea el primero en ser dibujado
         private Entidades.ESkyBox _skyBox; //TODO -> Actualizar en el manager Graficos para que se dibujen primeros / ultimos
-        private Entidades.EPasto[] pastos = new Entidades.EPasto[100];
+        private Entidades.EPasto[] pastos = new Entidades.EPasto[1000];
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public Escenario()
@@ -121,14 +121,14 @@ namespace TGC.MonoGame.TP.src.Escenarios
             }
 
             //------Crear pasto--------------------//
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 var pasto = new Entidades.EPasto();
                 float x = random.Next(-300, 300);
                 float z = random.Next(-300, 300);
                 var pos = new Vector2(x,z); 
                  if(PosicionesLibre(pos, posicionesUsadas,1)){
-                    pasto.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), view, projection, content, this);
+                    pasto.Initialize(graphicsDevice, Matrix.CreateScale(0.5f) * world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z) + 1f, z) , view, projection, content, this);
                     pastos[i] = pasto;
                     posicionesUsadas.Add(new Vector3(x,z,1));
                 }
@@ -212,14 +212,6 @@ namespace TGC.MonoGame.TP.src.Escenarios
             _camara.Update(gameTime);
             _managerGrafico.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
             _terreno.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
-            //TODO pasto dentro de manager grafico
-            foreach (var pasto in pastos)
-            {
-                if (pasto != null)
-                {
-                    pasto.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
-                }
-            }
         }
 
         public void AgregarAEliminar(Entidad entidad)
@@ -240,6 +232,15 @@ namespace TGC.MonoGame.TP.src.Escenarios
             _managerGameplay.Update(gameTime);
             _managerColision.VerificarColisiones();
             this.ActualizarCamara(gameTime);
+            //TODO pasto dentro de manager grafico
+            foreach (var pasto in pastos)
+            {
+                if (pasto != null)
+                {
+                    pasto.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
+                    pasto.ActualizarTime((float)gameTime.TotalGameTime.TotalSeconds);
+                }
+            }
             if (_faltaEliminar) this.EliminarEntidades();
             if (_faltaCrear) this.CrearEntidades();
 
