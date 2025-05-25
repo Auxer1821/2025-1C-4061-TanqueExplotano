@@ -48,9 +48,9 @@ namespace TGC.MonoGame.TP.src.Tanques
 
         protected override void ConfigurarModelo(ContentManager Content)
         {
-            this._modelo = Content.Load<Model>("Models/tgc-tanks" + this._tipoTanque.directorioModelo());
-            tanqueTexture = Content.Load<Texture2D>("Models/tgc-tanks" + this._tipoTanque.directorioTextura());
-            texturaCinta = Content.Load<Texture2D>("Models/tgc-tanks/T90/textures_mod/treadmills");
+            this._modelo = Content.Load<Model>(@"Models/tgc-tanks" + this._tipoTanque.directorioModelo());
+            tanqueTexture = Content.Load<Texture2D>(@"Models/tgc-tanks" + this._tipoTanque.directorioTextura());
+            texturaCinta = Content.Load<Texture2D>(@"Models/tgc-tanks/T90/textures_mod/treadmills");
             offsetCintas = getAnimacionTanque(Animacion.Detenido, 0.01f,offsetCintas); // esta es la animacion por defecto, 0 = detenido
             rotacionRuedas = getAnimacionTanque(Animacion.Detenido, 0.1f,rotacionRuedas); // esta es la animacion por defecto, 0 = detenido
 
@@ -141,7 +141,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------//
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
         {
-            return Content.Load<Effect>("Effects/shaderT90");
+            return Content.Load<Effect>(@"Effects/shaderT90");
         }
 
         // ajustar con delta time

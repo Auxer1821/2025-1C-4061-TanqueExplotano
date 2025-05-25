@@ -29,8 +29,10 @@ namespace TGC.MonoGame.TP.src.Rocas
         }
 
         protected override void ConfigurarModelo(ContentManager Content){
-            this._modelo = Content.Load<Model>("Models/Stone/Stone");
-            rocaTexture = Content.Load<Texture2D>("Models/Stone/roca3");
+            this._modelo = Content.Load<Model>(@"Models/Stone/Stone");
+            rocaTexture = Content.Load<Texture2D>(@"Models/Stone/roca3");
+            // Setear la textura de la roca
+            _effect2.Parameters["Texture"].SetValue(rocaTexture);
         }
         protected override void AjustarModelo(){
             _matixBase = Matrix.CreateScale(0.01f);
@@ -38,7 +40,7 @@ namespace TGC.MonoGame.TP.src.Rocas
 
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
         {
-            return Content.Load<Effect>("Effects/shaderTextura");
+            return Content.Load<Effect>(@"Effects/shaderRoca");
         }
                //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta
 
@@ -49,7 +51,6 @@ namespace TGC.MonoGame.TP.src.Rocas
             _effect2.Parameters["View"].SetValue(this._matrixView);
             _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
-            _effect2.Parameters["Texture"].SetValue(rocaTexture);
 
             foreach (var mesh in _modelo.Meshes)
             {

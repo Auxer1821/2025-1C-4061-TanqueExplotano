@@ -26,13 +26,15 @@ namespace TGC.MonoGame.TP.src.Pastos
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
         {
             this._Color = Color.LightBlue.ToVector3();
-            pastoTexture = Content.Load<Texture2D>("Models/heightmap/pastoAlto");
+            pastoTexture = Content.Load<Texture2D>(@"Models/heightmap/pastoAlto");
             base.Initialize(Graphics, Mundo, View, Projection, Content);
+            //cargar la textura una sola vez
+            _effect2.Parameters["Texture"].SetValue(pastoTexture);
         }
 
         protected override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
         {
-            return Content.Load<Effect>("Effects/shaderPasto");
+            return Content.Load<Effect>(@"Effects/shaderPasto");
         }
 
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta
@@ -48,7 +50,6 @@ namespace TGC.MonoGame.TP.src.Pastos
             _effect2.Parameters["View"].SetValue(this._matrixView);
             _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
-            _effect2.Parameters["Texture"].SetValue(pastoTexture);
             //_effect2.Parameters["Time"].SetValue((float)gameTime.ElapsedGameTime.TotalSeconds);
 
             Graphics.SetVertexBuffer(_vertices);

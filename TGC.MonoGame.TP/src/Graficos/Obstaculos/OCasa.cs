@@ -30,11 +30,11 @@ namespace TGC.MonoGame.TP.src.Casas
         }
 
         protected override void ConfigurarModelo(ContentManager Content){
-            this._modelo = Content.Load<Model>("Models/house/cartoon_house1");
-            chimeneaTexture = Content.Load<Texture2D>("Models/house/paredPiedra");
-            paredTexture = Content.Load<Texture2D>("Models/house/textura-roja");
-            techoTexture = Content.Load<Texture2D>("Models/house/techo2");
-            marcoTexture = Content.Load<Texture2D>("Models/house/tablasMadera");
+            this._modelo = Content.Load<Model>(@"Models/house/cartoon_house1");
+            chimeneaTexture = Content.Load<Texture2D>(@"Models/house/paredPiedra");
+            paredTexture = Content.Load<Texture2D>(@"Models/house/textura-roja");
+            techoTexture = Content.Load<Texture2D>(@"Models/house/techo2");
+            marcoTexture = Content.Load<Texture2D>(@"Models/house/tablasMadera");
 
             //obtenemos los meshes del modelo
             int count = 0;
@@ -64,7 +64,7 @@ namespace TGC.MonoGame.TP.src.Casas
 
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
         {
-            return Content.Load<Effect>("Effects/shaderTextura");
+            return Content.Load<Effect>(@"Effects/shaderTextura");
         }
 
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta

@@ -98,7 +98,7 @@ namespace TGC.MonoGame.TP.src.Modelos
         }
 
         public virtual Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content){
-            return Content.Load<Effect>("Effects/BasicShader");
+            return Content.Load<Effect>(@"Effects/BasicShader");
         }
 
         public void ActualizarVistaProyeccion(Matrix Vista, Matrix Proyeccion){

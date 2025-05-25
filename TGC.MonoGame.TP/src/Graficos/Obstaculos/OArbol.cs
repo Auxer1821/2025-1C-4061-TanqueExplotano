@@ -31,9 +31,9 @@ namespace TGC.MonoGame.TP.src.Arboles
 
         protected override void ConfigurarModelo(ContentManager Content)
         {
-            this._modelo = Content.Load<Model>("Models/tree/tree2");
-            troncoTexture = Content.Load<Texture2D>("Models/tree/tronco2");
-            hojasTexture = Content.Load<Texture2D>("Models/tree/light-green-texture");
+            this._modelo = Content.Load<Model>(@"Models/tree/tree2");
+            troncoTexture = Content.Load<Texture2D>(@"Models/tree/tronco2");
+            hojasTexture = Content.Load<Texture2D>(@"Models/tree/light-green-texture");
 
             _effect2.Parameters["TextureTronco"].SetValue(troncoTexture);
             _effect2.Parameters["TextureHojas"].SetValue(hojasTexture);
@@ -47,7 +47,7 @@ namespace TGC.MonoGame.TP.src.Arboles
 
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
         {
-            return Content.Load<Effect>("Effects/shaderArbol");
+            return Content.Load<Effect>(@"Effects/shaderArbol");
         }
 
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta

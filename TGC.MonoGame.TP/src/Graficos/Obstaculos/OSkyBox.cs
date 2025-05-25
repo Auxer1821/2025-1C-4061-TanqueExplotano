@@ -30,12 +30,14 @@ namespace TGC.MonoGame.TP.src.SkyBox
 
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
         {
-            return Content.Load<Effect>("Effects/shaderTextura");
+            return Content.Load<Effect>(@"Effects/shaderSkyBox");
         }
 
         protected override void ConfigurarModelo(ContentManager Content){
-            this._modelo = Content.Load<Model>("Models/skybox/skybox");
-            skyBoxTexture = Content.Load<Texture2D>("Models/skybox/skyTexture");
+            this._modelo = Content.Load<Model>(@"Models/skybox/skybox");
+            skyBoxTexture = Content.Load<Texture2D>(@"Models/skybox/skyTexture");
+            // Setear la textura del skybox
+            _effect2.Parameters["Texture"].SetValue(skyBoxTexture);
         }
         protected override void AjustarModelo(){
             _matixBase = Matrix.CreateScale(1500.0f) * Matrix.CreateRotationX(MathHelper.Pi + MathHelper.PiOver2) * Matrix.CreateTranslation(Vector3.UnitY * 10);
@@ -53,11 +55,9 @@ namespace TGC.MonoGame.TP.src.SkyBox
             // Configura para dibujar el skybox detrás de todo
             Graphics.DepthStencilState = DepthStencilState.None;
 
-            // Seteo de textura
             _effect2.Parameters["World"].SetValue(_matrixMundo);
             _effect2.Parameters["View"].SetValue(_matrixView);
             _effect2.Parameters["Projection"].SetValue(_matrixProyection);
-            _effect2.Parameters["Texture"].SetValue(skyBoxTexture);
 
             //Dibujar el modelo
             foreach (var mesh in _modelo.Meshes)

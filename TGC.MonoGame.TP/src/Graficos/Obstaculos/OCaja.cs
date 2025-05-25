@@ -34,14 +34,16 @@ namespace TGC.MonoGame.TP.src.Cajas
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
         {
             //this._Color = new Vector2(0,0).ToVector3();
-            cajaTexture = Content.Load<Texture2D>("Models/house/tablasMadera");
+            cajaTexture = Content.Load<Texture2D>(@"Models/house/tablasMadera");
             base.Initialize(Graphics, Mundo, View, Projection, Content);
+            //setear solo una vez la textura
+            _effect2.Parameters["Texture"].SetValue(cajaTexture);
 
         }
 
 
         protected override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content){
-            return Content.Load<Effect>("Effects/shaderTextura");
+            return Content.Load<Effect>(@"Effects/shaderCaja");
         }
 
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta
@@ -55,7 +57,6 @@ namespace TGC.MonoGame.TP.src.Cajas
             _effect2.Parameters["View"].SetValue(this._matrixView);
             _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
-            _effect2.Parameters["Texture"].SetValue(cajaTexture);
 
             Graphics.SetVertexBuffer(_vertices);
             Graphics.Indices = _indices;

@@ -35,13 +35,15 @@ namespace TGC.MonoGame.TP.src.Montanas
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
         {
             this._Color = Color.DarkGray.ToVector3();
-            montanaTexture = Content.Load<Texture2D>("Models/heightmap/montana");
+            montanaTexture = Content.Load<Texture2D>(@"Models/heightmap/montana");
             base.Initialize(Graphics, Matrix.CreateScale(new Vector3(100,200,100)) * Mundo, View, Projection, Content);
+            //setear solo una vez la textura
+            _effect2.Parameters["Texture"].SetValue(montanaTexture);
         }
 
         protected override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
         {
-            return Content.Load<Effect>("Effects/shaderTerreno");
+            return Content.Load<Effect>(@"Effects/shaderMontana");
         }
 
         //El constructor que tiene de parametos las matrices, usamos el de la clase abstracta
@@ -52,11 +54,10 @@ namespace TGC.MonoGame.TP.src.Montanas
         {
 
 
+            //actualizar solo valores necesarios
+            _effect2.Parameters["World"].SetValue(this._matrixMundo);
             _effect2.Parameters["View"].SetValue(this._matrixView);
             _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
-            _effect2.Parameters["World"].SetValue(this._matrixMundo);
-            //_effect2.Parameters["DiffuseColor"].SetValue(this._Color);
-            _effect2.Parameters["Texture"].SetValue(montanaTexture);
 
             Graphics.SetVertexBuffer(_vertices);
             Graphics.Indices = _indices;
