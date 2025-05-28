@@ -21,7 +21,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         public string directorioModelo(){return "/T90/T90";}
         public Vector3 angulo(){return new Vector3(4.71f, 4.71f, 0.0f);}
         public float escala(){return 2.0f;} //Posible 0.1f
-        public string directorioTextura(){return "/T90/textures_mod/hullB";}
+        public string directorioTextura(){return "/T90/textures_mod/hullB2";}
         public float cooldown(){return 0.5f;}
         public float Vida(){return vida;}
         public float VidaMaxima(){return 140f;}
