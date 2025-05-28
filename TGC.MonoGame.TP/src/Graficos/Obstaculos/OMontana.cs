@@ -25,18 +25,16 @@ namespace TGC.MonoGame.TP.src.Montanas
             //Configuración de matrices
             this._Color = Color.Yellow.ToVector3();
             this._matrixMundo = Matrix.Identity;
-            this._matrixView = Matrix.CreateLookAt(Vector3.UnitZ * 150, Vector3.Zero, Vector3.Up);
-            this._matrixProyection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, Graphics.Viewport.AspectRatio, 1, 250);
 
             base.Initialize(Graphics);
 
         }
 
-        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
             this._Color = Color.DarkGray.ToVector3();
             montanaTexture = Content.Load<Texture2D>(@"Models/heightmap/montana");
-            base.Initialize(Graphics, Matrix.CreateScale(new Vector3(100,200,100)) * Mundo, View, Projection, Content);
+            base.Initialize(Graphics, Matrix.CreateScale(new Vector3(100,200,100)) * Mundo, Content);
             //setear solo una vez la textura
             _effect2.Parameters["Texture"].SetValue(montanaTexture);
         }
@@ -56,8 +54,6 @@ namespace TGC.MonoGame.TP.src.Montanas
 
             //actualizar solo valores necesarios
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
-            _effect2.Parameters["View"].SetValue(this._matrixView);
-            _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
 
             Graphics.SetVertexBuffer(_vertices);
             Graphics.Indices = _indices;

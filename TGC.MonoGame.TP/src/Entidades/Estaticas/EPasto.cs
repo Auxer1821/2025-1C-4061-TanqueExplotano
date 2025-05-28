@@ -18,11 +18,11 @@ namespace TGC.MonoGame.TP.src.Entidades
     {
 
         public EPasto() { }
-        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario)
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
         {
             this._objeto = new Pastos.OPasto();
             this._tipo = TipoEntidad.Otro;//TODO - Actualizar
-            base.Initialize(Graphics, Mundo, View, Projection, Content, escenario);
+            base.Initialize(Graphics, Mundo, Content, escenario);
         }
 
         public void ActualizarTime(float time)

@@ -12,9 +12,9 @@ namespace TGC.MonoGame.TP.src.Entidades
     /// <summary>
     ///     Clase Abstracta para todos los objetos
     /// </summary>
-    public class Etanque:EntidadFull
+    public class Etanque : EntidadFull
     {
-        
+
         // Variables
         private bool _activo;
         protected TipoTanque _tipoTanque;
@@ -29,23 +29,23 @@ namespace TGC.MonoGame.TP.src.Entidades
         private SoundEffectInstance _sonidoDisparoInstance;
         private SoundEffectInstance _sonidoMovimientoInstance;
         private SoundEffectInstance _sonidoDetenidoInstance;
-        float _volumen = 0.3f;
+        float _volumen = 0.0f;
 
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public Etanque() { }
-        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario)
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
         {
             this._tipoTanque = new TanqueT90();
             this._modelo = new MTanque(_tipoTanque);
             this._tipo = TipoEntidad.Tanque;
             this._activo = true;
             this._bala = new EBala();
-            this._bala.Initialize(Graphics, Mundo, View, Projection, Content, escenario);
+            this._bala.Initialize(Graphics, Mundo, Content, escenario);
             this._bala.setDanio(this._tipoTanque.danio());
             this._cooldownActual = 0.0f;
             //TODO - Crear Bounding Volume especializados // Eliminarlo de EntidadFull
-            base.Initialize(Graphics, Mundo, View, Projection, Content, escenario);
+            base.Initialize(Graphics, Mundo, Content, escenario);
 
             //this._boundingVolume = new BVCuboOBB(this.CalcularCentro(_posicion), new Vector3(4.0f, 8.0f, 8.0f) , Matrix.Identity);
             this._boundingVolume = new BoundingsVolumes.BVEsfera(5.0f, this._posicion);
@@ -81,7 +81,8 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             return _activo;
         }
-        public override bool PuedeSerChocado(){
+        public override bool PuedeSerChocado()
+        {
             return true;
         }
 
@@ -117,14 +118,15 @@ namespace TGC.MonoGame.TP.src.Entidades
             this.ActualizarDireccion();
             this.Mover();
             this.ActualicarModeloTanque();
-            
+
             float anguloRotacionY = (float)Math.Atan2(_dirMovimiento.X, _dirMovimiento.Y);
-            this._boundingVolume.Transformar(this.CalcularCentro(_posicion), new Vector3(0.0f, anguloRotacionY, 0.0f),1f);
+            this._boundingVolume.Transformar(this.CalcularCentro(_posicion), new Vector3(0.0f, anguloRotacionY, 0.0f), 1f);
         }
 
-        private void ActualicarModeloTanque(){
-            ((MTanque)(this._modelo)).ActualizarMovimeinto(this._velocidadActual,this._anguloActual);
-            ((MTanque)(this._modelo)).ActualizarTorreta(this._dirMovimiento,this._dirApuntado);
+        private void ActualicarModeloTanque()
+        {
+            ((MTanque)(this._modelo)).ActualizarMovimeinto(this._velocidadActual, this._anguloActual);
+            ((MTanque)(this._modelo)).ActualizarTorreta(this._dirMovimiento, this._dirApuntado);
         }
 
 
@@ -150,7 +152,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             if (!this._tipoTanque.EstaVivo()) return;
             // Restar vida (suponiendo que existe una propiedad 'Vida')
             this._tipoTanque.RecibirDanio(bala._danio);
-            this._modelo.EfectoDaño(Math.Clamp(this._tipoTanque.Vida()/this._tipoTanque.VidaMaxima(),0.2f,1.0f));
+            this._modelo.EfectoDaño(Math.Clamp(this._tipoTanque.Vida() / this._tipoTanque.VidaMaxima(), 0.2f, 1.0f));
 
             // Efectos visuales
             // MostrarChispa(choque._puntoContacto);
@@ -160,7 +162,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             // Chequear destrucción
             if (!this._tipoTanque.EstaVivo()) this.Destruir();
         }
-        
+
 
         private void Destruir()
         {
@@ -183,20 +185,46 @@ namespace TGC.MonoGame.TP.src.Entidades
         // Para luego usarlos y crear la matriz mundo
         public void Mover()
         {
-            this._posicion += new Vector3(_dirMovimiento.X, 0, _dirMovimiento.Y) * _velocidadActual;
 
 
+            this._posicion += new Vector3(_dirMovimiento.X, 0, _dirMovimiento.Y) * _velocidadActual;//p
+
+            // triangulo 
+            float dis = 30f;
+            Vector2 punto1 = new Vector2((this._posicion.X + this._dirMovimiento.X * dis), (this._posicion.Z + this._dirMovimiento.Y*dis));
+
+            Vector2 perpendicular = new Vector2(-this._dirMovimiento.Y,this._dirMovimiento.X);
+            Vector2 punto2 = new Vector2((this._posicion.X + perpendicular.X * dis), (this._posicion.Z + perpendicular.Y*dis));
+            Vector2 punto3 = new Vector2((this._posicion.X - perpendicular.X * dis), (this._posicion.Z - perpendicular.Y*dis));
+
+
+
+            //calcular pendiente
+            Vector3 normalTanque = this._escenario.getNormal(punto1,punto2,punto3);
+            //direccion en vector 3 (para facilidad de uso)
+            Vector3 dir3 = new Vector3(_dirMovimiento.X , 0f , _dirMovimiento.Y);
+            //direccion real en R3
+            // Vector3 direccionEnR3 =  dir3 - Vector3.Dot(dir3, normalTanque)/ Vector3.Dot(normalTanque,normalTanque)*normalTanque;
+            //angulos
+            float pitch = (float)Math.Atan2(normalTanque.X, normalTanque.Y); // Inclinación adelante/atrás
+            float roll  = (float)Math.Atan2(normalTanque.Z, normalTanque.Y); // Inclinación lateral
+            float yaw   = (float)Math.Atan2(dir3.Z, dir3.X); // Dirección del tanque
+            // CREO Q SERIA ASI?
+            
+/*
             var angulo = this._angulo;
             angulo.Z -= _anguloActual;
             this._angulo = angulo;
-
+*/
+            this._angulo = new Vector3(pitch, roll, -yaw);
             this.ActualizarMatrizMundo(); // Puntual para la grafica
             this._boundingVolume.Transformar(_posicion, _angulo, 1.0f); // Puntual para la colision
 
 
             var posAux = this._posicion;
-            posAux.Y = this._escenario.getAltura(this._posicion);
+            posAux.Y = this._escenario.getAltura(punto1,punto2,punto3);
             this._posicion = posAux;
+
 
             //sonido
             if (_velocidadActual != 0)
@@ -222,7 +250,7 @@ namespace TGC.MonoGame.TP.src.Entidades
                 }
             }
 
-            
+
         }
 
         //Función llamada gameplay para que actualice los valores de la matriz dirección.
@@ -248,9 +276,12 @@ namespace TGC.MonoGame.TP.src.Entidades
         }
 
         //
-        public void ActualizarApuntado(Vector3 apuntado){
+        public void ActualizarApuntado(Vector3 apuntado)
+        {
             this._dirApuntado = apuntado;
         }
+
+
 
     }
 }

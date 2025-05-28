@@ -22,10 +22,10 @@ namespace TGC.MonoGame.TP.src.SkyBox
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public OSkyBox(){}
-        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
             this._Color = Color.LightBlue.ToVector3();
-            base.Initialize(Graphics, Mundo, View, Projection, Content);
+            base.Initialize(Graphics, Mundo, Content);
         }
 
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
@@ -56,8 +56,6 @@ namespace TGC.MonoGame.TP.src.SkyBox
             Graphics.DepthStencilState = DepthStencilState.None;
 
             _effect2.Parameters["World"].SetValue(_matrixMundo);
-            _effect2.Parameters["View"].SetValue(_matrixView);
-            _effect2.Parameters["Projection"].SetValue(_matrixProyection);
 
             //Dibujar el modelo
             foreach (var mesh in _modelo.Meshes)

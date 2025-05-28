@@ -48,10 +48,11 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             // 2. Crear la Matriz de Rotación a partir de los ángulos de Euler
             // El orden de las rotaciones puede ser importante (ej. ZYX, XYZ, etc.).
             // XNA/MonoGame comúnmente usa ZYX si construyes con CreateFromYawPitchRoll.
+            /*
             Matrix rotacionX = Matrix.CreateRotationX(rotacionEuler.X);
             Matrix rotacionY = Matrix.CreateRotationY(rotacionEuler.Y);
             Matrix rotacionZ = Matrix.CreateRotationZ(rotacionEuler.Z);
-
+            */
             // Combina las rotaciones. El orden importa. Un orden común es ZYX.
             // this.Orientacion = rotacionZ * rotacionY * rotacionX;
             // this.Orientacion = Matrix.CreateFromYawPitchRoll(rotacionEuler.Y, rotacionEuler.X, rotacionEuler.Z);

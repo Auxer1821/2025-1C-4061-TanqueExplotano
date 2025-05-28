@@ -17,22 +17,18 @@ namespace TGC.MonoGame.TP.src.Entidades
         // Variables
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
-        public virtual void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario)
+        public virtual void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
         {
             this.InicializarDataMundo();
 
             this._posicion = Vector3.Transform(Vector3.Zero, Mundo);
-            this._modelo.Initialize(Graphics, Mundo, View, Projection, Content);
+            this._modelo.Initialize(Graphics, Mundo, Content);
             this._escenario = escenario;
         }
 
         public override void Dibujar(GraphicsDevice graphics)
         {
             this._modelo.Dibujar(graphics);
-        }
-        public override void ActualizarVistaProyeccion(Matrix Vista, Matrix Proyeccion)
-        {
-            this._modelo.ActualizarVistaProyeccion(Vista, Proyeccion);
         }
 
         public override bool PuedeChocar()

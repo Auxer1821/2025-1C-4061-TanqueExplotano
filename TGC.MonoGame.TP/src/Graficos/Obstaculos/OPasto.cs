@@ -24,11 +24,11 @@ namespace TGC.MonoGame.TP.src.Pastos
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public OPasto() { }
-        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
             this._Color = Color.LightBlue.ToVector3();
             pastoTexture = Content.Load<Texture2D>(@"Models/heightmap/pastoAlto");
-            base.Initialize(Graphics, Mundo, View, Projection, Content);
+            base.Initialize(Graphics, Mundo, Content);
             //cargar la textura una sola vez
             _effect2.Parameters["Texture"].SetValue(pastoTexture);
             _effect2.Parameters["WindSpeed"].SetValue(1.4f);
@@ -51,8 +51,7 @@ namespace TGC.MonoGame.TP.src.Pastos
             Graphics.SetVertexBuffer(_vertices);
             Graphics.Indices = _indices;
 
-            _effect2.Parameters["View"].SetValue(this._matrixView);
-            _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
+
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
             _effect2.Parameters["Time"].SetValue(time);
 

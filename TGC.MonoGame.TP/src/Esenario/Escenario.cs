@@ -51,15 +51,16 @@ namespace TGC.MonoGame.TP.src.Escenarios
             _camara = new Cameras.FreeCamera(graphicsDevice.Viewport.AspectRatio, Vector3.UnitZ * 150, screenSize);
             Matrix view = _camara.Vista;
             Matrix projection = _camara.Proyeccion;
+            _managerGrafico.inicializarCamara(_camara);
 
             //-----------------Inicializar el skybox-------------------//
             _skyBox = new ESkyBox();
-            _skyBox.Initialize(graphicsDevice, world, view, projection, content, this);
+            _skyBox.Initialize(graphicsDevice, world, content, this);
             this.AgregarACrear(_skyBox);
 
             //-----------------Inicializar terreno--------------------//
             _terreno = new Terrenos.Terreno();
-            _terreno.Initialize(graphicsDevice, world, view, projection, content);
+            _terreno.Initialize(graphicsDevice, world, content);
 
             //-----------------Posiciones usadas----------------------//
             List<Vector3> posicionesUsadas = new List<Vector3>();
@@ -70,12 +71,12 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 for (int z = -50; z <= 50; z += 20)
                 {
                     var casa = new ECasa();
-                    casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), view, projection, content, this, new Vector3 (x, _terreno.GetHeightAt(x,z), z));
+                    casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), content, this, new Vector3 (x, _terreno.GetHeightAt(x,z), z));
                     this.AgregarACrear(casa);
                     posicionesUsadas.Add(new Vector3(x, z, 4));
 
                     var caja = new ECaja();
-                    caja.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x + 8, _terreno.GetHeightAt(x,z), z + 8), view, projection, content, this);
+                    caja.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x + 8, _terreno.GetHeightAt(x,z), z + 8), content, this);
                     this.AgregarACrear(caja);
                     posicionesUsadas.Add(new Vector3(x + 8, z + 8, 2));
                 }
@@ -91,7 +92,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
-                    arbol.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), view, projection, content, this);
+                    arbol.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), content, this);
                     this.AgregarACrear(arbol);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
                 }
@@ -110,7 +111,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
-                    roca.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), view, projection, content, this);
+                    roca.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), content, this);
                     this.AgregarACrear(roca);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
                 }
@@ -128,7 +129,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 float z = random.Next(-300, 300);
                 var pos = new Vector2(x,z); 
                  if(PosicionesLibre(pos, posicionesUsadas,1)){
-                    pasto.Initialize(graphicsDevice, Matrix.CreateScale(0.5f) * world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z) + 1f, z) , view, projection, content, this);
+                    pasto.Initialize(graphicsDevice, Matrix.CreateScale(0.5f) * world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z) + 1f, z) , content, this);
                     pastos[i] = pasto;
                     posicionesUsadas.Add(new Vector3(x,z,1));
                 }
@@ -144,11 +145,11 @@ namespace TGC.MonoGame.TP.src.Escenarios
             {
                 //IZQUIERDA
                 var montana = new EMontana();
-                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(-400, 0, -400 + 200 * i), view, projection, content, this);
+                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(-400, 0, -400 + 200 * i), content, this);
                 this.AgregarACrear(montana);
                 //DERECHA
                 montana = new EMontana();
-                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(400, 0, -400 + 200 * i), view, projection, content, this);
+                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(400, 0, -400 + 200 * i), content, this);
                 this.AgregarACrear(montana);
             }
 
@@ -166,7 +167,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 Jpos = new Vector2(Jx, Jz);
             }
 
-            jugador.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Jx, 0f, Jz), view, projection, content, this);
+            jugador.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Jx, 0f, Jz), content, this);
             jugador.setCamara(_camara);
             this.AgregarACrear(jugador);
             this._managerGameplay.AgregarJugador(jugador);
@@ -182,7 +183,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var pos = new Vector2(Ax, Az);
                 if (PosicionesLibre(pos, posicionesUsadas, 10))
                 {
-                    tank.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Ax, _terreno.GetHeightAt(Ax, Az), Az), view, projection, content, this);
+                    tank.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Ax, _terreno.GetHeightAt(Ax, Az), Az), content, this);
                     this.AgregarACrear(tank);
                     this._managerGameplay.AgregarEnemigo(tank);
                     posicionesUsadas.Add(new Vector3(Ax, Az, 10));
@@ -197,6 +198,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
         public void Dibujar(GraphicsDevice graphicsDevice)
         {
             _managerGrafico.DibujarObjetos(graphicsDevice);
+            _terreno.EfectCamera(_camara.Vista,_camara.Proyeccion);
             _terreno.Dibujar(graphicsDevice);
             //pasto debe ser dibujado al final por la transparencia
             foreach (var pasto in pastos)
@@ -210,8 +212,6 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
         public void ActualizarCamara(GameTime gameTime){
             _camara.Update(gameTime);
-            _managerGrafico.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
-            _terreno.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
         }
 
         public void AgregarAEliminar(Entidad entidad)
@@ -237,7 +237,6 @@ namespace TGC.MonoGame.TP.src.Escenarios
             {
                 if (pasto != null)
                 {
-                    pasto.ActualizarVistaProyeccion(_camara.Vista, _camara.Proyeccion);
                     pasto.ActualizarTime((float)gameTime.TotalGameTime.TotalSeconds);
                 }
             }
@@ -285,6 +284,14 @@ namespace TGC.MonoGame.TP.src.Escenarios
         internal float getAltura(Vector3 pos)
         {
             return _terreno.GetHeightAt(pos.X, pos.Z);
+        }
+
+
+        public Vector3 getNormal(Vector2 pos1 , Vector2 pos2 , Vector2 pos3 ){
+            return this._terreno.getNormal(pos1,pos2,pos3);
+        }
+        public float getAltura(Vector2 pos1 , Vector2 pos2 , Vector2 pos3 ){
+            return this._terreno.getAltura(pos1,pos2,pos3);
         }
     }
 

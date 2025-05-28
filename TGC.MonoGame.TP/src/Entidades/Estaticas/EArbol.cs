@@ -18,11 +18,11 @@ namespace TGC.MonoGame.TP.src.Entidades
     public class EArbol : Entidades.EntidadFull
     {
         public EArbol() { }
-        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario)
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
         {
             this._modelo = new Arboles.OArbol();
             this._tipo = TipoEntidad.Obstaculo;
-            base.Initialize(Graphics, Mundo, View, Projection, Content, escenario);
+            base.Initialize(Graphics, Mundo, Content, escenario);
             this._boundingVolume = new BVCilindroAABB(this._posicion + Vector3.UnitY * 3, 1, 3);
         }
 

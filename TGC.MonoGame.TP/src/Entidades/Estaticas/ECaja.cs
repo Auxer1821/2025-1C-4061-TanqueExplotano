@@ -19,12 +19,12 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public ECaja() { }
-        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario)
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
         {
             this._objeto = new Cajas.OCaja();
             this._tipo = TipoEntidad.Obstaculo;
             //Crear Bounding Volume
-            base.Initialize(Graphics, Mundo, View, Projection, Content, escenario);
+            base.Initialize(Graphics, Mundo,  Content, escenario);
             this._boundingVolume = new BVCuboAABB(ObtenerMinimo(this._posicion), ObtenerMaximo(this._posicion));
         }
         

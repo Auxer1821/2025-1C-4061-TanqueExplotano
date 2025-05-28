@@ -30,21 +30,19 @@ namespace TGC.MonoGame.TP.src.Terrenos
         {
             //Configuración de matrices
             this._matrixMundo = Matrix.Identity ;
-            this._matrixView = Matrix.CreateLookAt(new Vector3(0, 50, 150), Vector3.Zero, Vector3.Up);
-            this._matrixProyection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, Graphics.Viewport.AspectRatio, 1, 2500);
 
             base.Initialize(Graphics);
 
         }
 
-        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
             heightMap = Content.Load<Texture2D>("Models/heightmap/crater2");
             terrenoTexture = Content.Load<Texture2D>("Models/heightmap/pasto");
             heightData = LoadHeightData(heightMap);
             //this._Color = Color.SandyBrown.ToVector3();
             Graphics.SamplerStates[0] = SamplerState.LinearWrap;
-            base.Initialize(Graphics, Matrix.CreateScale(5) * Mundo * Matrix.CreateTranslation(Vector3.Down * 10), View, Projection, Content);
+            base.Initialize(Graphics, Matrix.CreateScale(5) * Mundo * Matrix.CreateTranslation(Vector3.Down * 10), Content);
         }
 
         protected override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
@@ -66,8 +64,6 @@ namespace TGC.MonoGame.TP.src.Terrenos
             }
             Graphics.Indices = terrainIndexBuffer;
 
-            _effect2.Parameters["View"].SetValue(this._matrixView);
-            _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
             _effect2.Parameters["Texture"].SetValue(terrenoTexture);
 
@@ -114,56 +110,6 @@ namespace TGC.MonoGame.TP.src.Terrenos
            
         }
 
-        public float GetHeightAt(float X, float Y)
-        {
-            /*
-            
-            int width = heightData.GetLength(0);
-    int height = heightData.GetLength(1);
-    
-    // Estos valores deben coincidir con la escala de tu terreno en el mundo
-    float terrainWidth = (width - 1) * 0.1f * 5f; // Considerando tu escala de 0.1 y luego 5
-    float terrainHeight = (height - 1) * 0.1f * 5f;
-    
-    // Convertir coordenadas del mundo a coordenadas del heightmap
-    float normalizedX = (x + terrainWidth / 2f) / terrainWidth;
-    float normalizedZ = (z + terrainHeight / 2f) / terrainHeight;
-    
-    // Asegurarse de que estén en el rango [0, 1]
-    normalizedX = MathHelper.Clamp(normalizedX, 0f, 1f);
-    normalizedZ = MathHelper.Clamp(normalizedZ, 0f, 1f);
-    
-    // Convertir a coordenadas del heightmap
-    int xIndex = (int)(normalizedX * (width - 1));
-    int zIndex = (int)(normalizedZ * (height - 1));
-    
-    // Devolver la altura
-    return heightData[xIndex, zIndex];
-            */
-
-    // 1. Obtener dimensiones del heightmap
-    int heightmapWidth = heightData.GetLength(0);
-    int heightmapHeight = heightData.GetLength(1);
-    
-    // 2. Calcular dimensiones REALES del terreno (considerando escalas 0.1f y 5f)
-    float terrainWorldWidth = (heightmapWidth - 1) *5f;  // Escala total: 0.5f
-    float terrainWorldHeight = (heightmapHeight - 1) *5f;
-    
-    // 3. Convertir coordenadas del mundo a coordenadas del heightmap
-    float normalizedX = (X + terrainWorldWidth / 2f) / terrainWorldWidth;
-    float normalizedZ = (Y + terrainWorldHeight / 2f) / terrainWorldHeight;
-    
-    // 4. Asegurarse de que están en el rango [0, 1]
-    normalizedX = MathHelper.Clamp(normalizedX, 0f, 1f);
-    normalizedZ = MathHelper.Clamp(normalizedZ, 0f, 1f);
-    
-    // 5. Convertir a índices del heightmap
-    int xIndex = (int)(normalizedX * (heightmapWidth - 1));
-    int zIndex = (int)(normalizedZ * (heightmapHeight - 1));
-    
-    // 6. Devolver la altura, RESTANDO el desplazamiento hacia abajo (10 unidades)
-    return heightData[xIndex, zIndex] * 5f -10f;  // Ajuste clave aquí
-}
         
 
         protected override void ConfigPuntos(GraphicsDevice Graphics)
@@ -224,6 +170,7 @@ namespace TGC.MonoGame.TP.src.Terrenos
            
         }
 
+        
         protected void CalculateNormals(VertexPositionNormalTexture[] vertices, int[] indices)
         {
             // Resetear normales
@@ -257,6 +204,55 @@ namespace TGC.MonoGame.TP.src.Terrenos
         //Configuración de efectos tomados desde la clase padre
 
 
+        public float GetHeightAt(float X, float Y)
+        {
+            // 1. Obtener dimensiones del heightmap
+            int heightmapWidth = heightData.GetLength(0);
+            int heightmapHeight = heightData.GetLength(1);
+            
+            // 2. Calcular dimensiones REALES del terreno (considerando escalas 0.1f y 5f)
+            float terrainWorldWidth = (heightmapWidth - 1) *5f;  // Escala total: 0.5f
+            float terrainWorldHeight = (heightmapHeight - 1) *5f;
+            
+            // 3. Convertir coordenadas del mundo a coordenadas del heightmap
+            float normalizedX = (X + terrainWorldWidth / 2f) / terrainWorldWidth;
+            float normalizedZ = (Y + terrainWorldHeight / 2f) / terrainWorldHeight;
+            
+            // 4. Asegurarse de que están en el rango [0, 1]
+            normalizedX = MathHelper.Clamp(normalizedX, 0f, 1f);
+            normalizedZ = MathHelper.Clamp(normalizedZ, 0f, 1f);
+            
+            // 5. Convertir a índices del heightmap
+            int xIndex = (int)(normalizedX * (heightmapWidth - 1));
+            int zIndex = (int)(normalizedZ * (heightmapHeight - 1));
+            
+            // 6. Devolver la altura, RESTANDO el desplazamiento hacia abajo (10 unidades)
+            return heightData[xIndex, zIndex] * 5f -10f;  // Ajuste clave aquí
+        }
+
+        public float getAltura(Vector2 pos1 , Vector2 pos2 , Vector2 pos3 )
+        {
+            float y1 = GetHeightAt(pos1.X,pos1.Y);
+            float y2 = GetHeightAt(pos2.X,pos2.Y);
+            float y3 = GetHeightAt(pos3.X,pos3.Y);
+
+            return (y1+y2+y3)/3;
+        }
+
+        public Vector3 getNormal(Vector2 pos1 , Vector2 pos2 , Vector2 pos3 )
+        {
+            float y1 = GetHeightAt(pos1.X,pos1.Y);
+            float y2 = GetHeightAt(pos2.X,pos2.Y);
+            float y3 = GetHeightAt(pos3.X,pos3.Y);
+
+            Vector2 verctor1AUX = pos1-pos2;
+            Vector3 vector1 = new Vector3(verctor1AUX.X, y1-y2 , verctor1AUX.Y);
+            
+            Vector2 verctor2AUX = pos3-pos2;
+            Vector3 vector2 = new Vector3(verctor2AUX.X, y3-y2 , verctor2AUX.Y);
+
+            return Vector3.Cross(vector1, vector2);
+        }
 
 
 

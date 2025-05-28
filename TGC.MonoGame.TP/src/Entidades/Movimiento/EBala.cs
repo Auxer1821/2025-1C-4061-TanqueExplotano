@@ -25,10 +25,10 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             this._tiempo = 0.2f;
         }
-        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario)
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
         {
             this._tipo = TipoEntidad.Bala;
-            base.Initialize(Graphics, Mundo, View, Projection, Content, escenario);
+            base.Initialize(Graphics, Mundo, Content, escenario);
         }
         public void setDanio(float danio)
         {

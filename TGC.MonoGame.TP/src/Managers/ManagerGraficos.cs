@@ -16,12 +16,19 @@ namespace TGC.MonoGame.TP.src.Managers
     /// </summary>
     public class ManagerGrafico 
     {
-        private List<Entidades.Entidad> _entidades;
+        private List<Entidades.Entidad> _entidades; // dif listas [arboles,casa,caja,roca,pasto,montaña]
+                                                    //effecto particular [arbol,casa,caja,roca,pasto,montaña]
+        private Camaras.Camera _camera;
         
+                                                    //skybox , pasto
+                                                    //decidir terreno (separar el dibujado del alturamapa)
         public ManagerGrafico()
         {
             _entidades = new List<Entidades.Entidad>();
 
+        }
+        public void inicializarCamara(Camaras.Camera camera){
+            _camera = camera;
         }
 
         public void AgregarEntidad(Entidades.Entidad entidad)
@@ -36,19 +43,14 @@ namespace TGC.MonoGame.TP.src.Managers
 
         public void DibujarObjetos(GraphicsDevice graphicsDevice)
         {
+                    //recorrer por listas separadas
             foreach (var entidad in _entidades)
             {
+                entidad.EfectCamera(_camera.Vista,_camera.Proyeccion);
                 entidad.Dibujar(graphicsDevice);
             }
         }
 
-        public void ActualizarVistaProyeccion(Matrix Vista, Matrix Proyeccion){
-
-            foreach (var entidad in _entidades)
-            {
-                entidad.ActualizarVistaProyeccion(Vista, Proyeccion);
-            }
-        }
 
     }
 }

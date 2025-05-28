@@ -23,10 +23,10 @@ namespace TGC.MonoGame.TP.src.Casas
         //  En Clase Abstracta
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
-        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
             this._Color = Color.DarkRed.ToVector3();
-            base.Initialize(Graphics, Mundo, View, Projection, Content);
+            base.Initialize(Graphics, Mundo, Content);
         }
 
         protected override void ConfigurarModelo(ContentManager Content){
@@ -79,9 +79,8 @@ namespace TGC.MonoGame.TP.src.Casas
         public override void Dibujar(GraphicsDevice Graphics)
         {
             // Seteo de textura
-            _effect2.Parameters["View"].SetValue(this._matrixView);
-            _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
+
 
             foreach (var mesh in _modelo.Meshes)
             {

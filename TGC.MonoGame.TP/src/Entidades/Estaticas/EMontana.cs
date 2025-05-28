@@ -14,10 +14,10 @@ namespace TGC.MonoGame.TP.src.Entidades
     public class EMontana : Entidades.EntidadFullPrimitiva
     {
         public EMontana(){}
-        public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
+        public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario){
             this._objeto = new Montanas.OMontana();
             this._tipo = TipoEntidad.Obstaculo;
-            base.Initialize(Graphics,Mundo,View,Projection,Content, escenario);
+            base.Initialize(Graphics,Mundo,Content, escenario);
         }
     }
 }

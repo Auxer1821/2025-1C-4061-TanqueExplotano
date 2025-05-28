@@ -20,7 +20,7 @@ sampler TextureSampler = sampler_state
     Texture = (Texture);
     MagFilter = Anisotropic;
     MinFilter = Linear;
-    MipFilter = Linear;
+    MipFilter = Anisotropic;
     AddressU = Wrap;
     AddressV = Wrap;
 };

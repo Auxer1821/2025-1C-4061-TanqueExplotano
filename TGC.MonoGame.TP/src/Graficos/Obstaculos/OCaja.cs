@@ -24,18 +24,15 @@ namespace TGC.MonoGame.TP.src.Cajas
         {
             //Configuración de matrices
             this._matrixMundo = Matrix.Identity;
-            this._matrixView = Matrix.CreateLookAt(Vector3.UnitZ * 150, Vector3.Zero, Vector3.Up);
-            this._matrixProyection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, Graphics.Viewport.AspectRatio, 1, 250);
-
             base.Initialize(Graphics);
 
         }
         
-        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content)
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
             //this._Color = new Vector2(0,0).ToVector3();
             cajaTexture = Content.Load<Texture2D>(@"Models/house/tablasMadera");
-            base.Initialize(Graphics, Mundo, View, Projection, Content);
+            base.Initialize(Graphics, Mundo, Content);
             //setear solo una vez la textura
             _effect2.Parameters["Texture"].SetValue(cajaTexture);
 
@@ -54,8 +51,6 @@ namespace TGC.MonoGame.TP.src.Cajas
             Graphics.SetVertexBuffer(_vertices);
             Graphics.Indices = _indices;
 
-            _effect2.Parameters["View"].SetValue(this._matrixView);
-            _effect2.Parameters["Projection"].SetValue(this._matrixProyection);
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
 
             Graphics.SetVertexBuffer(_vertices);

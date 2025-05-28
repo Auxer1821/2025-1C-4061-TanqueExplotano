@@ -53,9 +53,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             throw new NotImplementedException();
         }
-        public virtual void ActualizarVistaProyeccion(Matrix Vista, Matrix Proyeccion){
-            throw new NotImplementedException();
-        }
+       
 
         public virtual void InicializarDataMundo()
         {
@@ -68,6 +66,9 @@ namespace TGC.MonoGame.TP.src.Entidades
             throw new NotImplementedException();
         }
 
-        
+        public virtual void EfectCamera(Matrix vista, Matrix proyeccion)
+        {
+            _modelo.EfectCamera( vista,  proyeccion);
+        }
     }
 }

@@ -21,9 +21,9 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public EJugador() { }
-        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario)
+        public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
         {
-            base.Initialize(Graphics, Mundo, View, Projection, Content, escenario);
+            base.Initialize(Graphics, Mundo, Content, escenario);
             this._modelo.ActualizarColor(Color.RoyalBlue);
         }
 

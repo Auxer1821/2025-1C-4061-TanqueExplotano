@@ -16,7 +16,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         // Variables
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
-        public virtual void Initialize(GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario)
+        public virtual void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
         {
             this.InicializarDataMundo();
 

@@ -16,10 +16,10 @@ namespace TGC.MonoGame.TP.src.Entidades
     public class ESkyBox : Entidades.EntidadGrafica
     {
         public ESkyBox(){}
-        public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
+        public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario){
             this._modelo = new SkyBox.OSkyBox();
             this._tipo = TipoEntidad.Otro;//TODO - Actualizar
-            base.Initialize(Graphics,Mundo,View,Projection,Content,escenario);
+            base.Initialize(Graphics,Mundo,Content,escenario);
         }
 
 

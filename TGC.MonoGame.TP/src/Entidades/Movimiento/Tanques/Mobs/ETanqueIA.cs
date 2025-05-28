@@ -19,9 +19,9 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         //-------------------------------------------||---Constructores-e-inicializador--------------------------------------------------//
         public ETanqueIA(){}
-        public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, Matrix View, Matrix Projection, ContentManager Content, Escenarios.Escenario escenario){
+        public override void Initialize (GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario){
             //Tal vez haga algo
-            base.Initialize(Graphics,Mundo,View,Projection,Content, escenario);
+            base.Initialize(Graphics,Mundo,Content, escenario);
         }
 
         //----------------------------------------------Metodos-Logica--------------------------------------------------//
