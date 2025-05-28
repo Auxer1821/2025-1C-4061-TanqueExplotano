@@ -227,7 +227,7 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             var posAux = this._posicion;
             posAux.Y = this._escenario.getAltura(punto1,punto2,punto3);
-            this._posicion = posAux;
+            this._posicion = Vector3.Lerp(this._posicion, posAux, 0.3f); // Suavizado de altura
 
 
             //sonido
