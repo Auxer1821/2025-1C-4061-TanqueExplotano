@@ -24,6 +24,8 @@ namespace TGC.MonoGame.TP.src.Entidades
         protected float _cooldownActual;
         protected float _velocidadActual;
         protected float _anguloActual;
+        float time = 0.0f;
+        float deltaTime = 0.0f;
 
         //variables de sonido
         private SoundEffectInstance _sonidoDisparoInstance;
@@ -121,6 +123,8 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             float anguloRotacionY = (float)Math.Atan2(_dirMovimiento.X, _dirMovimiento.Y);
             this._boundingVolume.Transformar(this.CalcularCentro(_posicion), new Vector3(0.0f, anguloRotacionY, 0.0f), 1f);
+            time = (float)gameTime.TotalGameTime.TotalSeconds;
+            deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         private void ActualicarModeloTanque()
@@ -190,33 +194,33 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._posicion += new Vector3(_dirMovimiento.X, 0, _dirMovimiento.Y) * _velocidadActual;//p
 
             // triangulo 
-            float dis = 30f;
-            Vector2 punto1 = new Vector2((this._posicion.X + this._dirMovimiento.X * dis), (this._posicion.Z + this._dirMovimiento.Y*dis));
+            float dis = 15f;
+            Vector2 punto1 = new Vector2((this._posicion.X + this._dirMovimiento.X * dis), (this._posicion.Z + this._dirMovimiento.Y * dis));
 
-            Vector2 perpendicular = new Vector2(-this._dirMovimiento.Y,this._dirMovimiento.X);
-            Vector2 punto2 = new Vector2((this._posicion.X + perpendicular.X * dis), (this._posicion.Z + perpendicular.Y*dis));
-            Vector2 punto3 = new Vector2((this._posicion.X - perpendicular.X * dis), (this._posicion.Z - perpendicular.Y*dis));
+            Vector2 perpendicular = new Vector2(-this._dirMovimiento.Y, this._dirMovimiento.X);
+            Vector2 punto2 = new Vector2((this._posicion.X + perpendicular.X * dis), (this._posicion.Z + perpendicular.Y * dis));
+            Vector2 punto3 = new Vector2((this._posicion.X - perpendicular.X * dis), (this._posicion.Z - perpendicular.Y * dis));
 
+            // Calcular el ángulo de inclinación del tanque en función de la altura del terreno
+            var distanciaZ = Vector2.Distance(punto1, new Vector2(_posicion.X, _posicion.Z));
+            var AlturaZ = this._escenario.getAltura(new Vector3(punto1.X, 0f, punto1.Y)) - _posicion.Y;
+            var ArcoSenoZ = (float)Math.Asin(AlturaZ / distanciaZ);
 
+            var distanciaX = Vector2.Distance(punto2, new Vector2(_posicion.X, _posicion.Z));
+            var AlturaX = this._escenario.getAltura(new Vector3(punto2.X, 0f, punto2.Y)) - _posicion.Y;
+            var ArcoSenoX = (float)Math.Asin(AlturaX / distanciaX);
 
-            //calcular pendiente
-            Vector3 normalTanque = this._escenario.getNormal(punto1,punto2,punto3);
-            //direccion en vector 3 (para facilidad de uso)
-            Vector3 dir3 = new Vector3(_dirMovimiento.X , 0f , _dirMovimiento.Y);
-            //direccion real en R3
-            // Vector3 direccionEnR3 =  dir3 - Vector3.Dot(dir3, normalTanque)/ Vector3.Dot(normalTanque,normalTanque)*normalTanque;
-            //angulos
-            float pitch = (float)Math.Atan2(normalTanque.X, normalTanque.Y); // Inclinación adelante/atrás
-            float roll  = (float)Math.Atan2(normalTanque.Z, normalTanque.Y); // Inclinación lateral
-            float yaw   = (float)Math.Atan2(dir3.Z, dir3.X); // Dirección del tanque
-            // CREO Q SERIA ASI?
+            //suavizado de angulo para que no se vea tan brusco
+            var anguloObjetivo = new Vector3(ArcoSenoZ,ArcoSenoX , 0f);
+            float suavizado = 1.0f; // Factor de suavizado
+            var anguloSuavizado = Vector3.Lerp(this._angulo, anguloObjetivo, suavizado * deltaTime);
+            anguloSuavizado.Z = -(float)Math.Atan2(_dirMovimiento.Y, _dirMovimiento.X); // Mantener la rotación en Z para que apunte hacia adelante
+            // Actualizar el ángulo del tanque
+            this._angulo = anguloSuavizado;
             
-/*
-            var angulo = this._angulo;
-            angulo.Z -= _anguloActual;
-            this._angulo = angulo;
-*/
-            this._angulo = new Vector3(pitch, roll, -yaw);
+            //this._angulo = new Vector3((float)anguloSuaveZ, (float)anguloSuaveX, -(float)Math.Atan2(_dirMovimiento.Y, _dirMovimiento.X));
+
+
             this.ActualizarMatrizMundo(); // Puntual para la grafica
             this._boundingVolume.Transformar(_posicion, _angulo, 1.0f); // Puntual para la colision
 
