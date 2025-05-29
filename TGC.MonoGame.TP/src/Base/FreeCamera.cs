@@ -15,6 +15,8 @@ namespace TGC.MonoGame.TP.src.Cameras
         private Vector2 _pastMousePosition;
         private float _pitch;
 
+        private bool _bloquearMouse = true;
+
         // Angles
         private float _yaw = -90f;
 
@@ -43,7 +45,7 @@ namespace TGC.MonoGame.TP.src.Cameras
         /// <inheritdoc />
         public override void Update(GameTime gameTime)
         {
-            var elapsedTime = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            var elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _changed = false;
             //ProcessKeyboard(elapsedTime);
             ProcessMouseMovement(elapsedTime);
@@ -89,7 +91,8 @@ namespace TGC.MonoGame.TP.src.Cameras
         {
             var mouseState = Mouse.GetState();
 
-            //if (mouseState.RightButton.Equals(ButtonState.Pressed))
+            desbloquearMouse();
+            if (_bloquearMouse)
             {
                 var mouseDelta = mouseState.Position.ToVector2() - _pastMousePosition;
                 mouseDelta *= MouseSensitivity * elapsedTime;
@@ -114,6 +117,8 @@ namespace TGC.MonoGame.TP.src.Cameras
                 {
                     Mouse.SetCursor(MouseCursor.Arrow);
                 }
+            }else{
+                    Mouse.SetCursor(MouseCursor.Arrow);
             }
 
             _pastMousePosition = Mouse.GetState().Position.ToVector2();
@@ -137,12 +142,20 @@ namespace TGC.MonoGame.TP.src.Cameras
 
         internal void setPosicion(Vector3 posicion, Vector3 direcion)
         {
-            Position = posicion + new Vector3(0f,10f,0f) - direcion * 0f ;//30f dir
+            Position = posicion + new Vector3(0f, 10f, 0f) - direcion * 0f;//30f dir
         }
 
         internal Vector3 getDireccion()
         {
             return FrontDirection;
+        }
+
+        private void desbloquearMouse()
+        {
+            var tecladoState = Keyboard.GetState();
+            if (tecladoState.IsKeyDown(Keys.P)) this._bloquearMouse = false;
+            else if (tecladoState.IsKeyDown(Keys.O)) this._bloquearMouse = true;
+
         }
     }
 }
