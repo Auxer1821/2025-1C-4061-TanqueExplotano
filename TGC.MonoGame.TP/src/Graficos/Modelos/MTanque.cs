@@ -27,6 +27,8 @@ namespace TGC.MonoGame.TP.src.Tanques
         private TipoTanque _tipoTanque;
         Texture2D tanqueTexture;
         Texture2D texturaCinta;
+        Texture2D texturaNormalTanque;
+        Texture2D texturaNormalCinta;
         float giroTorreta = 0f;
         float alturaTorreta = -0.6f;
         Vector2 rotacionRuedas = new Vector2(0f, 0f);
@@ -50,12 +52,17 @@ namespace TGC.MonoGame.TP.src.Tanques
         {
             this._modelo = Content.Load<Model>(@"Models/tgc-tanks" + this._tipoTanque.directorioModelo());
             tanqueTexture = Content.Load<Texture2D>(@"Models/tgc-tanks" + this._tipoTanque.directorioTextura());
+            // TODO: pasar texturas a tipo tanque
             texturaCinta = Content.Load<Texture2D>(@"Models/tgc-tanks/T90/textures_mod/treadmills");
+            texturaNormalTanque = Content.Load<Texture2D>(@"Models/tgc-tanks/T90/textures_mod/normal");
+            texturaNormalCinta = Content.Load<Texture2D>(@"Models/tgc-tanks/T90/textures_mod/treadmills_normal");
             offsetCintas = getAnimacionTanque(Animacion.Detenido, 0.01f,offsetCintas); // esta es la animacion por defecto, 0 = detenido
             rotacionRuedas = getAnimacionTanque(Animacion.Detenido, 0.1f,rotacionRuedas); // esta es la animacion por defecto, 0 = detenido
 
             _effect2.Parameters["Texture"].SetValue(tanqueTexture);
-            _effect2.Parameters["TexturaCinta"].SetValue(texturaCinta);
+            _effect2.Parameters["TextureCinta"].SetValue(texturaCinta);
+            _effect2.Parameters["TextureNormalTanque"].SetValue(texturaNormalTanque);
+            _effect2.Parameters["TextureNormalCinta"].SetValue(texturaNormalCinta);
         }
         
         protected override void AjustarModelo(){
@@ -66,8 +73,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         public override void Dibujar(GraphicsDevice Graphics)
         {
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
-            _effect2.Parameters["Opaco"].SetValue(modificadorDanio);
-
+            _effect2.Parameters["Opaco"]?.SetValue(modificadorDanio);
 
             //------------------------------dibujado de los meshes---------------------------------------------------
             //TODO mejorar la lectura del codigo

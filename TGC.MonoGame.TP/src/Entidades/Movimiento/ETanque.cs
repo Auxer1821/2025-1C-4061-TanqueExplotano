@@ -31,7 +31,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         private SoundEffectInstance _sonidoDisparoInstance;
         private SoundEffectInstance _sonidoMovimientoInstance;
         private SoundEffectInstance _sonidoDetenidoInstance;
-        float _volumen = 0.0f;
+        float _volumen = 0.3f;
 
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//

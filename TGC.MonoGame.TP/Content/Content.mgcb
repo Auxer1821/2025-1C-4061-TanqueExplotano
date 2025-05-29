@@ -477,6 +477,54 @@
 /processorParam:TextureFormat=Color
 /build:Models/tgc-tanks/T90/textures_mod/hullC.jpg
 
+#begin Models/tgc-tanks/T90/textures_mod/mask.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/tgc-tanks/T90/textures_mod/mask.png
+
+#begin Models/tgc-tanks/T90/textures_mod/normal.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/tgc-tanks/T90/textures_mod/normal.png
+
+#begin Models/tgc-tanks/T90/textures_mod/treadmills_mask.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/tgc-tanks/T90/textures_mod/treadmills_mask.png
+
+#begin Models/tgc-tanks/T90/textures_mod/treadmills_normal.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Models/tgc-tanks/T90/textures_mod/treadmills_normal.png
+
 #begin Models/tgc-tanks/T90/textures_mod/treadmills.png
 /importer:TextureImporter
 /processor:TextureProcessor
