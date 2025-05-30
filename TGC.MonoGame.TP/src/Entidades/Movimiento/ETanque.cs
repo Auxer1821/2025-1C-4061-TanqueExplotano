@@ -183,6 +183,11 @@ namespace TGC.MonoGame.TP.src.Entidades
             return this._cooldownActual > this._tipoTanque.cooldown();
         }
 
+        public float getVida()
+        {
+            return this._tipoTanque.Vida();
+        }
+
         //---------------------------------------------MOVIMIENTO-Y-APUNTADO---------------------------------------------------//
 
         // Función que actualiza los valores de posición y ángulo
@@ -211,13 +216,13 @@ namespace TGC.MonoGame.TP.src.Entidades
             var ArcoSenoX = (float)Math.Asin(AlturaX / distanciaX);
 
             //suavizado de angulo para que no se vea tan brusco
-            var anguloObjetivo = new Vector3(ArcoSenoZ,ArcoSenoX , 0f);
+            var anguloObjetivo = new Vector3(ArcoSenoZ, ArcoSenoX, 0f);
             float suavizado = 1.0f; // Factor de suavizado
             var anguloSuavizado = Vector3.Lerp(this._angulo, anguloObjetivo, suavizado * deltaTime);
             anguloSuavizado.Z = -(float)Math.Atan2(_dirMovimiento.Y, _dirMovimiento.X); // Mantener la rotación en Z para que apunte hacia adelante
             // Actualizar el ángulo del tanque
             this._angulo = anguloSuavizado;
-            
+
             //this._angulo = new Vector3((float)anguloSuaveZ, (float)anguloSuaveX, -(float)Math.Atan2(_dirMovimiento.Y, _dirMovimiento.X));
 
 
@@ -226,7 +231,7 @@ namespace TGC.MonoGame.TP.src.Entidades
 
 
             var posAux = this._posicion;
-            posAux.Y = this._escenario.getAltura(punto1,punto2,punto3);
+            posAux.Y = this._escenario.getAltura(punto1, punto2, punto3);
             this._posicion = Vector3.Lerp(this._posicion, posAux, 0.3f); // Suavizado de altura
 
 

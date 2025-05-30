@@ -99,11 +99,16 @@ namespace TGC.MonoGame.TP.src.Entidades
         }
         
         protected override void RecibirDaño(DataChoque choque,  EBala bala){}
-        
+
+        internal int getKills() //TODO
+        {
+            throw new NotImplementedException();
+        }
 
 
 
-//---------------------------------------------MOVIMIENTO-Y-APUNTADO---------------------------------------------------//
+
+        //---------------------------------------------MOVIMIENTO-Y-APUNTADO---------------------------------------------------//
 
 
     }
