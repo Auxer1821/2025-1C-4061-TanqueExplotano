@@ -64,7 +64,7 @@ namespace TGC.MonoGame.TP.src.HUD
                 float min = indice * _tamanioLetra;
                 float max = (indice + 1) * _tamanioLetra;
 
-                efecto.Parameters["Coordenadas"].SetValue(_coordenadas + Vector2.UnitX * ( i * 0.1f ) );
+                efecto.Parameters["Coordenadas"].SetValue(_coordenadas + Vector2.UnitX * ( i * 0.05f ) );
                 efecto.Parameters["Minimo"].SetValue(min);
                 efecto.Parameters["Maximo"].SetValue(max);
 

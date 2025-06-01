@@ -63,14 +63,14 @@ namespace TGC.MonoGame.TP.src.Managers
             _textoEffect.Parameters["PixelSize"].SetValue(1.0f / texture.Width);
             _textoEffect.Parameters["WorldViewProjection"]?.SetValue(Matrix.Identity);
 
-            _vida.Initialize(new Vector2(-0.8f, 0.8f));
-            _vida.setValor(((int)_jugador.getVida()).ToString());
+            _vida.Initialize(new Vector2(-0.9f, 0.9f));
+            _vida.setValor("vida:" + ((int)_jugador.getVida()).ToString());
 
-            _progreso.Initialize(new Vector2(0.7f, 0.8f));
-            _progreso.setValor("A");
+            _progreso.Initialize(new Vector2(0.5f, 0.9f));
+            _progreso.setValor("Kills:0/5");
 
-            _tiempo.Initialize(new Vector2(-0.2f, 0.8f));
-            _tiempo.setValor("00:00s");
+            _tiempo.Initialize(new Vector2(-0.1f, 0.9f));
+            _tiempo.setValor("00:00");
 
             this.crearQuad();
 
@@ -83,15 +83,15 @@ namespace TGC.MonoGame.TP.src.Managers
             _progreso.Dibujado(_graphicsDevice, _textoEffect, _indexBuffer, _vertexBuffer);
             _tiempo.Dibujado(_graphicsDevice, _textoEffect, _indexBuffer, _vertexBuffer);
         }
-/*
-        public void Update()//no esta haciendos
+
+        public void Update(GameTime gameTime)//no esta haciendos
         {
-            _vida.setValor(((int)_jugador.getVida()).ToString());
-            _progreso.setValor( (int)_jugador.getKills() + "/5");//TODO
+            _vida.setValor("vida:" + ((int)_jugador.getVida()).ToString());
+            //_progreso.setValor( (int)_jugador.getKills() + "/5");//TODO
             _tiempo.setValor("00:00");//DIFERENCIA DE TIMES O ALGO
             
         }
-*/
+
         //------Funcion para crear donde se dibujan las texturas----//
         private void crearQuad()
         {
@@ -99,7 +99,7 @@ namespace TGC.MonoGame.TP.src.Managers
             var vertices = new VertexPositionNormalTexture[4];
 
             // Tamaño del quad (1 unidad de ancho y alto)
-            float halfSize = 0.05f;
+            float halfSize = 0.025f;
 
             // Coordenadas de los vértices (en sentido horario)
             vertices[0] = new VertexPositionNormalTexture(

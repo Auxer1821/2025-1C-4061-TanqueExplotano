@@ -236,6 +236,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
             _managerGameplay.Update(gameTime);
             _managerColision.VerificarColisiones();
+            _managerInterfaz.Update(gameTime);
             this.ActualizarCamara(gameTime);
             //TODO pasto dentro de manager grafico
             foreach (var pasto in pastos)
