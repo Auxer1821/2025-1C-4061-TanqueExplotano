@@ -14,9 +14,12 @@ namespace TGC.MonoGame.TP.src.HUD
     /// </summary>
     public class HTexto: IHUD
     {
+        /// <summary>
+        /// Usás _tamanioLetra + 2 como espaciado. Esto puede dejar texto desalineado. Considerá usar un float Espaciado = 1f; o escalar con resolución para adaptarlo a distintos tamaños de pantalla.
+        /// </summary
         private string _texto;
         private Vector2 _coordenadas;
-        private int _tamanioLetra;
+        private float _tamanioLetra;
 
 
         //----------------------------------------------Variables--------------------------------------------------//
@@ -30,13 +33,13 @@ namespace TGC.MonoGame.TP.src.HUD
         {
             this._texto = texto;
             this._coordenadas = coordenadas;
-            this._tamanioLetra = 5;
+            this._tamanioLetra = 63f;
         }
         public void Initialize(Vector2 coordenadas)
         {
             this._texto = null;
             this._coordenadas = coordenadas;
-            this._tamanioLetra = 5;
+            this._tamanioLetra = 63f;
         }
 
 
@@ -46,61 +49,37 @@ namespace TGC.MonoGame.TP.src.HUD
         //----------------------------------------------Dibujado--------------------------------------------------//
         public void Dibujado(GraphicsDevice Graphics, Effect efecto, IndexBuffer indices, VertexBuffer vertices)
         {
-            //matix mundo vista y proyeccion lo setea el mana
+
+            //modificar cordenadas
             int i = 0;
 
-            foreach (char letra in _texto) //La imagen de los caracteres tiene TODAS LAS LETRAS seguido de TODOS LOS NUMEROS seguido de SIMBOLOS
-            {   // no Ñ
-                i++;
-                int min = 0;
-                int max = 0;
-
-                if (char.IsLetter(letra))
+            foreach (char letra in _texto)
+            {
+                if (!TryGetCharIndex(letra, out int indice))
                 {
-                    char enMayuscula = char.ToUpper(letra);
-                    min = (enMayuscula - 'A') * _tamanioLetra;
-                    max = (enMayuscula - 'A' + 1) * _tamanioLetra;
+                    i++;
+                    continue; // saltea caracteres no dibujables
                 }
 
-                else if (char.IsNumber(letra))
-                {
-                    min = (letra - '0' + 26) * _tamanioLetra;
-                    max = (letra - '0' + 26 + 1) * _tamanioLetra;
-                }
+                float min = indice * _tamanioLetra;
+                float max = (indice + 1) * _tamanioLetra;
 
-                else  // signo
-                {
-                    if (letra == '/')
-                    {
-                        min = (letra - '0' + 26 + 10) * _tamanioLetra;
-                        max = (letra - '0' + 26 + 10 + 1) * _tamanioLetra;
-                    }
-                    else if (letra == ':')
-                    {
-                        min = (letra - '0' + 26 + 10 + 1) * _tamanioLetra;
-                        max = (letra - '0' + 26 + 10 + 2) * _tamanioLetra;
-                    }
-                    else if (letra == ' ')
-                    {
-                        min = (letra - '0' + 26 + 10 + 2) * _tamanioLetra;
-                        max = (letra - '0' + 26 + 10 + +3) * _tamanioLetra;
-
-                    }
-                    else i--;
-                }
-
-                efecto.Parameters["Coordenadas"].SetValue(_coordenadas + Vector2.UnitX * i * (_tamanioLetra + 2));//COMO MATRIX MUNDO
+                efecto.Parameters["Coordenadas"].SetValue(_coordenadas + Vector2.UnitX * ( i * 0.1f ) );
                 efecto.Parameters["Minimo"].SetValue(min);
                 efecto.Parameters["Maximo"].SetValue(max);
 
                 Graphics.SetVertexBuffer(vertices);
                 Graphics.Indices = indices;
-                foreach (var pass in efecto.CurrentTechnique.Passes){
+
+                foreach (var pass in efecto.CurrentTechnique.Passes)
+                {
                     pass.Apply();
                     Graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, indices.IndexCount);
                 }
 
+                i++;
             }
+
 
         }
 
@@ -108,6 +87,46 @@ namespace TGC.MonoGame.TP.src.HUD
         public void setValor(string valor){
             this._texto = valor;
         }
+
+
+
+
+
+        private bool TryGetCharIndex(char c, out int index)
+        {
+            index = 0;
+            
+            if (char.IsLetter(c))
+            {
+                index = char.ToUpper(c) - 'A';
+                return true;
+            }
+
+            if (char.IsDigit(c))
+            {
+                index = (c - '0') + 26;
+                return true;
+            }
+
+            switch (c)
+            {
+                case '/':
+                    index = 36; // después de letras (26) + números (10)
+                    return true;
+                case ':':
+                    index = 37;
+                    return true;
+                case ' ':
+                    index = 38;
+                    return true;
+                default:
+                    return false; // no se puede dibujar
+            }
+        }
+
+
+        
+
 
 
         

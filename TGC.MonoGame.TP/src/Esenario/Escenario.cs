@@ -23,6 +23,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private ManagerGrafico _managerGrafico;
         private ManagerColisiones _managerColision;
         private ManagerGameplay _managerGameplay;
+        private ManagerInterfaz _managerInterfaz;
         private List<Entidad> _entidadesEliminar;
         private bool _faltaEliminar;
         private List<Entidad> _entidadesCrear;
@@ -39,6 +40,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             _managerGrafico = new ManagerGrafico();
             _managerColision = new ManagerColisiones();
             _managerGameplay = new ManagerGameplay();
+            _managerInterfaz = new ManagerInterfaz();
             _entidadesEliminar = new List<Entidad>();
             _entidadesCrear = new List<Entidad>();
             _faltaEliminar = false;
@@ -71,12 +73,12 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 for (int z = -50; z <= 50; z += 20)
                 {
                     var casa = new ECasa();
-                    casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), content, this, new Vector3 (x, _terreno.GetHeightAt(x,z), z));
+                    casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this, new Vector3(x, _terreno.GetHeightAt(x, z), z));
                     this.AgregarACrear(casa);
                     posicionesUsadas.Add(new Vector3(x, z, 4));
 
                     var caja = new ECaja();
-                    caja.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x + 8, _terreno.GetHeightAt(x,z), z + 8), content, this);
+                    caja.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x + 8, _terreno.GetHeightAt(x, z), z + 8), content, this);
                     this.AgregarACrear(caja);
                     posicionesUsadas.Add(new Vector3(x + 8, z + 8, 2));
                 }
@@ -92,7 +94,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
-                    arbol.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), content, this);
+                    arbol.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this);
                     this.AgregarACrear(arbol);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
                 }
@@ -111,7 +113,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
-                    roca.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z), z), content, this);
+                    roca.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this);
                     this.AgregarACrear(roca);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
                 }
@@ -127,11 +129,12 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var pasto = new Entidades.EPasto();
                 float x = random.Next(-300, 300);
                 float z = random.Next(-300, 300);
-                var pos = new Vector2(x,z); 
-                 if(PosicionesLibre(pos, posicionesUsadas,1)){
-                    pasto.Initialize(graphicsDevice, Matrix.CreateScale(0.5f) * world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x,z) + 1f, z) , content, this);
+                var pos = new Vector2(x, z);
+                if (PosicionesLibre(pos, posicionesUsadas, 1))
+                {
+                    pasto.Initialize(graphicsDevice, Matrix.CreateScale(0.5f) * world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z) + 1f, z), content, this);
                     pastos[i] = pasto;
-                    posicionesUsadas.Add(new Vector3(x,z,1));
+                    posicionesUsadas.Add(new Vector3(x, z, 1));
                 }
                 else
                 {
@@ -171,10 +174,11 @@ namespace TGC.MonoGame.TP.src.Escenarios
             jugador.setCamara(_camara);
             this.AgregarACrear(jugador);
             this._managerGameplay.AgregarJugador(jugador);
+            this._managerInterfaz.Inicializar(graphicsDevice, content, jugador);
             posicionesUsadas.Add(new Vector3(Jx, Jz, 10));
 
             //----IA---//
-            
+
             for (int i = 0; i < 4; i++)
             {
                 var tank = new ETanqueIA();
@@ -208,6 +212,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                     pasto.Dibujar(graphicsDevice);
                 }
             }
+            _managerInterfaz.Dibujar();
         }
 
         public void ActualizarCamara(GameTime gameTime){

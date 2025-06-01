@@ -50,38 +50,48 @@ namespace TGC.MonoGame.TP.src.Managers
             _imagenesHud = new List<HImagen>();
         }
 
-        public void Inicializar(GraphicsDevice device,ContentManager Content, Entidades.EJugador jugador){
+        public void Inicializar(GraphicsDevice device, ContentManager Content, Entidades.EJugador jugador)
+        {
             _Content = Content;
             _jugador = jugador;
             _graphicsDevice = device;
-            
-            _textoEffect = Content.Load<Effect>(@"Effects/shaderTransparencia");//todo
+
+            _textoEffect = Content.Load<Effect>(@"Effects/shaderInterfazTexto");//todo
             Texture2D texture = Content.Load<Texture2D>(@"Textures/ui/CaracteresNegros");
             _textoEffect.Parameters["Texture"].SetValue(texture);
+            _textoEffect.Parameters["TamanioTextura"]?.SetValue(texture.Width);
+            _textoEffect.Parameters["PixelSize"].SetValue(1.0f / texture.Width);
+            _textoEffect.Parameters["WorldViewProjection"]?.SetValue(Matrix.Identity);
 
-            _vida.Initialize(new Vector2(0,0));
-            _vida.setValor( ((int) _jugador.getVida()).ToString() );
+            _vida.Initialize(new Vector2(-0.8f, 0.8f));
+            _vida.setValor(((int)_jugador.getVida()).ToString());
 
-            _vida.Initialize(new Vector2(0,0));
-            _progreso.setValor("0/5");
+            _progreso.Initialize(new Vector2(0.7f, 0.8f));
+            _progreso.setValor("A");
 
-            _vida.Initialize(new Vector2(0,0));
-            _tiempo.setValor("00:00");
+            _tiempo.Initialize(new Vector2(-0.2f, 0.8f));
+            _tiempo.setValor("00:00s");
+
+            this.crearQuad();
 
         }
 
         public void Dibujar(){
-
+            //_textoEffect.Parameters["View"].SetValue(Matrix.Identity);
+            //_textoEffect.Parameters["Projection"].SetValue(Matrix.Identity);
+            _vida.Dibujado(_graphicsDevice, _textoEffect, _indexBuffer, _vertexBuffer);
+            _progreso.Dibujado(_graphicsDevice, _textoEffect, _indexBuffer, _vertexBuffer);
+            _tiempo.Dibujado(_graphicsDevice, _textoEffect, _indexBuffer, _vertexBuffer);
         }
-
-        public void Update()
+/*
+        public void Update()//no esta haciendos
         {
             _vida.setValor(((int)_jugador.getVida()).ToString());
             _progreso.setValor( (int)_jugador.getKills() + "/5");//TODO
             _tiempo.setValor("00:00");//DIFERENCIA DE TIMES O ALGO
             
         }
-
+*/
         //------Funcion para crear donde se dibujan las texturas----//
         private void crearQuad()
         {
@@ -89,7 +99,7 @@ namespace TGC.MonoGame.TP.src.Managers
             var vertices = new VertexPositionNormalTexture[4];
 
             // Tamaño del quad (1 unidad de ancho y alto)
-            float halfSize = 0.5f;
+            float halfSize = 0.05f;
 
             // Coordenadas de los vértices (en sentido horario)
             vertices[0] = new VertexPositionNormalTexture(
