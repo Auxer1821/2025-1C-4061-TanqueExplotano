@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Escenarios;
 using TGC.MonoGame.TP.src.Cameras;
 using Microsoft.Xna.Framework.Audio;
+using TGC.MonoGame.TP.src.Managers;
 
 namespace TGC.MonoGame.TP
 {
@@ -24,10 +25,7 @@ namespace TGC.MonoGame.TP
         public const string ContentFolderSpriteFonts = "SpriteFonts/";
         public const string ContentFolderTextures = "Textures/";
 
-        //pruebas
-        private SoundEffect _sonidoFondo;
-        private SoundEffectInstance _sonidoFondoInstance;
-        float _volumen = 0.1f;
+        private ManagerSonido _managerSonido;
 
 
 
@@ -92,6 +90,8 @@ namespace TGC.MonoGame.TP
             //_escenario.Initialize(GraphicsDevice, Matrix.Identity, View, Projection, Content);
             _escenario.Initialize(GraphicsDevice, Matrix.Identity, Content);
 
+            _managerSonido = new ManagerSonido(Content);
+
             base.Initialize();
         }
 
@@ -106,10 +106,8 @@ namespace TGC.MonoGame.TP
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             //cargamos el sonido de fondo
-            _sonidoFondo = Content.Load<SoundEffect>(@ContentFolderMusic + "epico");
-            _sonidoFondoInstance = _sonidoFondo.CreateInstance();
-            _sonidoFondoInstance.IsLooped = true;
-            _sonidoFondoInstance.Volume = _volumen;
+            _managerSonido.InstanciarMusica();
+    
 
             base.LoadContent();
         }
@@ -130,10 +128,8 @@ namespace TGC.MonoGame.TP
                 Exit();
             }
 
-            if (_sonidoFondoInstance.State != SoundState.Playing)
-            {
-                _sonidoFondoInstance.Play();
-            }
+            this._managerSonido.reproducirMusica("accion");
+          
 
             _escenario.Update(gameTime);
             base.Update(gameTime);

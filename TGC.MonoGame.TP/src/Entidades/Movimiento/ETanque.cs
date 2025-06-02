@@ -30,10 +30,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         float deltaTime = 0.0f;
 
         //variables de sonido
-        private SoundEffectInstance _sonidoDisparoInstance;
-        private SoundEffectInstance _sonidoMovimientoInstance;
-        private SoundEffectInstance _sonidoDetenidoInstance;
-        float _volumen = 0.1f;
+        private Managers.ManagerSonido _managerSonido;
 
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -55,29 +52,10 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._boundingVolume = new BoundingsVolumes.BVEsfera(5.0f, this._posicion);
 
             //Cargar el sonido
-            InstanciarSonidosTanque(Content);
+            this._managerSonido = new Managers.ManagerSonido(Content);
+            this._managerSonido.InstanciarSonidosTanque();
         }
 
-        private void InstanciarSonidosTanque(ContentManager Content)
-        {
-            SoundEffect sonidoDetenido = Content.Load<SoundEffect>(@"Sounds/tankStop");
-            this._sonidoDetenidoInstance = sonidoDetenido.CreateInstance();
-            _sonidoDetenidoInstance.IsLooped = true;
-            _sonidoDetenidoInstance.Volume = _volumen / 4;
-
-            SoundEffect sonidoMovimiento = Content.Load<SoundEffect>(@"Sounds/tankMove");
-            this._sonidoMovimientoInstance = sonidoMovimiento.CreateInstance();
-            _sonidoMovimientoInstance.IsLooped = true;
-            _sonidoMovimientoInstance.Volume = _volumen / 3;
-
-            SoundEffect sonidoDisparo = Content.Load<SoundEffect>(@"Sounds/disparo2");
-            this._sonidoDisparoInstance = sonidoDisparo.CreateInstance();
-            _sonidoDisparoInstance.IsLooped = false;
-            _sonidoDisparoInstance.Volume = _volumen;
-            _sonidoDisparoInstance.Pitch = 0.0f;
-
-
-        }
 
         //----------------------------------------------Metodos-Logica--------------------------------------------------//
 
@@ -246,29 +224,8 @@ namespace TGC.MonoGame.TP.src.Entidades
 
 
             //sonido
-            if (_velocidadActual != 0)
-            {
-                if (_sonidoMovimientoInstance.State != SoundState.Playing)
-                {
-                    _sonidoMovimientoInstance.Play();
-                }
-                if (_sonidoDetenidoInstance.State == SoundState.Playing)
-                {
-                    _sonidoDetenidoInstance.Stop();
-                }
-            }
-            else
-            {
-                if (_sonidoMovimientoInstance.State == SoundState.Playing)
-                {
-                    _sonidoMovimientoInstance.Stop();
-                }
-                if (_sonidoDetenidoInstance.State != SoundState.Playing)
-                {
-                    _sonidoDetenidoInstance.Play();
-                }
-            }
-
+            this._managerSonido.sonidoMovimiento(_velocidadActual != 0);
+            this._managerSonido.sonidoDetenido(_velocidadActual == 0);
 
         }
 
@@ -288,11 +245,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._escenario.AgregarACrear(this._bala); //temporal
 
             //sonido disparo
-            if (_sonidoDisparoInstance.State != SoundState.Playing)
-            {
-                _sonidoDisparoInstance.Pitch = new Random().Next(-90, 100) / 100.0f;
-                _sonidoDisparoInstance.Play();
-            }
+            this._managerSonido.reproducirSonido("disparo");
         }
 
         public virtual void setPosicionSalidaBala()

@@ -629,6 +629,18 @@
 /processorParam:Quality=Best
 /build:Music/epico.wav
 
+#begin Music/musicaEpicaTranquila.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/musicaEpicaTranquila.wav
+
+#begin Music/musicaTranquila.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Music/musicaTranquila.wav
+
 #begin Sounds/disparo.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -640,6 +652,24 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/disparo2.wav
+
+#begin Sounds/explocion.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/explocion.wav
+
+#begin Sounds/explocion2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/explocion2.wav
+
+#begin Sounds/explocion3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/explocion3.wav
 
 #begin Sounds/tankMove.wav
 /importer:WavImporter
