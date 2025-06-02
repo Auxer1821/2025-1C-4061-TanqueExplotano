@@ -20,27 +20,26 @@ sampler TextureSampler = sampler_state
     Texture = (Texture);
     MagFilter = Linear;
     MinFilter = Linear;
-    MipFilter = Anisotropic;
-    MaxAnisotropy = 4;
+    MipFilter = Linear;
     AddressU = Wrap;
     AddressV = Wrap;
 };
-float4x4 World;
-float4x4 View;
-float4x4 Projection;
+float4x4 WorldViewProjection;
+
+float2 Coordenadas;
 
 float3 DiffuseColor;
 float AlphaThreshold = 0.5f; // Valor de umbral de transparencia
-float WindStrength = 0.4f;
-float WindSpeed = 1.3f;
-float GrassStiffness = 0.3f;
+float PorcentaClaridad = 1.0f; // Porcentaje de recarga del HUD
+
+
 float Time = 0;
 
 struct VertexShaderInput
 {
 	float4 Position : POSITION0;
 	float2 TexCoord : TEXCOORD0;
-    float3 Normal : NORMAL0;
+	float4 Color : COLOR0;
 };
 
 struct VertexShaderOutput
@@ -54,41 +53,37 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 {
     // Clear the output
 	VertexShaderOutput output = (VertexShaderOutput)0;
-    // Movimiento principal (usa posición en X y Z para variación)
-    float wave = sin(Time * WindSpeed + input.Position.x + input.Position.z) * WindStrength;
-    
-    // Aplica movimiento solo a la parte superior
-    float4 modifiedPosition = input.Position;
-    modifiedPosition.x += wave * (1.0f - abs(input.Position.y) * GrassStiffness);
-    
-    // Transformaciones normales
-    float4 WorldModificado = mul(modifiedPosition ,World);
-    float4 ViewModificado = mul(WorldModificado, View);
-    output.Position = mul(ViewModificado, Projection);
-    output.TexCoord = input.TexCoord;
-    
+
+    float4 posMundo = input.Position;
+	posMundo.xy += Coordenadas; // Aplico desplazamiento del carácter
+    output.Position = mul(posMundo, WorldViewProjection);
+	output.TexCoord = input.TexCoord;
+	output.Color = input.Color;
+
     return output;
 }
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-    // Distorsión basada en el tiempo y posición en Y (para que el pasto se mueva desde la base)
-    float windEffect = sin(1 - input.TexCoord.y + Time * WindSpeed) * WindStrength * (1- input.TexCoord.y);
-    windEffect *= (1.0f - input.TexCoord.y) * GrassStiffness; // Aumenta el efecto en la parte superior del pasto
-    
-    // Aplicamos la distorsión solo en X para simular el viento
-    float2 distortedTexCoord = input.TexCoord + float2(windEffect, 0);
-    
-    // Muestreamos la textura con las coordenadas modificadas
-    float4 color = tex2D(TextureSampler, distortedTexCoord);
-    if (color.a < AlphaThreshold)         
+	float4 color = tex2D(TextureSampler, input.TexCoord);
+
+    if (color.a < AlphaThreshold)
         discard;
-
-
     return color;
 }
 
-technique BasicColorDrawing
+float4 RecargaPS(VertexShaderOutput input) : COLOR
+{
+	float4 color = tex2D(TextureSampler, input.TexCoord);
+	//aplicar tiempo para animación
+	color.xyz *= PorcentaClaridad;
+
+    if (color.a < AlphaThreshold)
+        discard;
+    return color;
+}
+
+technique Default
 {
 	pass P0
 	{
@@ -98,4 +93,16 @@ technique BasicColorDrawing
         SrcBlend = SrcAlpha;
         DestBlend = InvSrcAlpha;
 	}
-};
+}
+
+technique Recarga
+{
+	pass P0
+	{
+		VertexShader = compile VS_SHADERMODEL MainVS();
+		PixelShader = compile PS_SHADERMODEL RecargaPS();
+		AlphaBlendEnable = true;
+        SrcBlend = SrcAlpha;
+        DestBlend = InvSrcAlpha;
+	}
+}

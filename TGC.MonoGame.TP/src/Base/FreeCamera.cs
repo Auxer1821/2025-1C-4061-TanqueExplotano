@@ -111,7 +111,7 @@ namespace TGC.MonoGame.TP.src.Cameras
                 if (_lockMouse)
                 {
                     Mouse.SetPosition(_screenCenter.X, _screenCenter.Y);
-                    Mouse.SetCursor(MouseCursor.Crosshair);
+                    //Mouse.SetCursor(MouseCursor.);
                 }
                 else
                 {

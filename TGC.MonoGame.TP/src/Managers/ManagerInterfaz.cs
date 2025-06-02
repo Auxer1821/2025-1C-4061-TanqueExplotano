@@ -28,18 +28,16 @@ namespace TGC.MonoGame.TP.src.Managers
 
         //-------------HImagen--------------//
         private List<HImagen> _imagenesHud;
+        private HImagen _misil;
 
-        //buffers para dibujar el HUD
+        //buffers para dibujar el HUD letra
         private ContentManager _Content;
         private VertexBuffer _vertexBuffer;
         private IndexBuffer _indexBuffer;
         private GraphicsDevice _graphicsDevice;
         /*
-            IMPLEMENTACION EN ESENARIO
             IMPLEMETACION DE LISTA IMAGENES HUD
-            IMPLEMENTACION DEL DRAW
-            Y LO QUE HAY EN EL UPDATE
-            CREAR EL EFECTO PARTICULAR DEL IMAGEN TEXTO
+            COMPLATR DEL DRAW
         */
         public ManagerInterfaz()
         {
@@ -48,6 +46,7 @@ namespace TGC.MonoGame.TP.src.Managers
             _progreso = new HTexto();
             _tiempo = new HTexto();
             _imagenesHud = new List<HImagen>();
+            _misil = new HImagen();
         }
 
         public void Inicializar(GraphicsDevice device, ContentManager Content, Entidades.EJugador jugador)
@@ -72,6 +71,20 @@ namespace TGC.MonoGame.TP.src.Managers
             _tiempo.Initialize(new Vector2(-0.1f, 0.9f));
             _tiempo.setValor("00:00");
 
+
+            HImagen mira = new HImagen();
+            mira.Initialize(new Vector2(0.0f, 0.0f), Content, "Textures/miras/aim_PNG56");
+            mira.setQuad(0.05f,device);
+            _imagenesHud.Add(mira);
+
+            _misil.Initialize(new Vector2(-0.9f, -0.9f), Content, "Textures/misiles/R");
+            _misil.setQuad(0.10f,device);
+            _misil.cambioDeTecnica("Recarga");
+            //_imagenesHud.Add(mira);
+
+            
+            
+            
             this.crearQuad();
 
         }
@@ -82,13 +95,30 @@ namespace TGC.MonoGame.TP.src.Managers
             _vida.Dibujado(_graphicsDevice, _textoEffect, _indexBuffer, _vertexBuffer);
             _progreso.Dibujado(_graphicsDevice, _textoEffect, _indexBuffer, _vertexBuffer);
             _tiempo.Dibujado(_graphicsDevice, _textoEffect, _indexBuffer, _vertexBuffer);
+            _misil.Dibujado(_graphicsDevice);
+
+            foreach (HImagen hImagen in _imagenesHud)
+            {
+                hImagen.Dibujado(_graphicsDevice);
+            }
         }
 
-        public void Update(GameTime gameTime)//no esta haciendos
+        public void Update(GameTime gameTime)
         {
+            //TODO: recibe el tiempo restante de otro lado
+            float mseg = 300 - (float)gameTime.TotalGameTime.TotalSeconds;
+            /*
+            mseg = get.tiempro_restante 
+            //TODO
+            */
             _vida.setValor("vida:" + ((int)_jugador.getVida()).ToString());
             //_progreso.setValor( (int)_jugador.getKills() + "/5");//TODO
-            _tiempo.setValor("00:00");//DIFERENCIA DE TIMES O ALGO
+            int minuto = (int) mseg / 60;
+            int seg = (int) mseg % 60;
+            _tiempo.setValor(minuto.ToString() + ":" + seg.ToString());//DIFERENCIA DE TIMES O ALGO
+            
+            float porcentajeRecargado = _jugador.porcentajeRecargado();
+            _misil.setClaridad(porcentajeRecargado);
             
         }
 

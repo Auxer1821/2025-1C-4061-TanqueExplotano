@@ -42,7 +42,6 @@ namespace TGC.MonoGame.TP.src.Tanques
         }
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
-            ActualizarColor(Color.Gray);
             base.Initialize(Graphics, Mundo, Content);
         }
 

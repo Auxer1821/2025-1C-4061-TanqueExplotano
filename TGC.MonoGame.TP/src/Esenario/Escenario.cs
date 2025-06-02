@@ -31,8 +31,8 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
         private Cameras.FreeCamera _camara;
         //TODO: Que sea el primero en ser dibujado
-        private Entidades.ESkyBox _skyBox; //TODO -> Actualizar en el manager Graficos para que se dibujen primeros / ultimos
-        private Entidades.EPasto[] pastos = new Entidades.EPasto[1000];
+        //private Entidades.ESkyBox _skyBox; //TODO -> Actualizar en el manager Graficos para que se dibujen primeros / ultimos
+        //private Entidades.EPasto[] pastos = new Entidades.EPasto[1000];
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public Escenario()
@@ -56,13 +56,15 @@ namespace TGC.MonoGame.TP.src.Escenarios
             _managerGrafico.inicializarCamara(_camara);
 
             //-----------------Inicializar el skybox-------------------//
-            _skyBox = new ESkyBox();
-            _skyBox.Initialize(graphicsDevice, world, content, this);
-            this.AgregarACrear(_skyBox);
+            Entidades.ESkyBox skyBox = new ESkyBox();
+            skyBox.Initialize(graphicsDevice, world, content, this);
+            //this.AgregarACrear(skyBox);
+            _managerGrafico.inicializarSkyBox(skyBox);
 
             //-----------------Inicializar terreno--------------------//
             _terreno = new Terrenos.Terreno();
             _terreno.Initialize(graphicsDevice, world, content);
+            _managerGrafico.inicializarTerreno(_terreno);
 
             //-----------------Posiciones usadas----------------------//
             List<Vector3> posicionesUsadas = new List<Vector3>();
@@ -123,25 +125,6 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 }
             }
 
-            //------Crear pasto--------------------//
-            for (int i = 0; i < 1000; i++)
-            {
-                var pasto = new Entidades.EPasto();
-                float x = random.Next(-300, 300);
-                float z = random.Next(-300, 300);
-                var pos = new Vector2(x, z);
-                if (PosicionesLibre(pos, posicionesUsadas, 1))
-                {
-                    pasto.Initialize(graphicsDevice, Matrix.CreateScale(0.5f) * world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z) + 1f, z), content, this);
-                    pastos[i] = pasto;
-                    posicionesUsadas.Add(new Vector3(x, z, 1));
-                }
-                else
-                {
-                    i--;
-                }
-
-            }
 
             //---------Crear Coordillera--------//            
             for (int i = 0; i < 5; i++)
@@ -197,21 +180,32 @@ namespace TGC.MonoGame.TP.src.Escenarios
                     i--;
                 }
             }
+            //------Crear pasto--------------------//
+            for (int i = 0; i < 1000; i++)
+            {
+                var pasto = new Entidades.EPasto();
+                float x = random.Next(-300, 300);
+                float z = random.Next(-300, 300);
+                var pos = new Vector2(x, z);
+                if (PosicionesLibre(pos, posicionesUsadas, 1))
+                {
+                    pasto.Initialize(graphicsDevice,  world * Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z) + 1f, z), content, this);
+                    this._managerGrafico.AgregarPasto(pasto);
+                    posicionesUsadas.Add(new Vector3(x, z, 1));
+                }
+                else
+                {
+                    i--;
+                }
+
+            }
 
         }
         public void Dibujar(GraphicsDevice graphicsDevice)
         {
             _managerGrafico.DibujarObjetos(graphicsDevice);
-            _terreno.EfectCamera(_camara.Vista,_camara.Proyeccion);
-            _terreno.Dibujar(graphicsDevice);
-            //pasto debe ser dibujado al final por la transparencia
-            foreach (var pasto in pastos)
-            {
-                if (pasto != null)
-                {
-                    pasto.Dibujar(graphicsDevice);
-                }
-            }
+            
+            
             _managerInterfaz.Dibujar();
         }
 
@@ -233,19 +227,12 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
         public void Update(GameTime gameTime)
         {
-
             _managerGameplay.Update(gameTime);
             _managerColision.VerificarColisiones();
             _managerInterfaz.Update(gameTime);
             this.ActualizarCamara(gameTime);
-            //TODO pasto dentro de manager grafico
-            foreach (var pasto in pastos)
-            {
-                if (pasto != null)
-                {
-                    pasto.ActualizarTime((float)gameTime.TotalGameTime.TotalSeconds);
-                }
-            }
+           
+            _managerGrafico.ActualizarPasto(gameTime);
             if (_faltaEliminar) this.EliminarEntidades();
             if (_faltaCrear) this.CrearEntidades();
 

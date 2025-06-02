@@ -16,10 +16,12 @@ namespace TGC.MonoGame.TP.src.Entidades
     {
 
         // Variables
+        private float tiempoUltimoImpacto = 0f;
         private bool _activo;
         protected TipoTanque _tipoTanque;
         protected Vector2 _dirMovimiento = Vector2.UnitX;
         protected Vector3 _dirApuntado = Vector3.UnitX;
+        protected Vector3 _posicionSalidaBala;
         protected EBala _bala;
         protected float _cooldownActual;
         protected float _velocidadActual;
@@ -125,6 +127,12 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._boundingVolume.Transformar(this.CalcularCentro(_posicion), new Vector3(0.0f, anguloRotacionY, 0.0f), 1f);
             time = (float)gameTime.TotalGameTime.TotalSeconds;
             deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (!this.PuedeDisparar())
+            {
+                this._cooldownActual += 1*deltaTime;
+            }
+            this.tiempoUltimoImpacto += deltaTime;
         }
 
         private void ActualicarModeloTanque()
@@ -153,10 +161,13 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         protected virtual void RecibirDaño(DataChoque choque, EBala bala)
         {
-            if (!this._tipoTanque.EstaVivo()) return;
+            if (this.tiempoUltimoImpacto < 0.5 || bala == this._bala || !this._tipoTanque.EstaVivo())
+            return;
+            
             // Restar vida (suponiendo que existe una propiedad 'Vida')
             this._tipoTanque.RecibirDanio(bala._danio);
             this._modelo.EfectoDaño(Math.Clamp(this._tipoTanque.Vida() / this._tipoTanque.VidaMaxima(), 0.2f, 1.0f));
+            this.tiempoUltimoImpacto = 0.0f;
 
             // Efectos visuales
             // MostrarChispa(choque._puntoContacto);
@@ -174,7 +185,6 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._activo = false;
             // CrearEfectoExplosion(this._modelo.Posicion);
             this._escenario.AgregarAEliminar(this);
-            this._modelo.ActualizarColor(Color.DarkRed);
             this._escenario.AgregarACrear(this);
         }
 
@@ -273,7 +283,8 @@ namespace TGC.MonoGame.TP.src.Entidades
         // 
         public void Disparar()
         {
-            this._bala.ActualizarDatos(this._dirApuntado, this._posicion); //TODO - Cambiar lugar de disparo para que no se autodestruya
+            this.setPosicionSalidaBala();
+            this._bala.ActualizarDatos(this._dirApuntado, this._posicionSalidaBala); //TODO - Cambiar lugar de disparo para que no se autodestruya
             this._escenario.AgregarACrear(this._bala); //temporal
 
             //sonido disparo
@@ -284,8 +295,12 @@ namespace TGC.MonoGame.TP.src.Entidades
             }
         }
 
-        //
-        public void ActualizarApuntado(Vector3 apuntado)
+        public virtual void setPosicionSalidaBala()
+        {
+            this._posicionSalidaBala=this._posicion;
+        }
+
+        protected void ActualizarApuntado(Vector3 apuntado)
         {
             this._dirApuntado = apuntado;
         }

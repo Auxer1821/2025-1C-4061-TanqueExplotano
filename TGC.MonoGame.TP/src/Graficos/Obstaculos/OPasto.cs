@@ -31,8 +31,8 @@ namespace TGC.MonoGame.TP.src.Pastos
             base.Initialize(Graphics, Mundo, Content);
             //cargar la textura una sola vez
             _effect2.Parameters["Texture"].SetValue(pastoTexture);
-            _effect2.Parameters["WindSpeed"].SetValue(1.4f);
-            _effect2.Parameters["WindStrength"].SetValue(0.45f);
+            _effect2.Parameters["WindSpeed"].SetValue(1.8f);
+            _effect2.Parameters["WindStrength"].SetValue(0.5f);
             _effect2.Parameters["GrassStiffness"].SetValue(0.3f);
         }
 
@@ -46,8 +46,8 @@ namespace TGC.MonoGame.TP.src.Pastos
         //----------------------------------------------Dibujado--------------------------------------------------//
         public override void Dibujar(GraphicsDevice Graphics)
         {
-            Graphics.BlendState = BlendState.AlphaBlend;
             Graphics.DepthStencilState = DepthStencilState.DepthRead;
+            Graphics.BlendState = BlendState.AlphaBlend;
             Graphics.SetVertexBuffer(_vertices);
             Graphics.Indices = _indices;
 

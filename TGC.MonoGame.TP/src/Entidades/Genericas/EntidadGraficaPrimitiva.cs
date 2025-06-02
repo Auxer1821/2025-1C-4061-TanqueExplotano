@@ -46,5 +46,10 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._objeto.ActualizarMatrizMundo(mundo);
 
         } 
+
+        public override void EfectCamera(Matrix vista, Matrix proyeccion)
+        {
+            _objeto.EfectCamera( vista,  proyeccion);
+        }
     }
 }

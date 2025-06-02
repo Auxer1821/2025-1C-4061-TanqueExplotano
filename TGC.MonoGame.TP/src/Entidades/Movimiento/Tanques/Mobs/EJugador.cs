@@ -24,7 +24,6 @@ namespace TGC.MonoGame.TP.src.Entidades
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
         {
             base.Initialize(Graphics, Mundo, Content, escenario);
-            this._modelo.ActualizarColor(Color.RoyalBlue);
         }
 
         public void setCamara(Cameras.FreeCamera Camara){
@@ -83,10 +82,6 @@ namespace TGC.MonoGame.TP.src.Entidades
                     this._cooldownActual = 0;
                 }
             }
-            else
-            {
-                this._cooldownActual += 1*mseg;
-            }
 
             //---------------------Logica-Camara-----------------------//
             
@@ -97,15 +92,21 @@ namespace TGC.MonoGame.TP.src.Entidades
             
             base.Update(gameTime);
         }
-        
-        protected override void RecibirDaño(DataChoque choque,  EBala bala){}
 
         internal int getKills() //TODO
         {
             throw new NotImplementedException();
         }
 
+        internal float porcentajeRecargado() //TODO
+        {
+            return 1.0f - (this._tipoTanque.cooldown() - _cooldownActual) / this._tipoTanque.cooldown();
+        }
 
+        public override void setPosicionSalidaBala()
+        {
+        this._posicionSalidaBala = _Camara.Position;
+        }
 
 
         //---------------------------------------------MOVIMIENTO-Y-APUNTADO---------------------------------------------------//

@@ -69,11 +69,6 @@ namespace TGC.MonoGame.TP.src.Modelos
             }
         }
 
-        public void ActualizarColor(Color color)
-        {
-            this._Color = color.ToVector3();
-        }
-
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------//
 
         protected abstract void ConfigurarModelo(ContentManager content);

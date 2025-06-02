@@ -12,7 +12,7 @@ namespace TGC.MonoGame.TP.src.HUD
     /// <summary>
     ///     Esta es la clase del escenario donde se controla 
     /// </summary>
-    public class HTexto: IHUD
+    public class HTexto
     {
         /// <summary>
         /// Usás _tamanioLetra + 2 como espaciado. Esto puede dejar texto desalineado. Considerá usar un float Espaciado = 1f; o escalar con resolución para adaptarlo a distintos tamaños de pantalla.

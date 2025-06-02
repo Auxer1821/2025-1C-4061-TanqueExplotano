@@ -22,9 +22,9 @@ namespace TGC.MonoGame.TP.src.Tanques
         public Vector3 angulo(){return new Vector3(4.71f, 4.71f, 0.0f);}
         public float escala(){return 2.0f;} //Posible 0.1f
         public string directorioTextura(){return "/T90/textures_mod/hullB2";}
-        public float cooldown(){return 0.5f;}
+        public float cooldown(){return 2.0f;}
         public float Vida(){return vida;}
-        public float VidaMaxima(){return 140f;}
+        public float VidaMaxima(){return 14000f;}
         public void RecibirDanio(float danio){this.vida -= danio;}
         public bool EstaVivo(){ return vida > 0; }
 
