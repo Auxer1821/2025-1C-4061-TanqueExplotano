@@ -16,6 +16,11 @@ namespace TGC.MonoGame.TP.src.Managers
     /// </summary>
     public class ManagerGrafico 
     {
+        //deberia estar el frostum aca o en coliciones?
+        private BoundingFrustum _boundingFrustum;
+        //ejemplo de uso
+        //_boundingFrustum = new BoundingFrustum(_testCamera.View * _testCamera.Projection);
+        //_boudingFrustum.intersects(_entidad.BoundingBox);
         private List<Entidades.Entidad> _entidades; // dif listas [arboles,casa,caja,roca,pasto,montaña]
                                                     //effecto particular [arbol,casa,caja,roca,pasto,montaña]
 
