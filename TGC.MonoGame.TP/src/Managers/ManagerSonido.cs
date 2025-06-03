@@ -49,13 +49,13 @@ namespace TGC.MonoGame.TP.src.Managers
             SoundEffect sonidoDisparo = _contentManager.Load<SoundEffect>(@"Sounds/disparo2");
             this._sonidoDisparoInstance = sonidoDisparo.CreateInstance();
             _sonidoDisparoInstance.IsLooped = false;
-            _sonidoDisparoInstance.Volume = _volumenMaestro;
+            _sonidoDisparoInstance.Volume = _volumenMaestro * 2;
             _sonidoDisparoInstance.Pitch = 0.0f;
 
             SoundEffect sonidoImpactoBala = _contentManager.Load<SoundEffect>(@"Sounds/explocion2");
             this._sonidoImpactoBalaInstance = sonidoImpactoBala.CreateInstance();
             _sonidoImpactoBalaInstance.IsLooped = false;
-            _sonidoImpactoBalaInstance.Volume = _volumenMaestro;
+            _sonidoImpactoBalaInstance.Volume = _volumenMaestro * 3;
             _sonidoImpactoBalaInstance.Pitch = 0.0f;
 
             SoundEffect sonidoColision = _contentManager.Load<SoundEffect>(@"Sounds/explocion");//explosion es lo suficientemente parecido
@@ -66,7 +66,7 @@ namespace TGC.MonoGame.TP.src.Managers
             SoundEffect sonidoMuerte = _contentManager.Load<SoundEffect>(@"Sounds/explocion3");
             this._sonidoMuerteInstance = sonidoMuerte.CreateInstance();
             _sonidoMuerteInstance.IsLooped = false;
-            _sonidoMuerteInstance.Volume = _volumenMaestro;
+            _sonidoMuerteInstance.Volume = _volumenMaestro * 4;
 
         }
 
@@ -85,8 +85,11 @@ namespace TGC.MonoGame.TP.src.Managers
                     _sonidoDetenidoInstance.Play();
                     break;
                 case "impactoBala":
-                    _sonidoImpactoBalaInstance.Pitch = new Random().Next(-90, 100) / 100.0f; // Randomiza el pitch del sonido de impacto de bala
-                    _sonidoImpactoBalaInstance.Play();
+                    if (_sonidoImpactoBalaInstance.State != SoundState.Playing)
+                    {
+                        _sonidoImpactoBalaInstance.Pitch = new Random().Next(-90, 100) / 100.0f; // Randomiza el pitch del sonido de impacto de bala
+                        _sonidoImpactoBalaInstance.Play();
+                    }
                     break;
                 case "colision":
                     if (_sonidoColicionInstance.State == SoundState.Playing)
@@ -145,7 +148,7 @@ namespace TGC.MonoGame.TP.src.Managers
             SoundEffect sonidoFondoAccion = _contentManager.Load<SoundEffect>(@"Music/epico");
             this._sonidoFondoAccionInstance = sonidoFondoAccion.CreateInstance();
             _sonidoFondoAccionInstance.IsLooped = true;
-            _sonidoFondoAccionInstance.Volume = _volumenMaestro * 5;
+            _sonidoFondoAccionInstance.Volume = _volumenMaestro * 2;
 
             SoundEffect sonidoFondoSuspenso = _contentManager.Load<SoundEffect>(@"Music/musicaEpicaTranquila");
             this._sonidoFondoSuspensoInstance = sonidoFondoSuspenso.CreateInstance();

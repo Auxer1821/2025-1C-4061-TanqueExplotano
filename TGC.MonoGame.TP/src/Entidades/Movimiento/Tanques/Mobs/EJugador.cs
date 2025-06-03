@@ -21,10 +21,13 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public EJugador() { }
+        // es necesario hacer un override?
+        /*
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
         {
             base.Initialize(Graphics, Mundo, Content, escenario);
         }
+        */
 
         public void setCamara(Cameras.FreeCamera Camara){
             _Camara=Camara;
@@ -79,6 +82,7 @@ namespace TGC.MonoGame.TP.src.Entidades
                 if (raton.LeftButton == ButtonState.Pressed)
                 {
                     this.Disparar();
+                    this._managerSonido.reproducirSonido("disparo");
                     this._cooldownActual = 0;
                 }
             }
@@ -89,6 +93,9 @@ namespace TGC.MonoGame.TP.src.Entidades
             //cambios para ver el tanque
             _Camara.setPosicion(this._posicion - new Vector3(_dirApuntado.X *9, 2.5f, _dirApuntado.Z * 9), new Vector3(_dirMovimiento.X, 1.0f, _dirMovimiento.Y) * 8);
             
+            //-----------------------Sonido----------------------------//
+            this._managerSonido.sonidoMovimiento(_velocidadActual != 0);
+            this._managerSonido.sonidoDetenido(_velocidadActual == 0);
             
             base.Update(gameTime);
         }

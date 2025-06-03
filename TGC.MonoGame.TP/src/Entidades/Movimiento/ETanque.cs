@@ -30,7 +30,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         float deltaTime = 0.0f;
 
         //variables de sonido
-        private Managers.ManagerSonido _managerSonido;
+        public Managers.ManagerSonido _managerSonido;
 
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -83,9 +83,11 @@ namespace TGC.MonoGame.TP.src.Entidades
 
                 case TipoEntidad.Tanque:
                     this.AplicarColisionMovimiento(dataChoque);
+                    //this._managerSonido.reproducirSonido("colision");
                     break;
                 case TipoEntidad.Obstaculo:
                     this.AplicarColisionMovimiento(dataChoque);
+                    //this._managerSonido.reproducirSonido("colision");
                     break;
 
                 default:
@@ -152,6 +154,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             // ReproducirSonidoImpacto();
             // Modificar la mesh del modelo para simular el impacto (Entrega 4)
 
+            this._managerSonido.reproducirSonido("impactoBala");
             // Chequear destrucción
             if (!this._tipoTanque.EstaVivo()) this.Destruir();
         }
@@ -164,6 +167,8 @@ namespace TGC.MonoGame.TP.src.Entidades
             // CrearEfectoExplosion(this._modelo.Posicion);
             this._escenario.AgregarAEliminar(this);
             this._escenario.AgregarACrear(this);
+
+            this._managerSonido.reproducirSonido("muerte");
         }
 
         protected bool PuedeDisparar()
@@ -223,9 +228,6 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._posicion = Vector3.Lerp(this._posicion, posAux, 0.3f); // Suavizado de altura
 
 
-            //sonido
-            this._managerSonido.sonidoMovimiento(_velocidadActual != 0);
-            this._managerSonido.sonidoDetenido(_velocidadActual == 0);
 
         }
 
@@ -245,7 +247,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._escenario.AgregarACrear(this._bala); //temporal
 
             //sonido disparo
-            this._managerSonido.reproducirSonido("disparo");
+            //this._managerSonido.reproducirSonido("disparo");
         }
 
         public virtual void setPosicionSalidaBala()
