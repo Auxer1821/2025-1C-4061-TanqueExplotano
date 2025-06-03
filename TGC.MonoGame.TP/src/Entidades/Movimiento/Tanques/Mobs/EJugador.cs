@@ -82,16 +82,18 @@ namespace TGC.MonoGame.TP.src.Entidades
                 if (raton.LeftButton == ButtonState.Pressed)
                 {
                     this.Disparar();
-                    this._managerSonido.reproducirSonido("disparo");
                     this._cooldownActual = 0;
+                    //efecto de camara
+                    _Camara.setSacudida(true);
+                    //efecto de sonido
+                    this._managerSonido.reproducirSonido("disparo");
                 }
             }
 
             //---------------------Logica-Camara-----------------------//
             
-
-            //cambios para ver el tanque
-            _Camara.setPosicion(this._posicion - new Vector3(_dirApuntado.X *9, 2.5f, _dirApuntado.Z * 9), new Vector3(_dirMovimiento.X, 1.0f, _dirMovimiento.Y) * 8);
+            //_Camara.setPosicion(this._posicion - new Vector3(_dirApuntado.X *9, 2.5f, _dirApuntado.Z * 9), new Vector3(_dirMovimiento.X, 1.0f, _dirMovimiento.Y) * 8);
+            _Camara.actualizarCamara(this._posicion - new Vector3(_dirApuntado.X * 9, 2.5f, _dirApuntado.Z * 9), new Vector3(_dirMovimiento.X, 1.0f, _dirMovimiento.Y) * 8, gameTime);
             
             //-----------------------Sonido----------------------------//
             this._managerSonido.sonidoMovimiento(_velocidadActual != 0);

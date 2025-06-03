@@ -16,6 +16,8 @@ namespace TGC.MonoGame.TP.src.Cameras
         private float _pitch;
 
         private bool _bloquearMouse = true;
+        private bool estaSacudida = false;
+        private float tiempoSacudida = 1.2f;
 
         // Angles
         private float _yaw = -90f;
@@ -117,8 +119,10 @@ namespace TGC.MonoGame.TP.src.Cameras
                 {
                     Mouse.SetCursor(MouseCursor.Arrow);
                 }
-            }else{
-                    Mouse.SetCursor(MouseCursor.Arrow);
+            }
+            else
+            {
+                Mouse.SetCursor(MouseCursor.Arrow);
             }
 
             _pastMousePosition = Mouse.GetState().Position.ToVector2();
@@ -145,6 +149,19 @@ namespace TGC.MonoGame.TP.src.Cameras
             Position = posicion + new Vector3(0f, 10f, 0f) - direcion * 0f;//30f dir
         }
 
+        // Actualiza la posición y dirección de la cámara  
+        public void actualizarCamara(Vector3 posicion, Vector3 direcion, GameTime gameTime)
+        {
+            if (estaSacudida)
+            {
+                sacudida(posicion, direcion, gameTime);
+            }
+            else
+            {
+                setPosicion(posicion, direcion);
+            }
+        }
+
         internal Vector3 getDireccion()
         {
             return FrontDirection;
@@ -156,6 +173,49 @@ namespace TGC.MonoGame.TP.src.Cameras
             if (tecladoState.IsKeyDown(Keys.P)) this._bloquearMouse = false;
             else if (tecladoState.IsKeyDown(Keys.O)) this._bloquearMouse = true;
 
+        }
+
+        public void sacudida(Vector3 posicion, Vector3 direcion, GameTime gameTime)
+        {
+            if (estaSacudida)
+            {
+                float intensidad = 0.4f; // Intensidad de la sacudida
+                                         //deltaTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                                         // Calcular progreso del shake (1 al inicio, 0 al final)
+                float progreso = tiempoSacudida / 1.2f; // Duración total de la sacudida
+
+                // Reducir magnitud según progreso (efecto de decaimiento)
+                float magnitud = intensidad * progreso * progreso;
+
+                // Calcula el desplazamiento de la sacudida
+                /*
+                float desplazamientoX = (float)(Math.Sin(gameTime.TotalGameTime.TotalSeconds * 50) * magnitud);
+            float desplazamientoY = (float)(Math.Cos(gameTime.TotalGameTime.TotalSeconds * 50) * magnitud);
+            */
+            Vector3 randomOffset = new Vector3(
+            (float)(new Random().NextDouble() * 2 - 1) * magnitud,
+            (float)(new Random().NextDouble() * 2 - 1) * magnitud,
+            0); // Normalmente no sacudimos en Z
+
+            // Actualiza la posición de la cámara con el desplazamiento
+            //setPosicion(posicion + new Vector3(desplazamientoX, desplazamientoY, 0), direcion);
+            setPosicion(posicion + randomOffset, direcion);
+
+
+                tiempoSacudida -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            // Desactiva la sacudida después de la duración
+                if (tiempoSacudida <= 0)
+                {
+                    tiempoSacudida = 1.2f;
+                    estaSacudida = false;
+                }
+            }
+        }
+
+        public void setSacudida(bool sacudida)
+        {
+            estaSacudida = sacudida;
         }
     }
 }
