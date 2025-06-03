@@ -102,10 +102,11 @@ namespace TGC.MonoGame.TP.src.Cameras
                 _yaw += mouseDelta.X;
                 _pitch -= mouseDelta.Y;
 
-                if (_pitch > 89.0f)
-                    _pitch = 89.0f;
-                if (_pitch < -89.0f)
-                    _pitch = -89.0f;
+                //bloquea la camara para que no mire hacia arriba o abajo
+                if (_pitch > 39.0f)
+                    _pitch = 39.0f;
+                if (_pitch < -29.0f)
+                    _pitch = -29.0f;
 
                 _changed = true;
                 UpdateCameraVectors();
