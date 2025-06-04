@@ -20,13 +20,23 @@ namespace TGC.MonoGame.TP.src.Moldes
         private Model _modelo;
         Texture2D troncoTexture;
         Texture2D hojasTexture;
-        public MoldeArbol(ContentManager Content) {
+        public MoldeArbol(ContentManager Content)
+        {
             this._modelo = Content.Load<Model>(@"Models/tree/tree2");
             this._efecto = Content.Load<Effect>(@"Effects/shaderArbol");
             this.troncoTexture = Content.Load<Texture2D>(@"Models/tree/tronco2");
             this.hojasTexture = Content.Load<Texture2D>(@"Models/tree/light-green-texture");
             this._efecto.Parameters["TextureTronco"].SetValue(troncoTexture);
             this._efecto.Parameters["TextureHojas"].SetValue(hojasTexture);
+
+            foreach (var mesh in _modelo.Meshes)
+            {
+                // Un mesh puede tener mas de 1 mesh part (cada 1 puede tener su propio efecto).
+                foreach (var meshPart in mesh.MeshParts)
+                {
+                    meshPart.Effect = _efecto;
+                }
+            }
         }
         public override void Draw(Matrix Mundo, GraphicsDevice Graphics){
             foreach (var mesh in _modelo.Meshes)

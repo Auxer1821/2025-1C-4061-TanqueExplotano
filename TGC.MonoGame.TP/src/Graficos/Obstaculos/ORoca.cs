@@ -15,7 +15,7 @@ namespace TGC.MonoGame.TP.src.Rocas
     {
         
         // Variables
-        Texture2D rocaTexture;
+        //Texture2D rocaTexture;
         //  En Clase Abstracta
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -24,15 +24,15 @@ namespace TGC.MonoGame.TP.src.Rocas
 
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
-            this._Color = Color.Yellow.ToVector3();
+            //this._Color = Color.Yellow.ToVector3();
             base.Initialize(Graphics, Mundo, Content);
         }
 
         protected override void ConfigurarModelo(ContentManager Content){
-            this._modelo = Content.Load<Model>(@"Models/Stone/Stone");
-            rocaTexture = Content.Load<Texture2D>(@"Models/Stone/roca3");
+            //this._modelo = Content.Load<Model>(@"Models/Stone/Stone");
+            //rocaTexture = Content.Load<Texture2D>(@"Models/Stone/roca3");
             // Setear la textura de la roca
-            _effect2.Parameters["Texture"].SetValue(rocaTexture);
+            //_effect2.Parameters["Texture"].SetValue(rocaTexture);
         }
         protected override void AjustarModelo(){
             _matixBase = Matrix.CreateScale(0.01f);

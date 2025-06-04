@@ -17,7 +17,7 @@ namespace TGC.MonoGame.TP.src.Pastos
     {
 
         // Variables
-        Texture2D pastoTexture;
+        //Texture2D pastoTexture;
         private float tamano = 5f;
         private float time = 0f;
         //  En Clase Abstracta
@@ -26,14 +26,14 @@ namespace TGC.MonoGame.TP.src.Pastos
         public OPasto() { }
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
-            this._Color = Color.LightBlue.ToVector3();
-            pastoTexture = Content.Load<Texture2D>(@"Models/heightmap/pastoAlto");
+            //this._Color = Color.LightBlue.ToVector3();
+            //pastoTexture = Content.Load<Texture2D>(@"Models/heightmap/pastoAlto");
             base.Initialize(Graphics, Mundo, Content);
             //cargar la textura una sola vez
-            _effect2.Parameters["Texture"].SetValue(pastoTexture);
-            _effect2.Parameters["WindSpeed"].SetValue(1.8f);
-            _effect2.Parameters["WindStrength"].SetValue(0.5f);
-            _effect2.Parameters["GrassStiffness"].SetValue(0.3f);
+            //_effect2.Parameters["Texture"].SetValue(pastoTexture);
+            //_effect2.Parameters["WindSpeed"].SetValue(1.8f);
+            //_effect2.Parameters["WindStrength"].SetValue(0.5f);
+            //_effect2.Parameters["GrassStiffness"].SetValue(0.3f);
         }
 
         protected override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)

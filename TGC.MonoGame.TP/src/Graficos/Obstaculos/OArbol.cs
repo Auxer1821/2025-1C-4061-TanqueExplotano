@@ -17,26 +17,28 @@ namespace TGC.MonoGame.TP.src.Arboles
     {
         
         // Variables
-        Texture2D troncoTexture;
-        Texture2D hojasTexture;
+        //Texture2D troncoTexture;
+        //Texture2D hojasTexture;
         //  En Clase Abstracta
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public OArbol(){}
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
-            this._Color = Color.Green.ToVector3();
+            //this._Color = Color.Green.ToVector3();
             base.Initialize(Graphics, Mundo, Content);
         }
 
         protected override void ConfigurarModelo(ContentManager Content)
         {
+            /*
             this._modelo = Content.Load<Model>(@"Models/tree/tree2");
             troncoTexture = Content.Load<Texture2D>(@"Models/tree/tronco2");
             hojasTexture = Content.Load<Texture2D>(@"Models/tree/light-green-texture");
 
             _effect2.Parameters["TextureTronco"].SetValue(troncoTexture);
             _effect2.Parameters["TextureHojas"].SetValue(hojasTexture);
+            */
 
         }
 

@@ -24,7 +24,18 @@ namespace TGC.MonoGame.TP.src.Moldes
             this._efecto = Content.Load<Effect>(@"Effects/shaderRoca");
             this._rocaTexture = Content.Load<Texture2D>(@"Models/Stone/roca3");
             this._efecto.Parameters["Texture"].SetValue(_rocaTexture);
+
+
+            foreach (var mesh in _modelo.Meshes)
+            {
+                // Un mesh puede tener mas de 1 mesh part (cada 1 puede tener su propio efecto).
+                foreach (var meshPart in mesh.MeshParts)
+                {
+                    meshPart.Effect = _efecto;
+                }
+            }
         }
+
         public override void Draw(Matrix mundo, GraphicsDevice Graphics){
             _efecto.Parameters["World"].SetValue(mundo);
 

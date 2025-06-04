@@ -35,6 +35,15 @@ namespace TGC.MonoGame.TP.src.Moldes
             _efecto.Parameters["TexturePared"].SetValue(_paredTexture);
             _efecto.Parameters["TextureTecho"].SetValue(_techoTexture);
             _efecto.Parameters["TextureVentana"].SetValue(_marcoTexture);
+
+            foreach (var mesh in _modelo.Meshes)
+            {
+                // Un mesh puede tener mas de 1 mesh part (cada 1 puede tener su propio efecto).
+                foreach (var meshPart in mesh.MeshParts)
+                {
+                    meshPart.Effect = _efecto;
+                }
+            }
         }
         public override void Draw(Matrix mundo, GraphicsDevice graphics){
             _efecto.Parameters["World"].SetValue(mundo);

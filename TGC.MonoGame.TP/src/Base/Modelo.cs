@@ -39,6 +39,8 @@ namespace TGC.MonoGame.TP.src.Modelos
             this.AjustarModelo();
 
             //efecto al modelo
+            if (_modelo != null)
+            {
             foreach (var mesh in _modelo.Meshes)
             {
                 // Un mesh puede tener mas de 1 mesh part (cada 1 puede tener su propio efecto).
@@ -46,6 +48,7 @@ namespace TGC.MonoGame.TP.src.Modelos
                 {
                     meshPart.Effect = _effect2;
                 }
+            }
             }
             
             ActualizarMatrizMundo(Mundo);

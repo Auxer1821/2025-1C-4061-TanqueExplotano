@@ -15,7 +15,7 @@ namespace TGC.MonoGame.TP.src.Cajas
     {
         
         // Variables
-        Texture2D cajaTexture;
+        //Texture2D cajaTexture;
         //  En Clase Abstracta
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -31,10 +31,10 @@ namespace TGC.MonoGame.TP.src.Cajas
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
             //this._Color = new Vector2(0,0).ToVector3();
-            cajaTexture = Content.Load<Texture2D>(@"Models/house/tablasMadera");
+            //cajaTexture = Content.Load<Texture2D>(@"Models/house/tablasMadera");
             base.Initialize(Graphics, Mundo, Content);
             //setear solo una vez la textura
-            _effect2.Parameters["Texture"].SetValue(cajaTexture);
+            //_effect2.Parameters["Texture"].SetValue(cajaTexture);
 
         }
 

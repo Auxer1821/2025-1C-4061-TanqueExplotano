@@ -15,53 +15,34 @@ namespace TGC.MonoGame.TP.src.Casas
     {
         
         // Variables   
+        /*
         Texture2D paredTexture;
         Texture2D techoTexture;
         Texture2D chimeneaTexture;
         Texture2D marcoTexture;
-        string[] meshes;
+        */
         //  En Clase Abstracta
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
-            this._Color = Color.DarkRed.ToVector3();
+            //this._Color = Color.DarkRed.ToVector3();
             base.Initialize(Graphics, Mundo, Content);
         }
 
         protected override void ConfigurarModelo(ContentManager Content){
-            this._modelo = Content.Load<Model>(@"Models/house/cartoon_house1");
-            chimeneaTexture = Content.Load<Texture2D>(@"Models/house/paredPiedra");
-            paredTexture = Content.Load<Texture2D>(@"Models/house/textura-roja");
-            techoTexture = Content.Load<Texture2D>(@"Models/house/techo2");
-            marcoTexture = Content.Load<Texture2D>(@"Models/house/tablasMadera");
+            //this._modelo = Content.Load<Model>(@"Models/house/cartoon_house1");
+            //chimeneaTexture = Content.Load<Texture2D>(@"Models/house/paredPiedra");
+            //paredTexture = Content.Load<Texture2D>(@"Models/house/textura-roja");
+            //techoTexture = Content.Load<Texture2D>(@"Models/house/techo2");
+            //marcoTexture = Content.Load<Texture2D>(@"Models/house/tablasMadera");
 
             //cargar texturas en los parametros del shader
-            _effect2.Parameters["TextureChimenea"].SetValue(chimeneaTexture);
-            _effect2.Parameters["TexturePared"].SetValue(paredTexture);
-            _effect2.Parameters["TextureTecho"].SetValue(techoTexture);
-            _effect2.Parameters["TextureVentana"].SetValue(marcoTexture);
+            //_effect2.Parameters["TextureChimenea"].SetValue(chimeneaTexture);
+            //_effect2.Parameters["TexturePared"].SetValue(paredTexture);
+            //_effect2.Parameters["TextureTecho"].SetValue(techoTexture);
+            //_effect2.Parameters["TextureVentana"].SetValue(marcoTexture);
 
-            //obtenemos los meshes del modelo
-            int count = 0;
-            int meshCount = _modelo.Meshes.Count;
-            meshes = new string[meshCount];
-            foreach (var mesh in _modelo.Meshes)
-            {
-                if (!string.IsNullOrEmpty(mesh.Name))
-                {
-                    meshes[count] = mesh.Name;
-                    //Console.WriteLine($"Mesh {count}: {mesh.Name}");
-                }
-                else
-                {
-                    // Asignar nombre genérico si no tiene
-                    mesh.Name = $"Mesh_{count}";
-                    meshes[count] = mesh.Name;
-                    //Console.WriteLine($"Mesh {count}: {mesh.Name}");
-                }
-                count++;
-            }
 
         }
         protected override void AjustarModelo(){

@@ -32,10 +32,12 @@ namespace TGC.MonoGame.TP.src.Moldes
             Graphics.SetVertexBuffer(_vertices);
             Graphics.Indices = _indices;
 
+            _efecto.Parameters["World"].SetValue(Mundo);
+
             foreach (var pass in _efecto.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                Graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList,0,0,this._indices.IndexCount);
+                Graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, this._indices.IndexCount);
             }
         }
 

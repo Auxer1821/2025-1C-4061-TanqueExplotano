@@ -15,7 +15,7 @@ namespace TGC.MonoGame.TP.src.Montanas
     {
 
         // Variables
-        Texture2D montanaTexture;
+        //Texture2D montanaTexture;
         //  En Clase Abstracta
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -23,7 +23,7 @@ namespace TGC.MonoGame.TP.src.Montanas
         public override void Initialize (GraphicsDevice Graphics)
         {
             //Configuración de matrices
-            this._Color = Color.Yellow.ToVector3();
+            //this._Color = Color.Yellow.ToVector3();
             this._matrixMundo = Matrix.Identity;
 
             base.Initialize(Graphics);
@@ -32,11 +32,11 @@ namespace TGC.MonoGame.TP.src.Montanas
 
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
-            this._Color = Color.DarkGray.ToVector3();
-            montanaTexture = Content.Load<Texture2D>(@"Models/heightmap/montana");
+            //this._Color = Color.DarkGray.ToVector3();
+            //montanaTexture = Content.Load<Texture2D>(@"Models/heightmap/montana");
             base.Initialize(Graphics, Matrix.CreateScale(new Vector3(100,200,100)) * Mundo, Content);
             //setear solo una vez la textura
-            _effect2.Parameters["Texture"].SetValue(montanaTexture);
+            //_effect2.Parameters["Texture"].SetValue(montanaTexture);
         }
 
         protected override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
