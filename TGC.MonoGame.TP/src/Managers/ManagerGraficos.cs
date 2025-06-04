@@ -18,7 +18,7 @@ namespace TGC.MonoGame.TP.src.Managers
     public class ManagerGrafico 
     {
         //deberia estar el frostum aca o en coliciones?
-        private BoundingFrustum _boundingFrustum;
+        //private BoundingFrustum _boundingFrustum;
         //ejemplo de uso
         //_boundingFrustum = new BoundingFrustum(_testCamera.View * _testCamera.Projection);
         //_boudingFrustum.intersects(_entidad.BoundingBox);
@@ -140,9 +140,15 @@ namespace TGC.MonoGame.TP.src.Managers
 
         public void ActualizarPasto(GameTime gameTime)
         {
+            /*
             foreach (var pasto in _pastos)
             {
                 pasto.ActualizarTime((float)gameTime.TotalGameTime.TotalSeconds);
+            }
+            */
+            foreach (var molde in _moldes)
+            {
+                molde.setTime(gameTime);
             }
         }
 

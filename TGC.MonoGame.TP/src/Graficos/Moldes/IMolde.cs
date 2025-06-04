@@ -26,7 +26,7 @@ namespace TGC.MonoGame.TP.src.Moldes
         public abstract void Draw(Matrix Mundo, GraphicsDevice Graphics);
         public virtual void setTime(GameTime time)
         {
-            throw new NotImplementedException();
+
         }
 
     }

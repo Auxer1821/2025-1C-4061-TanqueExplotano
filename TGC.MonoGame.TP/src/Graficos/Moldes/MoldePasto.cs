@@ -24,6 +24,9 @@ namespace TGC.MonoGame.TP.src.Moldes
             this._efecto = Content.Load<Effect>(@"Effects/shaderPasto");
             this.pastoTexture = Content.Load<Texture2D>(@"Models/heightmap/pastoAlto");
             this._efecto.Parameters["Texture"].SetValue(pastoTexture);
+            this._efecto.Parameters["WindSpeed"].SetValue(1.8f);
+            this._efecto.Parameters["WindStrength"].SetValue(0.5f);
+            this._efecto.Parameters["GrassStiffness"].SetValue(0.3f);
             this.ConfigPuntos(Graphics);
         }
         public override void Draw(Matrix Mundo, GraphicsDevice Graphics){
@@ -44,6 +47,13 @@ namespace TGC.MonoGame.TP.src.Moldes
             // Restaurar estados
             Graphics.BlendState = BlendState.Opaque;
             Graphics.DepthStencilState = DepthStencilState.Default;
+        }
+
+        public override void setTime(GameTime time)
+        {
+            // Aquí podrías actualizar parámetros relacionados con el tiempo si es necesario
+            // Por ejemplo, podrías modificar la velocidad del viento o la fuerza del viento en función del tiempo
+            _efecto.Parameters["Time"].SetValue((float)time.TotalGameTime.TotalSeconds);
         }
 
         private void ConfigPuntos(GraphicsDevice Graphics)

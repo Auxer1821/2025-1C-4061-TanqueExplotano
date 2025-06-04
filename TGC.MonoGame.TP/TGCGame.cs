@@ -45,6 +45,12 @@ namespace TGC.MonoGame.TP
             Content.RootDirectory = "Content";
             // Hace que el mouse sea visible.
             IsMouseVisible = false;
+
+
+            Graphics.SynchronizeWithVerticalRetrace = false;
+
+            // Configurar para usar tiempo de juego fijo (opcional)
+            IsFixedTimeStep = false;
         }
 
         private GraphicsDeviceManager Graphics { get; }
