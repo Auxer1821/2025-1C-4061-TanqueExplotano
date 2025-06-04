@@ -24,7 +24,6 @@ namespace TGC.MonoGame.TP.src.Modelos
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
 
         public Modelo (){
-            //TODO
         }
         
         public virtual void Initialize (GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
@@ -60,7 +59,7 @@ namespace TGC.MonoGame.TP.src.Modelos
         public virtual void Dibujar(GraphicsDevice Graphics){
 
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
-            _effect2.Parameters["DiffuseColor"].SetValue(this._Color);
+            _effect2.Parameters["DiffuseColor"].SetValue(this._Color); //TODO OPTIMIZAR - Borrar
 
             foreach (var mesh in _modelo.Meshes)
             {
@@ -91,6 +90,9 @@ namespace TGC.MonoGame.TP.src.Modelos
 
         public virtual void ActualizarMatrizMundo(Matrix mundo){
             this._matrixMundo= this._matixBase * mundo;
+        }
+        public Matrix GetMundo(){
+            return _matrixMundo;
         }
 
         internal virtual void EfectoDaño(float v)

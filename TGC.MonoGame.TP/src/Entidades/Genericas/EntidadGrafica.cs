@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Modelos;
+using TGC.MonoGame.TP.src.Moldes;
 
 
 namespace TGC.MonoGame.TP.src.Entidades
@@ -11,28 +12,32 @@ namespace TGC.MonoGame.TP.src.Entidades
     /// <summary>
     ///     Clase Abstracta para todos los objetos
     /// </summary>
-    public abstract class EntidadGrafica:Entidad
+    public abstract class EntidadGrafica : Entidad
     {
-        
+
         // Variables
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
 
-        public virtual void Initialize (GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario){
+        public virtual void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
+        {
             this.InicializarDataMundo();
 
             this._boundingVolume = null;
-            this._modelo.Initialize(Graphics,Mundo,Content);
+            this._molde = null;
+            this._modelo.Initialize(Graphics, Mundo, Content);
             this._escenario = escenario;
-            this._posicion=Vector3.Transform(Vector3.Zero,Mundo);
+            this._posicion = Vector3.Transform(Vector3.Zero, Mundo);
         }
 
         //----------------------------------------------Metodos--------------------------------------------------//
 
-        public override bool PuedeChocar(){
+        public override bool PuedeChocar()
+        {
             return false;
         }
-        public override bool PuedeSerChocado(){
+        public override bool PuedeSerChocado()
+        {
             return false;
         }
         public override bool PuedeDibujar()
@@ -45,7 +50,8 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._modelo.Dibujar(graphics);
         }
 
-        public virtual void ActualizarMatrizMundo(){
+        public virtual void ActualizarMatrizMundo()
+        {
             Matrix mundo = Matrix.Identity;
             mundo *= Matrix.CreateScale(this._escala);
             mundo *= Matrix.CreateFromYawPitchRoll(this._angulo.Z, this._angulo.Y, this._angulo.X);
@@ -54,7 +60,10 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._modelo.ActualizarMatrizMundo(mundo);
 
         } 
-
-        //TODO Crear vista y proyección
+        
+        public override Matrix GetMundo()
+        {
+            return _modelo.GetMundo();
+        }
     }
 }

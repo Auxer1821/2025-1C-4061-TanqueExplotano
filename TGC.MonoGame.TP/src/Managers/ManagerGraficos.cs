@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Objetos;
 using System.Linq;
+using TGC.MonoGame.TP.src.Moldes;
 
 
 
@@ -23,11 +24,11 @@ namespace TGC.MonoGame.TP.src.Managers
         //_boudingFrustum.intersects(_entidad.BoundingBox);
         private List<Entidades.Entidad> _entidades; // dif listas [arboles,casa,caja,roca,pasto,montaña]
                                                     //effecto particular [arbol,casa,caja,roca,pasto,montaña]
-
         private List<Entidades.EPasto> _pastos;
         private Entidades.ESkyBox _skyBox;
         private Camaras.Camera _camera;
         private Terrenos.Terreno _terreno;
+        private List<Moldes.IMolde> _moldes;
 
         //skybox , pasto
         //decidir terreno (separar el dibujado del alturamapa)
@@ -35,9 +36,9 @@ namespace TGC.MonoGame.TP.src.Managers
         {
             _entidades = new List<Entidades.Entidad>();
             _pastos = new List<Entidades.EPasto>();
-
         }
-        public void inicializarCamara(Camaras.Camera camera){
+        public void inicializarCamara(Camaras.Camera camera)
+        {
             _camera = camera;
         }
 
@@ -50,12 +51,17 @@ namespace TGC.MonoGame.TP.src.Managers
         {
             _terreno = terreno;
         }
+        public void InicializarMoldes(List<IMolde> moldes)
+        {
+            _moldes = moldes;
+        }
 
         public void AgregarEntidad(Entidades.Entidad entidad)
         {
             if (entidad.PuedeDibujar())
                 _entidades.Add(entidad);
         }
+      
 
         public void AgregarPasto(Entidades.EPasto pasto)
         {
@@ -68,25 +74,68 @@ namespace TGC.MonoGame.TP.src.Managers
 
         public void DibujarObjetos(GraphicsDevice graphicsDevice)
         {
-                    //recorrer por listas separadas
+            //recorrer por listas separadas
             _skyBox.EfectCamera(_camera.Vista,_camera.Proyeccion);
-            _skyBox.Dibujar(graphicsDevice);
+            _skyBox.Dibujar(graphicsDevice);//se dibuja primero
 
             _terreno.EfectCamera(_camera.Vista,_camera.Proyeccion);
             _terreno.Dibujar(graphicsDevice);
 
+            //solamente los tanques pasan aqui
+            /*
             foreach (var entidad in _entidades)
             {
+                if (entidad.GetMolde() != null)
+                    continue;
                 entidad.EfectCamera(_camera.Vista,_camera.Proyeccion);
                 entidad.Dibujar(graphicsDevice);
             }
+            */
 
-            foreach (var pasto in _pastos)
+            //setear la vista y proyeccion una vez por frame
+            foreach (var molde in _moldes)
             {
-                pasto.EfectCamera(_camera.Vista,_camera.Proyeccion);
-                pasto.Dibujar(graphicsDevice);
+                setVistaProjection(molde, _camera.Vista, _camera.Proyeccion);
             }
 
+
+            //dibuja todas las instancias con sus matrices mundo
+            /*
+            foreach (var entidad in _entidades)//TODO - Filtrar solo para obstaculos
+            {
+                if (entidad.GetMolde() == null)
+                    continue;
+                entidad.GetMolde().Draw(entidad.GetMundo(), graphicsDevice);
+            }
+            */
+
+            foreach (var entidad in _entidades)
+            {
+                if (entidad._tipo == Entidades.TipoEntidad.Obstaculo)
+                {
+                    entidad.GetMolde().Draw(entidad.GetMundo(), graphicsDevice);
+                }
+                else
+                {
+                    entidad.EfectCamera(_camera.Vista, _camera.Proyeccion);
+                    entidad.Dibujar(graphicsDevice);
+                }
+            }
+
+            
+
+            foreach (var pasto in _pastos) //TODO hacer update del efecto pasto
+            {
+                //pasto.EfectCamera(_camera.Vista, _camera.Proyeccion);
+                //pasto.Dibujar(graphicsDevice);
+                pasto.GetMolde().Draw(pasto.GetMundo(), graphicsDevice);
+            }
+
+        }
+
+        private void setVistaProjection(Moldes.IMolde molde, Matrix vista, Matrix projection){
+            molde.setProjection(projection);
+            molde.setVista(vista);
         }
 
         public void ActualizarPasto(GameTime gameTime)

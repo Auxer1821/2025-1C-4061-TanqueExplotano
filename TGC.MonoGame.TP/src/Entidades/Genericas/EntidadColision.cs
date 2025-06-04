@@ -21,6 +21,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             this.InicializarDataMundo();
 
             this._modelo = null;
+            this._molde = null;
             this._escenario = escenario;
             this._posicion = Vector3.Transform(Vector3.Zero, Mundo);
             this._boundingVolume = new BoundingsVolumes.BVEsfera(3.0f, this._posicion);
@@ -38,7 +39,6 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             return false;
         }
-
         
     }
 }

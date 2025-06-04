@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.BoundingsVolumes;
+using TGC.MonoGame.TP.src.Moldes;
 using TGC.MonoGame.TP.src.Objetos;
 
 
@@ -38,11 +39,16 @@ namespace TGC.MonoGame.TP.src.Entidades
             Vector3 ret = new Vector3(pos.X - (7.0f / 2.0f), pos.Y, pos.Z - (7.0f / 2.0f));
             return ret;
         }
-        
+
         private Vector3 ObtenerMaximo(Vector3 pos)
         {
-            Vector3 ret = new Vector3( pos.X+(7.0f/2.0f) , pos.Y+7.0f , pos.Z+(7.0f/2.0f) );
+            Vector3 ret = new Vector3(pos.X + (7.0f / 2.0f), pos.Y + 7.0f, pos.Z + (7.0f / 2.0f));
             return ret;
+        }
+        
+        public void SetMolde(MoldeCasa molde)
+        {
+            this._molde = molde;
         }
         
     }

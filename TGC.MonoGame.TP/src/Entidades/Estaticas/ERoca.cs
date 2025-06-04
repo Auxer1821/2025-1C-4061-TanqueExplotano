@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TGC.MonoGame.TP.src.Moldes;
 using TGC.MonoGame.TP.src.Objetos;
 
 
@@ -23,6 +24,10 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._tipo = TipoEntidad.Obstaculo;
             base.Initialize(Graphics, Mundo, Content, escenario);
             this._boundingVolume = new BoundingsVolumes.BVEsfera(1.0f, this._posicion);
+        }
+         public void SetMolde(MoldeRoca molde)
+        {
+            this._molde = molde;
         }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Entidades;
 using TGC.MonoGame.TP.src.Objetos;
 using TGC.MonoGame.TP.src.Managers;
+using TGC.MonoGame.TP.src.Moldes;
 
 
 
@@ -28,6 +29,8 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private bool _faltaEliminar;
         private List<Entidad> _entidadesCrear;
         private bool _faltaCrear;
+        private List<IMolde> _moldes;
+
 
         private Cameras.FreeCamera _camara;
         //TODO: Que sea el primero en ser dibujado
@@ -43,6 +46,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             _managerInterfaz = new ManagerInterfaz();
             _entidadesEliminar = new List<Entidad>();
             _entidadesCrear = new List<Entidad>();
+            _moldes = new List<IMolde>();
             _faltaEliminar = false;
             _faltaCrear = false;
         }
@@ -66,21 +70,39 @@ namespace TGC.MonoGame.TP.src.Escenarios
             _terreno.Initialize(graphicsDevice, world, content);
             _managerGrafico.inicializarTerreno(_terreno);
 
+            //-----------------Inicializar moldes---------------------//
+            MoldeCasa moldeCasa = new MoldeCasa(content);
+            MoldeCaja moldeCaja = new MoldeCaja(content, graphicsDevice);
+            MoldeArbol moldeArbol = new MoldeArbol(content);
+            MoldeRoca moldeRoca = new MoldeRoca(content);
+            MoldeMontana moldeMontana = new MoldeMontana(content, graphicsDevice);
+            MoldePasto moldePasto = new MoldePasto(content, graphicsDevice);
+            this._moldes.Add(moldeCasa);
+            this._moldes.Add(moldeCaja);
+            this._moldes.Add(moldeArbol);
+            this._moldes.Add(moldeRoca);
+            this._moldes.Add(moldeMontana);
+            this._moldes.Add(moldePasto);
+            _managerGrafico.InicializarMoldes(_moldes);
+
             //-----------------Posiciones usadas----------------------//
             List<Vector3> posicionesUsadas = new List<Vector3>();
 
             //-------Crear un pequeño pueblo (casas y cajas)-----------//
+            
             for (int x = -50; x <= 50; x += 20)
             {
                 for (int z = -50; z <= 50; z += 20)
                 {
                     var casa = new ECasa();
                     casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this, new Vector3(x, _terreno.GetHeightAt(x, z), z));
+                    casa.SetMolde(moldeCasa);/*SEGUIR DESDE AQUI*/
                     this.AgregarACrear(casa);
                     posicionesUsadas.Add(new Vector3(x, z, 4));
 
                     var caja = new ECaja();
                     caja.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x + 8, _terreno.GetHeightAt(x, z), z + 8), content, this);
+                    caja.SetMolde(moldeCaja);
                     this.AgregarACrear(caja);
                     posicionesUsadas.Add(new Vector3(x + 8, z + 8, 2));
                 }
@@ -97,6 +119,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
                     arbol.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this);
+                    arbol.SetMolde(moldeArbol);
                     this.AgregarACrear(arbol);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
                 }
@@ -116,6 +139,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
                     roca.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this);
+                    roca.SetMolde(moldeRoca);
                     this.AgregarACrear(roca);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
                 }
@@ -126,16 +150,18 @@ namespace TGC.MonoGame.TP.src.Escenarios
             }
 
 
-            //---------Crear Coordillera--------//            
+            //---------Crear Coordillera--------//
             for (int i = 0; i < 5; i++)
             {
                 //IZQUIERDA
                 var montana = new EMontana();
                 montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(-400, 0, -400 + 200 * i), content, this);
+                montana.SetMolde(moldeMontana);
                 this.AgregarACrear(montana);
                 //DERECHA
                 montana = new EMontana();
                 montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(400, 0, -400 + 200 * i), content, this);
+                montana.SetMolde(moldeMontana);
                 this.AgregarACrear(montana);
             }
 
@@ -190,6 +216,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
                     pasto.Initialize(graphicsDevice,  world * Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z) + 1f, z), content, this);
+                    pasto.SetMolde(moldePasto);
                     this._managerGrafico.AgregarPasto(pasto);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
                 }

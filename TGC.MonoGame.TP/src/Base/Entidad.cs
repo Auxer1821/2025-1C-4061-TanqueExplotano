@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.BoundingsVolumes;
+using TGC.MonoGame.TP.src.Moldes;
 
 
 namespace TGC.MonoGame.TP.src.Entidades
@@ -21,27 +22,32 @@ namespace TGC.MonoGame.TP.src.Entidades
     /// </summary>
     public abstract class Entidad
     {
-        
-        // Variables
-        public Modelos.Modelo _modelo {get;set;}
-        public BoundingsVolumes.BoundingVolume _boundingVolume {get;set;}
-        public Escenarios.Escenario _escenario {get;set;}
 
-        public TipoEntidad _tipo {get;set;}
+        // Variables
+        public Modelos.Modelo _modelo { get; set; }
+        public BoundingsVolumes.BoundingVolume _boundingVolume { get; set; }
+        public Escenarios.Escenario _escenario { get; set; }
+
+        public TipoEntidad _tipo { get; set; }
 
         // DataMundo  --> La actualización está en: ""
-        public Vector3 _posicion {get;set;} //(x,y,z)
-        public float _escala {get;set;}     //(cantidad)
-        public Vector3 _angulo {get;set;}   //(zy,xz,xy)
+        public Vector3 _posicion { get; set; } //(x,y,z)
+        public float _escala { get; set; }     //(cantidad)
+        public Vector3 _angulo { get; set; }   //(zy,xz,xy)
+
+        protected IMolde _molde;
 
         //----------------------------------------------Metodos--------------------------------------------------//
-        public virtual bool PuedeChocar(){
+        public virtual bool PuedeChocar()
+        {
             throw new NotImplementedException();
         }
-        public virtual bool PuedeSerChocado(){
+        public virtual bool PuedeSerChocado()
+        {
             throw new NotImplementedException();
         }
-        public virtual bool PuedeDibujar(){
+        public virtual bool PuedeDibujar()
+        {
             throw new NotImplementedException();
         }
         public virtual void Dibujar(GraphicsDevice graphics)
@@ -53,7 +59,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             throw new NotImplementedException();
         }
-       
+
 
         public virtual void InicializarDataMundo()
         {
@@ -62,13 +68,24 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._escala = 1.0f;
         }
 
-        public virtual void Update(GameTime gameTime){
+        public virtual void Update(GameTime gameTime)
+        {
             throw new NotImplementedException();
         }
 
         public virtual void EfectCamera(Matrix vista, Matrix proyeccion)
         {
-            _modelo.EfectCamera( vista,  proyeccion);
+            _modelo.EfectCamera(vista, proyeccion);
+        }
+
+        public virtual Matrix GetMundo()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IMolde GetMolde()
+        {
+            return this._molde;
         }
     }
 }

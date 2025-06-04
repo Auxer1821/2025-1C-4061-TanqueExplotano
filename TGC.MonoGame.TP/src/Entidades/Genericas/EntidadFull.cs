@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.BoundingsVolumes;
+using TGC.MonoGame.TP.src.Moldes;
 
 
 namespace TGC.MonoGame.TP.src.Entidades
@@ -24,6 +25,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._posicion = Vector3.Transform(Vector3.Zero, Mundo);
             this._modelo.Initialize(Graphics, Mundo, Content);
             this._escenario = escenario;
+            this._molde = null;
         }
 
         public override void Dibujar(GraphicsDevice graphics)
@@ -67,9 +69,10 @@ namespace TGC.MonoGame.TP.src.Entidades
             }
         }
 
-
-
-        //TODO Crear vista y proyección
+        public override Matrix GetMundo()
+        {
+            return _modelo.GetMundo();
+        }
 
     }
 }

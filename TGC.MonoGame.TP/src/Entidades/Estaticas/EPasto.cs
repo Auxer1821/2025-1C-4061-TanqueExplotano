@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Objetos;
 using TGC.MonoGame.TP.src.Pastos;
+using TGC.MonoGame.TP.src.Moldes;
+
 
 
 namespace TGC.MonoGame.TP.src.Entidades
@@ -23,6 +25,10 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._objeto = new Pastos.OPasto();
             this._tipo = TipoEntidad.Otro;//TODO - Actualizar
             base.Initialize(Graphics, Mundo, Content, escenario);
+        } 
+        public void SetMolde(MoldePasto molde)
+        {
+            this._molde = molde;
         }
 
         public void ActualizarTime(float time)

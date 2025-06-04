@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.BoundingsVolumes;
 using TGC.MonoGame.TP.src.Objetos;
+using TGC.MonoGame.TP.src.Moldes;
 
 
 namespace TGC.MonoGame.TP.src.Entidades
@@ -24,21 +25,25 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._objeto = new Cajas.OCaja();
             this._tipo = TipoEntidad.Obstaculo;
             //Crear Bounding Volume
-            base.Initialize(Graphics, Mundo,  Content, escenario);
+            base.Initialize(Graphics, Mundo, Content, escenario);
             this._boundingVolume = new BVCuboAABB(ObtenerMinimo(this._posicion), ObtenerMaximo(this._posicion));
         }
-        
-        
+
+
         private Vector3 ObtenerMinimo(Vector3 pos)
         {
             Vector3 ret = new Vector3(pos.X - (1.0f / 2.0f), pos.Y, pos.Z - (1.0f / 2.0f));
             return ret;
         }
-        
+
         private Vector3 ObtenerMaximo(Vector3 pos)
         {
-            Vector3 ret = new Vector3( pos.X+(1.0f/2.0f) , pos.Y+1.0f , pos.Z+(1.0f/2.0f) );
+            Vector3 ret = new Vector3(pos.X + (1.0f / 2.0f), pos.Y + 1.0f, pos.Z + (1.0f / 2.0f));
             return ret;
+        }
+        public void SetMolde(MoldeCaja molde)
+        {
+            this._molde = molde;
         }
         
     }
