@@ -22,6 +22,9 @@ namespace TGC.MonoGame.TP.src.Tanques
         string directorioModelo();
         Vector3 angulo(); //Es el vector que debe ser perpendicular a la normal
         public string directorioTextura();
+        public string directorioTexturaNormal();
+        public string directorioTexturaCinta();
+        public string directorioTexturaCintaNormal();
         float escala();
         float cooldown();
 

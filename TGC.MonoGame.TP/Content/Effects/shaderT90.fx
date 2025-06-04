@@ -65,11 +65,11 @@ texture2D TextureMaskCinta;
 sampler2D MaskSampler2 = sampler_state
 {
     Texture = <TextureMaskCinta>;
-	    MinFilter = Linear;
+	MinFilter = Linear;
     MagFilter = Linear;
     MipFilter = Linear;
-    AddressU = Wrap;
-    AddressV = Wrap;
+    AddressU = Clamp;
+    AddressV = Clamp;
 };
 float4x4 World;
 float4x4 View;

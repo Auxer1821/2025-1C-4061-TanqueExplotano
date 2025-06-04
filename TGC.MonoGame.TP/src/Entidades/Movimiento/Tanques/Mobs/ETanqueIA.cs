@@ -35,11 +35,11 @@ namespace TGC.MonoGame.TP.src.Entidades
             float mseg = (float) gameTime.ElapsedGameTime.TotalSeconds;
 
             //1. Setear Velocidad Actual = tipo.velocidad
-            this._velocidadActual = this._tipoTanque.velocidad() * mseg * 0.5f;
+            //this._velocidadActual = this._tipoTanque.velocidad() * mseg * 0.5f;
 
             //2. Setear giro = giro.angulo
-            this._anguloActual = this._tipoTanque.anguloRotacionMovimiento() * mseg /8;
-            this.Disparar();
+            //this._anguloActual = this._tipoTanque.anguloRotacionMovimiento() * mseg /8;
+            //this.Disparar();
             base.Update(gameTime);
         }
         

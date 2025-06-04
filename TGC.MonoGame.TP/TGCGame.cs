@@ -25,8 +25,8 @@ namespace TGC.MonoGame.TP
         public const string ContentFolderSpriteFonts = "SpriteFonts/";
         public const string ContentFolderTextures = "Textures/";
 
-        private ManagerSonido _managerSonido;
 
+        public bool mouseVisible = false;
 
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace TGC.MonoGame.TP
             // Carpeta raiz donde va a estar toda la Media.
             Content.RootDirectory = "Content";
             // Hace que el mouse sea visible.
-            IsMouseVisible = false;
+            IsMouseVisible = mouseVisible;
 
 
             Graphics.SynchronizeWithVerticalRetrace = false;
@@ -54,6 +54,7 @@ namespace TGC.MonoGame.TP
         }
 
         private GraphicsDeviceManager Graphics { get; }
+        private ManagerSonido _managerSonido;
         private SpriteBatch SpriteBatch { get; set; }
         private Matrix View { get; set; }
         private Matrix Projection { get; set; }
@@ -132,6 +133,18 @@ namespace TGC.MonoGame.TP
             {
                 //Salgo del juego.
                 Exit();
+            }
+
+            //Cambio la visibilidad del mouse.
+            if (Keyboard.GetState().IsKeyDown(Keys.P))
+            {
+                mouseVisible = true;
+                IsMouseVisible = mouseVisible;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.O))
+            {
+                mouseVisible = false;
+                IsMouseVisible = mouseVisible;
             }
 
             this._managerSonido.reproducirMusica("accion");

@@ -21,7 +21,10 @@ namespace TGC.MonoGame.TP.src.Tanques
         public float danio(){return 20f;} //100
         public string directorioModelo(){return "/Panzer/Panzer";}
         public Vector3 angulo(){return new Vector3(0.0f, -4.71f, 0.0f);}
-        public string directorioTextura(){return "/T90/textures_mod/hullA";}
+        public string directorioTextura(){return "/Panzer/PzVl_Tiger_I";}
+        public string directorioTexturaNormal(){return "/Panzer/PzVl_Tiger_I_NM";}
+        public string directorioTexturaCinta(){ return "/Panzer/PzVl_Tiger_I_track"; }
+        public string directorioTexturaCintaNormal(){ return "/Panzer/PzVl_Tiger_I_track_NM"; }
         public float escala(){return 0.02f;}
         public float cooldown(){return 1.0f;} //10
         public float Vida(){return vida;}
