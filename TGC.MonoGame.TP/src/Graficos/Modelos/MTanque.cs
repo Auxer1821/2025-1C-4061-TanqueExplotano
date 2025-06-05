@@ -20,7 +20,9 @@ namespace TGC.MonoGame.TP.src.Tanques
             MarchaAdelante,
             MarchaAtras,
             giroDer,
-            giroIzq
+            giroIzq,
+            giroSobreEjeDer,
+            giroSobreEjeIzq
         }
 
         //----------------------------------------------Variables--------------------------------------------------//
@@ -205,20 +207,6 @@ namespace TGC.MonoGame.TP.src.Tanques
                         _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
                     }
 
-                    /*
-                    if (mesh.Name.Contains("Wheel"))
-                    {
-                        _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateScale(100f) * _matrixMundo);
-                    }
-                    else if (mesh.Name.Contains("Cannon"))
-                    { 
-                        _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateScale(100f) * _matrixMundo);
-                    }
-                    else
-                    {
-                        _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
-                    }
-                    */
                     mesh.Draw();
                 }
             }
@@ -263,6 +251,12 @@ namespace TGC.MonoGame.TP.src.Tanques
                 case Animacion.giroIzq:
                     resultado += new Vector2(0.5f, 1) * velocidad;
                     break;
+                case Animacion.giroSobreEjeDer:
+                    resultado += new Vector2(1f, -1f) * 0.06f;
+                    break;
+                case Animacion.giroSobreEjeIzq:
+                    resultado += new Vector2(-1f, 1f) * 0.06f;
+                    break;
                 default:
                     resultado = new Vector2(0, 0);
                     break;
@@ -294,12 +288,15 @@ namespace TGC.MonoGame.TP.src.Tanques
             modificadorDanio = porcentajeVida;
         }
 
-        public void ActualizarMovimeinto(float velocidad, float angulo){//update de entidad
+        public void ActualizarMovimeinto(float velocidad, float angulo)
+        {//update de entidad
             Animacion animacion = Animacion.Detenido;
-            if(angulo>0) animacion= Animacion.giroDer;
-            else if(angulo<0) animacion=Animacion.giroIzq;
-            else if(velocidad>0) animacion=Animacion.MarchaAdelante;
+            if (angulo > 0 && velocidad != 0) animacion = Animacion.giroDer;
+            else if (angulo < 0 && velocidad != 0) animacion = Animacion.giroIzq;
+            else if (velocidad > 0) animacion = Animacion.MarchaAdelante;
             else if(velocidad<0) animacion=Animacion.MarchaAtras;
+            else if(velocidad == 0 && angulo > 0) animacion = Animacion.giroSobreEjeDer;
+            else if(velocidad == 0 && angulo < 0) animacion = Animacion.giroSobreEjeIzq;
             offsetCintas = getAnimacionTanque(animacion, velocidad/10, offsetCintas); // esta es la animacion por defecto, 0 = detenido
             rotacionRuedas = getAnimacionTanque(animacion, velocidad, rotacionRuedas); // esta es la animacion por defecto, 0 = detenido
         }

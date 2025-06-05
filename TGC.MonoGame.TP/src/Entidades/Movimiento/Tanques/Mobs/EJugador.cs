@@ -60,7 +60,6 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._velocidadActual *= mseg;
 
             this._anguloActual = 0.0f; //cuanto rota segun su direcion
-            if(this._velocidadActual != 0.0f){
                 if (teclado.IsKeyDown(Keys.A))
                 {
                     this._anguloActual -= this._tipoTanque.anguloRotacionMovimiento();
@@ -70,7 +69,6 @@ namespace TGC.MonoGame.TP.src.Entidades
                 {
                     this._anguloActual += this._tipoTanque.anguloRotacionMovimiento();
                 }
-            }
             this._anguloActual *= mseg;
 
             //---------------Logica-Disparo---------------------//
