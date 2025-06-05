@@ -37,7 +37,10 @@ namespace TGC.MonoGame.TP.src.Entidades
         public Etanque() { }
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
         {
-            this._tipoTanque = new TanquePanzer();
+            if (this._tipoTanque == null)
+            {
+                this._tipoTanque = new TanqueT90();
+            }
             this._modelo = new MTanque(_tipoTanque);
             this._tipo = TipoEntidad.Tanque;
             this._activo = true;
@@ -179,6 +182,24 @@ namespace TGC.MonoGame.TP.src.Entidades
         public float getVida()
         {
             return this._tipoTanque.Vida();
+        }
+
+        public void setTipoTanque(string tipoTanque)
+        {
+            // Cambia el tipo de tanque y actualiza el modelo y las propiedades
+            switch (tipoTanque)
+            {
+                case "T90":
+                    this._tipoTanque = new TanqueT90();
+                    break;
+                case "Panzer":
+                    this._tipoTanque = new TanquePanzer();
+                    break;
+                default:
+                    throw new ArgumentException("Tipo de tanque no reconocido");
+            }
+
+            this._modelo = new MTanque(this._tipoTanque);
         }
 
         //---------------------------------------------MOVIMIENTO-Y-APUNTADO---------------------------------------------------//

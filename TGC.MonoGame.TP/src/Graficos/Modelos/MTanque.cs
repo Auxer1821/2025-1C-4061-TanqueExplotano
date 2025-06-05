@@ -57,11 +57,6 @@ namespace TGC.MonoGame.TP.src.Tanques
             texturaNormalCinta = Content.Load<Texture2D>(@"Models/tgc-tanks" + this._tipoTanque.directorioTexturaCintaNormal());
             offsetCintas = getAnimacionTanque(Animacion.Detenido, 0.01f, offsetCintas); // esta es la animacion por defecto, 0 = detenido
             rotacionRuedas = getAnimacionTanque(Animacion.Detenido, 0.1f, rotacionRuedas); // esta es la animacion por defecto, 0 = detenido
-
-            _effect2.Parameters["Texture"].SetValue(tanqueTexture);
-            _effect2.Parameters["TextureCinta"].SetValue(texturaCinta);
-            _effect2.Parameters["TextureNormalTanque"].SetValue(texturaNormalTanque);
-            _effect2.Parameters["TextureNormalCinta"].SetValue(texturaNormalCinta);
         }
         
         protected override void AjustarModelo(){
@@ -80,7 +75,10 @@ namespace TGC.MonoGame.TP.src.Tanques
         {
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
             _effect2.Parameters["Opaco"]?.SetValue(modificadorDanio);
-
+            _effect2.Parameters["Texture"].SetValue(tanqueTexture);
+            _effect2.Parameters["TextureCinta"].SetValue(texturaCinta);
+            _effect2.Parameters["TextureNormalTanque"].SetValue(texturaNormalTanque);
+            _effect2.Parameters["TextureNormalCinta"].SetValue(texturaNormalCinta);
             //------------------------------dibujado de los meshes---------------------------------------------------
             //TODO mejorar la lectura del codigo
             if (this._tipoTanque.directorioModelo().Contains("T90"))

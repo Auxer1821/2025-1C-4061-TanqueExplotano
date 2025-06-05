@@ -191,6 +191,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             for (int i = 0; i < 4; i++)
             {
                 var tank = new ETanqueIA();
+                    tank.setTipoTanque("Panzer");
                 float Ax = random.Next(-150, 150);
                 float Az = random.Next(-150, 150);
                 var pos = new Vector2(Ax, Az);
