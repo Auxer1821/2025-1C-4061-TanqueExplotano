@@ -55,8 +55,8 @@ namespace TGC.MonoGame.TP.src.Tanques
             texturaCinta = Content.Load<Texture2D>(@"Models/tgc-tanks" + this._tipoTanque.directorioTexturaCinta());
             texturaNormalTanque = Content.Load<Texture2D>(@"Models/tgc-tanks" + this._tipoTanque.directorioTexturaNormal());
             texturaNormalCinta = Content.Load<Texture2D>(@"Models/tgc-tanks" + this._tipoTanque.directorioTexturaCintaNormal());
-            offsetCintas = getAnimacionTanque(Animacion.Detenido, 0.01f,offsetCintas); // esta es la animacion por defecto, 0 = detenido
-            rotacionRuedas = getAnimacionTanque(Animacion.Detenido, 0.1f,rotacionRuedas); // esta es la animacion por defecto, 0 = detenido
+            offsetCintas = getAnimacionTanque(Animacion.Detenido, 0.01f, offsetCintas); // esta es la animacion por defecto, 0 = detenido
+            rotacionRuedas = getAnimacionTanque(Animacion.Detenido, 0.1f, rotacionRuedas); // esta es la animacion por defecto, 0 = detenido
 
             _effect2.Parameters["Texture"].SetValue(tanqueTexture);
             _effect2.Parameters["TextureCinta"].SetValue(texturaCinta);
@@ -65,7 +65,14 @@ namespace TGC.MonoGame.TP.src.Tanques
         }
         
         protected override void AjustarModelo(){
-            this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo().X) * Matrix.CreateRotationY(this._tipoTanque.angulo().Y) * Matrix.CreateRotationZ(this._tipoTanque.angulo().Z) * Matrix.CreateTranslation(new Vector3(0,1 * 3,0)); ;
+            if(this._tipoTanque.directorioModelo().Contains("T90"))
+            {
+                this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo().X) * Matrix.CreateRotationY(this._tipoTanque.angulo().Y) * Matrix.CreateRotationZ(this._tipoTanque.angulo().Z) * Matrix.CreateTranslation(new Vector3(0,1 * 3,0)); 
+            }
+            else
+            {
+            this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo().X) * Matrix.CreateRotationY(this._tipoTanque.angulo().Y) * Matrix.CreateRotationZ(this._tipoTanque.angulo().Z) * Matrix.CreateTranslation(new Vector3(0,0.5f,0)); 
+            }
         }
 
         //----------------------------------------------Dibujado--------------------------------------------------//
@@ -76,11 +83,11 @@ namespace TGC.MonoGame.TP.src.Tanques
 
             //------------------------------dibujado de los meshes---------------------------------------------------
             //TODO mejorar la lectura del codigo
-            foreach (var mesh in _modelo.Meshes)
+            if (this._tipoTanque.directorioModelo().Contains("T90"))
             {
-                _effect2.CurrentTechnique = _effect2.Techniques["Main"];
-                if (this._tipoTanque.directorioModelo().Contains("T90"))
+                foreach (var mesh in _modelo.Meshes)
                 {
+                    _effect2.CurrentTechnique = _effect2.Techniques["Main"];
 
                     if (mesh.Name.Contains("Treadmill"))
                     {
@@ -136,9 +143,15 @@ namespace TGC.MonoGame.TP.src.Tanques
                     {
                         _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
                     }
+                    mesh.Draw();
                 }
-                else
+            }
+            else
+            {
+                foreach (var mesh in _modelo.Meshes)
                 {
+
+                    _effect2.CurrentTechnique = _effect2.Techniques["Main"];
                     //logica para el tanque Panzer
                     if (mesh.Name.Contains("Treadmill"))
                     {
@@ -147,25 +160,29 @@ namespace TGC.MonoGame.TP.src.Tanques
                         //desplazamiento de la cinta individual
                         if (mesh.Name.Contains("1"))
                         {
-                            _effect2.Parameters["UVOffset"].SetValue(new Vector2(0, offsetCintas.X));
+                            _effect2.Parameters["UVOffset"].SetValue(new Vector2(0, -offsetCintas.X));
                         }
                         else
                         {
-                            _effect2.Parameters["UVOffset"].SetValue(new Vector2(0, offsetCintas.Y));
+                            _effect2.Parameters["UVOffset"].SetValue(new Vector2(0, -offsetCintas.Y));
                         }
                         _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
 
                     }
                     else if (mesh.Name == "Turret")
                     {
-                        _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta) * _matrixMundo);
-
-                    }
-                    else if (mesh.Name.Contains("Wheel"))
+                        _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationY(giroTorreta) * _matrixMundo);
+                    }else if (mesh.Name == "Cannon")
+                    {
+                        //por alguna razon el cannon eran muy pequeño
+                        _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationY(giroTorreta) * Matrix.CreateScale(100f) * _matrixMundo);
+                    }else if (mesh.Name.Contains("Wheel"))
                     {
                         Vector3 wheelCenter = mesh.BoundingSphere.Center;
 
-                        Matrix transform = mesh.ParentBone.Transform * Matrix.CreateRotationZ(MathF.PI);
+                        //por alguna razon las ruedas eran muy pequeño
+                        Matrix transform = mesh.ParentBone.Transform *
+                                           Matrix.CreateScale(100f);
 
                         //giro individual de cada rueda
                         if (esRuedaDerechaPanzer(mesh.Name))
@@ -189,12 +206,27 @@ namespace TGC.MonoGame.TP.src.Tanques
                     {
                         _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
                     }
+
+                    /*
+                    if (mesh.Name.Contains("Wheel"))
+                    {
+                        _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateScale(100f) * _matrixMundo);
+                    }
+                    else if (mesh.Name.Contains("Cannon"))
+                    { 
+                        _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateScale(100f) * _matrixMundo);
+                    }
+                    else
+                    {
+                        _effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
+                    }
+                    */
+                    mesh.Draw();
                 }
-                mesh.Draw();
             }
+        }
 
             //dibujado de proyextiles
-        }
 
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------//
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)

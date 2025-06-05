@@ -22,10 +22,10 @@ namespace TGC.MonoGame.TP.src.Tanques
         public string directorioModelo(){return "/Panzer/Panzer";}
         public Vector3 angulo(){return new Vector3(0.0f, -4.71f, 0.0f);}
         public string directorioTextura(){return "/Panzer/PzVl_Tiger_I";}
-        public string directorioTexturaNormal(){return "/Panzer/PzVl_Tiger_I_NM";}
-        public string directorioTexturaCinta(){ return "/Panzer/PzVl_Tiger_I_track"; }
-        public string directorioTexturaCintaNormal(){ return "/Panzer/PzVl_Tiger_I_track_NM"; }
-        public float escala(){return 0.02f;}
+        public string directorioTexturaNormal(){return "/Panzer/PzVI_Tiger_I_track_NM";}
+        public string directorioTexturaCinta(){ return "/Panzer/PzVI_Tiger_I_track"; }
+        public string directorioTexturaCintaNormal(){ return "/Panzer/PzVI_Tiger_I_track_NM"; }
+        public float escala(){return 0.015f;}
         public float cooldown(){return 1.0f;} //10
         public float Vida(){return vida;}
         public float VidaMaxima(){return 60f;}
