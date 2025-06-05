@@ -61,7 +61,7 @@ namespace TGC.MonoGame.TP
 
 
         //objetos
-        private Escenario _escenario;
+        private DirectorEscenarios _directorEscenario;
 
         //private Camara _camara;
 
@@ -93,9 +93,9 @@ namespace TGC.MonoGame.TP
             //_camara = new Camara(Vector3.UnitZ * 150, Vector3.Zero , GraphicsDevice.Viewport.AspectRatio);
 
             //_Escenario = new Escenario(GraphicsDevice);
-            _escenario = new Escenario();
+            _directorEscenario = new DirectorEscenarios();
             //_escenario.Initialize(GraphicsDevice, Matrix.Identity, View, Projection, Content);
-            _escenario.Initialize(GraphicsDevice, Matrix.Identity, Content);
+            _directorEscenario.Initialize(GraphicsDevice, Matrix.Identity, Content);
 
             _managerSonido = new ManagerSonido(Content);
 
@@ -134,7 +134,6 @@ namespace TGC.MonoGame.TP
                 //Salgo del juego.
                 Exit();
             }
-
             //Cambio la visibilidad del mouse.
             if (Keyboard.GetState().IsKeyDown(Keys.P))
             {
@@ -147,10 +146,12 @@ namespace TGC.MonoGame.TP
                 IsMouseVisible = mouseVisible;
             }
 
+            
+
             this._managerSonido.reproducirMusica("accion");
           
 
-            _escenario.Update(gameTime);
+            _directorEscenario.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -163,7 +164,7 @@ namespace TGC.MonoGame.TP
             // Aca deberiamos poner toda la logia de renderizado del juego.
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _escenario.Dibujar(GraphicsDevice);
+            _directorEscenario.Dibujar();
 
 
         }

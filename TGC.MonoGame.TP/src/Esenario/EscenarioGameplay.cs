@@ -10,13 +10,12 @@ using TGC.MonoGame.TP.src.Managers;
 using TGC.MonoGame.TP.src.Moldes;
 
 
-
 namespace TGC.MonoGame.TP.src.Escenarios
 {
     /// <summary>
     ///     Esta es la clase del escenario donde se controla los managers
     /// </summary>
-    public class Escenario
+    public class Escenario : IEscenario
     {
 
         // Variables
@@ -255,6 +254,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
         public void Update(GameTime gameTime)
         {
+
             _managerGameplay.Update(gameTime);
             _managerColision.VerificarColisiones();
             _managerInterfaz.Update(gameTime);
