@@ -137,7 +137,7 @@ namespace TGC.MonoGame.TP.src.Tanques
                               transform;
                         }
 
-                        _effect2.Parameters["World"].SetValue(transform * _matrixMundo);
+                        _effect2.Parameters["World"].SetValue(transform * Matrix.CreateTranslation(0.15f,0,0) * _matrixMundo);// Ajuste de la posición de las ruedas
                     }
                     else
                     {
