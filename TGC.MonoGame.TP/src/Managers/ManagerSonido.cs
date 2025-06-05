@@ -75,7 +75,11 @@ namespace TGC.MonoGame.TP.src.Managers
             switch (sonido)
             {
                 case "disparo":
-                    _sonidoDisparoInstance.Pitch = new Random().Next(-80, 90) / 100.0f; // Randomiza el pitch del sonido de disparo
+                    if (_sonidoDisparoInstance.State == SoundState.Playing)
+                    {
+                        _sonidoDisparoInstance.Stop();
+                    }
+                    _sonidoDisparoInstance.Pitch = new Random().Next(-80, 0) / 100.0f; // Randomiza el pitch del sonido de disparo
                     _sonidoDisparoInstance.Play();
                     break;
                 case "movimiento":

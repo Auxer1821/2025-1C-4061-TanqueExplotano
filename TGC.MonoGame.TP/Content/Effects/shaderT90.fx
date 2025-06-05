@@ -165,11 +165,11 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     float specular = pow(NdotH, 32) * 0.9; // Reducir intensidad
     
     // Componente ambiental
-    float3 ambient = diffuseColor.rgb * 0.55; //iluminación ambiente
+    float3 ambient = diffuseColor.rgb * 0.65; //iluminación ambiente
     
     // 4. Combinación final con gamma correction
     float3 finalColor = saturate(ambient + diffuse + specular);
-    finalColor = pow(finalColor, 1/1.09); // Gamma correction
+    finalColor = pow(finalColor, 1/1.05); // Gamma correction
     
     return float4(finalColor, diffuseColor.a);
 }

@@ -25,7 +25,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         public string directorioTexturaNormal(){return "/T90/textures_mod/normal";}
         public string directorioTexturaCinta(){ return "/T90/textures_mod/treadmills"; }
         public string directorioTexturaCintaNormal(){ return "/T90/textures_mod/treadmills_normal"; }
-        public float cooldown(){return 2.5f;}
+        public float cooldown(){return 1.5f;}
         public float Vida(){return vida;}
         public float VidaMaxima(){return 14000f;}
         public void RecibirDanio(float danio){this.vida -= danio;}
