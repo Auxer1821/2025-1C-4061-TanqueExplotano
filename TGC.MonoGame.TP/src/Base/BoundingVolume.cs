@@ -13,6 +13,6 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
     public abstract class BoundingVolume
     {
         public virtual void Transformar(Vector3 nuevaPosicion, Vector3 rotacionEuler, float escala){}
-        
+        public abstract Vector3 GetCentro();
     }
 }

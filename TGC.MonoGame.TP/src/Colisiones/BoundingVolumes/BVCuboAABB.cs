@@ -41,6 +41,10 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             return (_maximo + _minimo) / 2 ;
         }
 
+        public override Vector3 GetCentro(){
+            return this.Centro();
+        }
+
 
     }
 }

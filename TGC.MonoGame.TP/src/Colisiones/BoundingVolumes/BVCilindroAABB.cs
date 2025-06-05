@@ -18,6 +18,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         public Vector3 _centro { get; set;}//El centro es el centro de la figura (no la base)
         public float _alto { get; set; }
 
+        
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------// 
     public BVCilindroAABB(Vector3 centro, float radio, float alto)
     {
@@ -26,5 +27,9 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         _alto = alto;
     }
 
+    public override Vector3 GetCentro()
+    {
+        return _centro;
+    }
     }
 }

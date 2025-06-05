@@ -64,5 +64,9 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             // La posición del centro se actualiza directamente.
             this.Centro = nuevaPosicion;
         }
+
+        public override Vector3 GetCentro(){
+            return Centro;
+        }
     }
 }

@@ -27,8 +27,8 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             _Direccion = Vector3.Normalize(Direccion);
             _PuntoPartda = PuntoPartda;
 
-            _ODireccion=_Direccion;
-            _OPuntoPartda=_PuntoPartda;
+            _ODireccion = _Direccion;
+            _OPuntoPartda = _PuntoPartda;
         }
 
         public BVRayo(Vector3 Direccion)
@@ -37,8 +37,8 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             _Direccion = Vector3.Normalize(Direccion);
             _PuntoPartda = Vector3.Zero;
 
-            _ODireccion=_Direccion;
-            _OPuntoPartda=_PuntoPartda;
+            _ODireccion = _Direccion;
+            _OPuntoPartda = _PuntoPartda;
         }
 
         public override void Transformar(Vector3 nuevaPosicionPartida, Vector3 rotacionEuler, float escala)
@@ -61,6 +61,11 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             // 3. Escala:
             // La escala no tiene un efecto. Se ignora.
 
+        }
+
+        public override Vector3 GetCentro()
+        {
+            return this._PuntoPartda;
         }
 
 

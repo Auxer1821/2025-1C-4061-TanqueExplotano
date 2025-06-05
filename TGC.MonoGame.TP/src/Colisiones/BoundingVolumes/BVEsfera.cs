@@ -44,6 +44,10 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             //SE REUBICA
             this._centro = nuevaPosicion;
         }
+
+        public override Vector3 GetCentro(){
+            return _centro;
+        }
         
     }
 }

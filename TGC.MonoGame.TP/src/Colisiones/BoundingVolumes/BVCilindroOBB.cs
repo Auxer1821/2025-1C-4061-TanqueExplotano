@@ -71,5 +71,11 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             // La posición del centro se actualiza directamente.
             this._centro = nuevaPosicion;
         }
+
+        public override Vector3 GetCentro()
+        {
+            // Retorna el centro del cilindro
+            return _centro;
+        }
     }
 }

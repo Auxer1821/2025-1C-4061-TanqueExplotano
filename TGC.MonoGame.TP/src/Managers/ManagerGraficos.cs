@@ -18,10 +18,12 @@ namespace TGC.MonoGame.TP.src.Managers
     public class ManagerGrafico 
     {
         //deberia estar el frostum aca o en coliciones?
-        //private BoundingFrustum _boundingFrustum;
+        private BoundingsVolumes.BVTrufas _boundingFrustum;
         //ejemplo de uso
         //_boundingFrustum = new BoundingFrustum(_testCamera.View * _testCamera.Projection);
         //_boudingFrustum.intersects(_entidad.BoundingBox);
+         // Update the view projection matrix of the bounding frustum
+            //_boundingFrustum.Matrix = _testCamera.View * _testCamera.Projection;
         private List<Entidades.Entidad> _entidades; // dif listas [arboles,casa,caja,roca,pasto,montaña]
                                                     //effecto particular [arbol,casa,caja,roca,pasto,montaña]
         private List<Entidades.EPasto> _pastos;
@@ -40,8 +42,8 @@ namespace TGC.MonoGame.TP.src.Managers
         public void inicializarCamara(Camaras.Camera camera)
         {
             _camera = camera;
+            _boundingFrustum = new BoundingsVolumes.BVTrufas(camera);
         }
-
         public void inicializarSkyBox(Entidades.ESkyBox skyBox)
         {
             _skyBox = skyBox;
@@ -109,16 +111,20 @@ namespace TGC.MonoGame.TP.src.Managers
             }
             */
 
+            //TODO de los chunks de minegraft
+            
             foreach (var entidad in _entidades)
             {
-                if (entidad._tipo == Entidades.TipoEntidad.Obstaculo)
-                {
-                    entidad.GetMolde().Draw(entidad.GetMundo(), graphicsDevice);
-                }
-                else
-                {
-                    entidad.EfectCamera(_camera.Vista, _camera.Proyeccion);
-                    entidad.Dibujar(graphicsDevice);
+                if (_boundingFrustum.colisiona(entidad._boundingVolume)) {
+                    if (entidad._tipo == Entidades.TipoEntidad.Obstaculo)
+                    {
+                        entidad.GetMolde().Draw(entidad.GetMundo(), graphicsDevice);
+                    }
+                    else
+                    {
+                        entidad.EfectCamera(_camera.Vista, _camera.Proyeccion);
+                        entidad.Dibujar(graphicsDevice);
+                    }
                 }
             }
 
@@ -126,9 +132,11 @@ namespace TGC.MonoGame.TP.src.Managers
 
             foreach (var pasto in _pastos) //TODO hacer update del efecto pasto
             {
+                if (_boundingFrustum.colisiona(pasto._posicion)){
                 //pasto.EfectCamera(_camera.Vista, _camera.Proyeccion);
                 //pasto.Dibujar(graphicsDevice);
                 pasto.GetMolde().Draw(pasto.GetMundo(), graphicsDevice);
+                }
             }
 
         }
@@ -150,6 +158,10 @@ namespace TGC.MonoGame.TP.src.Managers
             {
                 molde.setTime(gameTime);
             }
+        }
+
+        public void ActualizarCamera(){
+            _boundingFrustum.UpdateFrustum(_camera);
         }
 
 
