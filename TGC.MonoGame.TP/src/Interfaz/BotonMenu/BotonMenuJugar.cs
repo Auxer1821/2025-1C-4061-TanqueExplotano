@@ -23,6 +23,7 @@ namespace TGC.MonoGame.TP.src.HUD
         }
         public override void Enter()
         {
+            this._escenarioDirector.GetGame().IsMouseVisible = false;
             this._escenarioDirector.CambiarEsenarioActivo(Escenarios.TipoEsenario.Gameplay);
         }
 
