@@ -184,7 +184,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             return this._tipoTanque.Vida();
         }
 
-        public void setTipoTanque(string tipoTanque)
+        public void SetTipoTanque(string tipoTanque)
         {
             // Cambia el tipo de tanque y actualiza el modelo y las propiedades
             switch (tipoTanque)
@@ -200,6 +200,12 @@ namespace TGC.MonoGame.TP.src.Entidades
             }
 
             this._modelo = new MTanque(this._tipoTanque);
+        }
+
+        public void SetSkinTanque(string skin)
+        {
+            // Cambia la skin del tanque
+            ((MTanque)this._modelo).CambiarTexturaT90(skin);
         }
 
         //---------------------------------------------MOVIMIENTO-Y-APUNTADO---------------------------------------------------//

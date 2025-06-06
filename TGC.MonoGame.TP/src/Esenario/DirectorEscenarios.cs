@@ -84,6 +84,11 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
             }
         }
+
+        public void SetSkinTanque(string skin)
+        {
+            _escenarioGameplay.SetSkinTanque(skin);
+        }
         
         public TGCGame GetGame()
         {

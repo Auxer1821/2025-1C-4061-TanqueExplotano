@@ -223,6 +223,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             }
 
             _tanque.CambiarTexturaT90(_texturaTanque);
+            _dEsenarios.SetSkinTanque(_texturaTanque);
         }
 
         void CambiarBoton(IBotonMenu botonNuevo){

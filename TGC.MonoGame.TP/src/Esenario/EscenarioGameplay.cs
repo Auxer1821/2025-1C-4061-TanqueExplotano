@@ -32,6 +32,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
 
         private Cameras.FreeCamera _camara;
+        private EJugador jugador;
         //TODO: Que sea el primero en ser dibujado
         //private Entidades.ESkyBox _skyBox; //TODO -> Actualizar en el manager Graficos para que se dibujen primeros / ultimos
         //private Entidades.EPasto[] pastos = new Entidades.EPasto[1000];
@@ -88,7 +89,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             List<Vector3> posicionesUsadas = new List<Vector3>();
 
             //-------Crear un pequeño pueblo (casas y cajas)-----------//
-            
+
             for (int x = -50; x <= 50; x += 20)
             {
                 for (int z = -50; z <= 50; z += 20)
@@ -166,7 +167,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
             //-------------------Crear tanks--------------------//
             //---Jugador---//
-            var jugador = new EJugador();
+            jugador = new EJugador();
             float Jx = random.Next(-150, 150);
             float Jz = random.Next(-150, 150);
             var Jpos = new Vector2(Jx, Jz);
@@ -190,7 +191,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             for (int i = 0; i < 4; i++)
             {
                 var tank = new ETanqueIA();
-                    tank.setTipoTanque("Panzer");
+                tank.SetTipoTanque("Panzer");
                 float Ax = random.Next(-150, 150);
                 float Az = random.Next(-150, 150);
                 var pos = new Vector2(Ax, Az);
@@ -215,7 +216,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
-                    pasto.Initialize(graphicsDevice,  world * Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z) + 1f, z), content, this);
+                    pasto.Initialize(graphicsDevice, world * Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z) + 1f, z), content, this);
                     pasto.SetMolde(moldePasto);
                     this._managerGrafico.AgregarPasto(pasto);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
@@ -231,12 +232,13 @@ namespace TGC.MonoGame.TP.src.Escenarios
         public void Dibujar(GraphicsDevice graphicsDevice)
         {
             _managerGrafico.DibujarObjetos(graphicsDevice);
-            
-            
+
+
             _managerInterfaz.Dibujar();
         }
 
-        public void ActualizarCamara(GameTime gameTime){
+        public void ActualizarCamara(GameTime gameTime)
+        {
             _camara.Update(gameTime);
         }
 
@@ -308,11 +310,18 @@ namespace TGC.MonoGame.TP.src.Escenarios
         }
 
 
-        public Vector3 getNormal(Vector2 pos1 , Vector2 pos2 , Vector2 pos3 ){
-            return this._terreno.getNormal(pos1,pos2,pos3);
+        public Vector3 getNormal(Vector2 pos1, Vector2 pos2, Vector2 pos3)
+        {
+            return this._terreno.getNormal(pos1, pos2, pos3);
         }
-        public float getAltura(Vector2 pos1 , Vector2 pos2 , Vector2 pos3 ){
-            return this._terreno.getAltura(pos1,pos2,pos3);
+        public float getAltura(Vector2 pos1, Vector2 pos2, Vector2 pos3)
+        {
+            return this._terreno.getAltura(pos1, pos2, pos3);
+        }
+
+        public void SetSkinTanque(string skin)
+        {
+            this.jugador.SetSkinTanque(skin);
         }
     }
 
