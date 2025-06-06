@@ -262,7 +262,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             _managerInterfaz.Update(gameTime);
             this.ActualizarCamara(gameTime);
             _managerGrafico.ActualizarCamera();
-            _managerGrafico.ActualizarPasto(gameTime);//actualiza todos los moldes
+            _managerGrafico.ActualizarAnimacion(gameTime);//actualiza todos los moldes
             if (_faltaEliminar) this.EliminarEntidades();
             if (_faltaCrear) this.CrearEntidades();
 

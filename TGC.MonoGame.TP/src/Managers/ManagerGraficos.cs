@@ -146,7 +146,7 @@ namespace TGC.MonoGame.TP.src.Managers
             molde.setVista(vista);
         }
 
-        public void ActualizarPasto(GameTime gameTime)
+        public void ActualizarAnimacion(GameTime gameTime)
         {
             /*
             foreach (var pasto in _pastos)

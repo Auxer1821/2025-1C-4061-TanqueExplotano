@@ -28,6 +28,9 @@ namespace TGC.MonoGame.TP.src.Moldes
             this.hojasTexture = Content.Load<Texture2D>(@"Models/tree/light-green-texture");
             this._efecto.Parameters["TextureTronco"].SetValue(troncoTexture);
             this._efecto.Parameters["TextureHojas"].SetValue(hojasTexture);
+            this._efecto.Parameters["WindStrength"].SetValue(0.3f);
+            this._efecto.Parameters["WindSpeed"].SetValue(1.0f);
+            this._efecto.Parameters["LeafFlexibility"].SetValue(0.3f);
 
             foreach (var mesh in _modelo.Meshes)
             {
@@ -52,6 +55,12 @@ namespace TGC.MonoGame.TP.src.Moldes
                 _efecto.Parameters["World"].SetValue(mesh.ParentBone.Transform * Mundo);
                 mesh.Draw();
             }
+        }
+        public override void setTime(GameTime time)
+        {
+            // Aquí podrías actualizar parámetros relacionados con el tiempo si es necesario
+            // Por ejemplo, podrías modificar la velocidad del viento o la fuerza del viento en función del tiempo
+            _efecto.Parameters["Time"].SetValue((float)time.TotalGameTime.TotalSeconds);
         }
 
     }

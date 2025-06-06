@@ -42,11 +42,15 @@ float4x4 Projection;
 float3 DiffuseColor;
 
 float Time = 0;
+float WindStrength = 0.1f;
+float WindSpeed = 2.0f;
+float LeafFlexibility = 0.3f;
 
 struct VertexShaderInput
 {
 	float4 Position : POSITION0;
 	float2 TexCoord : TEXCOORD0;
+	float3 Normal : NORMAL0; // Normal para el efecto de viento
 };
 
 struct VertexShaderOutput
@@ -55,10 +59,44 @@ struct VertexShaderOutput
 	float2 TexCoord : TEXCOORD0;
 };
 
-VertexShaderOutput MainVS(in VertexShaderInput input)
+VertexShaderOutput TroncoVS(in VertexShaderInput input)
 {
     // Clear the output
 	VertexShaderOutput output = (VertexShaderOutput)0;
+    // Model space to World space
+    float4 worldPosition = mul(input.Position, World);
+    // World space to View space
+    float4 viewPosition = mul(worldPosition, View);	
+	// View space to Projection space
+    output.Position = mul(viewPosition, Projection);
+
+	output.TexCoord = input.TexCoord;
+
+    return output;
+}
+
+VertexShaderOutput HojasVS(in VertexShaderInput input)
+{
+    // Clear the output
+	VertexShaderOutput output = (VertexShaderOutput)0;
+
+	// 1. Calculamos la influencia del viento en base a:
+    //    - Coordenada Y (las hojas superiores se mueven más)
+    //    - Tiempo para animación
+    //    - Normal de la hoja (para dirección)
+    float windEffect = sin(Time * WindSpeed + input.Position.x * 10.0) * WindStrength;
+    
+    // 2. Aplicamos movimiento a los vértices
+    float3 displacement = float3(
+        windEffect * LeafFlexibility * input.Normal.x,
+        windEffect * 0.2 * input.Normal.y, // Menor movimiento en Y
+        0
+    );
+    
+    // 3. Deformamos la posición
+    input.Position.xyz += displacement;
+
+
     // Model space to World space
     float4 worldPosition = mul(input.Position, World);
     // World space to View space
@@ -85,7 +123,7 @@ technique Tronco
 {
 	pass P0
 	{
-		VertexShader = compile VS_SHADERMODEL MainVS();
+		VertexShader = compile VS_SHADERMODEL TroncoVS();
 		PixelShader = compile PS_SHADERMODEL TroncoPS();
 	}
 };
@@ -95,7 +133,7 @@ technique Hojas
 {
 	pass P0
 	{
-		VertexShader = compile VS_SHADERMODEL MainVS();
+		VertexShader = compile VS_SHADERMODEL HojasVS();
 		PixelShader = compile PS_SHADERMODEL HojasPS();
 	}
 };

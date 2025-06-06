@@ -22,7 +22,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         public BVTrufas(Camaras.Camera camera)
         {
             Matrix nuevaProyeccion = Matrix.CreatePerspectiveFieldOfView(
-               camera.FieldOfView + 0.1f, camera.AspectRatio, camera.NearPlane, camera.FarPlane);
+               camera.FieldOfView + 0.1f, camera.AspectRatio, camera.NearPlane, camera.FarPlane - 1000f);
             Frustum  = new BoundingFrustum(camera.Vista * nuevaProyeccion);
             this.getPlanes();
         }
@@ -30,7 +30,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         public void UpdateFrustum(Camaras.Camera  camera)
         {
             Matrix nuevaProyeccion = Matrix.CreatePerspectiveFieldOfView(
-               camera.FieldOfView + 0.1f , camera.AspectRatio, camera.NearPlane, camera.FarPlane);
+               camera.FieldOfView + 0.1f , camera.AspectRatio, camera.NearPlane, camera.FarPlane - 1000f);
             Frustum.Matrix = camera.Vista * nuevaProyeccion;
             this.getPlanes();
         }
