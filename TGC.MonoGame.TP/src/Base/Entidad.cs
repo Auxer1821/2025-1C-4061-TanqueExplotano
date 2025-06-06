@@ -87,5 +87,9 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             return this._molde;
         }
+        public virtual bool ExcluidoDelFrustumCulling()
+        {
+            return false; // Por defecto no se excluye del frustum culling
+        }
     }
 }

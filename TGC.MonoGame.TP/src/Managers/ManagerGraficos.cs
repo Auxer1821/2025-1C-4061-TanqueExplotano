@@ -115,7 +115,7 @@ namespace TGC.MonoGame.TP.src.Managers
             
             foreach (var entidad in _entidades)
             {
-                if (_boundingFrustum.colisiona(entidad._boundingVolume)) {
+                if (_boundingFrustum.colisiona(entidad._boundingVolume) || entidad.ExcluidoDelFrustumCulling()) {
                     if (entidad._tipo == Entidades.TipoEntidad.Obstaculo)
                     {
                         entidad.GetMolde().Draw(entidad.GetMundo(), graphicsDevice);

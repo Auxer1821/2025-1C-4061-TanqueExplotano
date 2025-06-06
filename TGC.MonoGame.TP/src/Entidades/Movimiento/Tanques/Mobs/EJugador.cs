@@ -29,8 +29,9 @@ namespace TGC.MonoGame.TP.src.Entidades
         }
         */
 
-        public void setCamara(Cameras.FreeCamera Camara){
-            _Camara=Camara;
+        public void setCamara(Cameras.FreeCamera Camara)
+        {
+            _Camara = Camara;
         }
 
         //----------------------------------------------Metodos-Logica--------------------------------------------------//
@@ -46,7 +47,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             var raton = Mouse.GetState();
 
             //------------Logica-Movimiento---------------------------//
-            
+
             this._velocidadActual = 0; // cuantsdo se mueve segun su direccion
             if (teclado.IsKeyDown(Keys.W))
             {
@@ -60,19 +61,19 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._velocidadActual *= mseg;
 
             this._anguloActual = 0.0f; //cuanto rota segun su direcion
-                if (teclado.IsKeyDown(Keys.A))
-                {
-                    this._anguloActual -= this._tipoTanque.anguloRotacionMovimiento();
-                }
+            if (teclado.IsKeyDown(Keys.A))
+            {
+                this._anguloActual -= this._tipoTanque.anguloRotacionMovimiento();
+            }
 
-                if (teclado.IsKeyDown(Keys.D))
-                {
-                    this._anguloActual += this._tipoTanque.anguloRotacionMovimiento();
-                }
+            if (teclado.IsKeyDown(Keys.D))
+            {
+                this._anguloActual += this._tipoTanque.anguloRotacionMovimiento();
+            }
             this._anguloActual *= mseg;
 
             //---------------Logica-Disparo---------------------//
-            
+
 
             this._dirApuntado = _Camara.getDireccion();
             if (this.PuedeDisparar())
@@ -89,13 +90,13 @@ namespace TGC.MonoGame.TP.src.Entidades
             }
 
             //---------------------Logica-Camara-----------------------//
-            
-            _Camara.actualizarCamara(this._posicion - new Vector3(_dirApuntado.X * 9, 2.5f, _dirApuntado.Z * 9), new Vector3(_dirMovimiento.X, 1.0f, _dirMovimiento.Y) * 8, gameTime);
-            
+
+            _Camara.actualizarCamara(this._posicion - new Vector3(_dirApuntado.X * 10, 2.5f, _dirApuntado.Z * 10), new Vector3(_dirMovimiento.X, 1.0f, _dirMovimiento.Y) * 8, gameTime);
+
             //-----------------------Sonido----------------------------//
             this._managerSonido.sonidoMovimiento(_velocidadActual != 0);
             this._managerSonido.sonidoDetenido(_velocidadActual == 0);
-            
+
             base.Update(gameTime);
         }
 
@@ -111,7 +112,14 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         public override void setPosicionSalidaBala()
         {
-        this._posicionSalidaBala = _Camara.Position;
+            this._posicionSalidaBala = _Camara.Position;
+        }
+
+        
+        //el jugador siempre se dibuja, para evitar que se vea el escenario sin el tanque
+        public override bool ExcluidoDelFrustumCulling()
+        {
+            return true;
         }
 
 

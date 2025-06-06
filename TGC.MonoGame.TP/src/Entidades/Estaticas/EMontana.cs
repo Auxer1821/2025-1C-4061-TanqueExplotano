@@ -21,10 +21,16 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._tipo = TipoEntidad.Obstaculo;
             base.Initialize(Graphics, Mundo, Content, escenario);
         }
-        
+
         public void SetMolde(MoldeMontana molde)
         {
             this._molde = molde;
+        }
+
+        //esta entidad tiene que ser dibujada siempre, no importa si esta fuera del frustum
+        public override bool ExcluidoDelFrustumCulling()
+        {
+            return true;
         }
     }
 }
