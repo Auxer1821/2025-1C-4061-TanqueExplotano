@@ -225,12 +225,14 @@ namespace TGC.MonoGame.TP.src.Entidades
             var AlturaZ = this._escenario.getAltura(new Vector3(punto1.X, 0f, punto1.Y)) - _posicion.Y;
             var ArcoSenoZ = (float)Math.Asin(AlturaZ / distanciaZ);
 
-            var distanciaX = Vector2.Distance(punto2, new Vector2(_posicion.X, _posicion.Z));
-            var AlturaX = this._escenario.getAltura(new Vector3(punto2.X, 0f, punto2.Y)) - _posicion.Y;
+            //altura entre los puntos 2 y 3
+            var distanciaX = Vector2.Distance(punto2, punto3);
+            var AlturaX = this._escenario.getAltura(new Vector3(punto2.X, 0f, punto2.Y)) - this._escenario.getAltura(new Vector3(punto3.X, 0f, punto3.Y));
+
             var ArcoSenoX = (float)Math.Asin(AlturaX / distanciaX);
 
             //suavizado de angulo para que no se vea tan brusco
-            var anguloObjetivo = new Vector3(ArcoSenoZ, ArcoSenoX, 0f);
+            var anguloObjetivo = new Vector3(ArcoSenoZ, -ArcoSenoX, 0f);
             float suavizado = 1.0f; // Factor de suavizado
             var anguloSuavizado = Vector3.Lerp(this._angulo, anguloObjetivo, suavizado * deltaTime);
             anguloSuavizado.Z = -(float)Math.Atan2(_dirMovimiento.Y, _dirMovimiento.X); // Mantener la rotación en Z para que apunte hacia adelante
