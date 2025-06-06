@@ -21,13 +21,17 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------// 
         public BVTrufas(Camaras.Camera camera)
         {
-            Frustum  = new BoundingFrustum(camera.Vista * camera.Proyeccion);
+            Matrix nuevaProyeccion = Matrix.CreatePerspectiveFieldOfView(
+               camera.FieldOfView + 0.3f, camera.AspectRatio, camera.NearPlane, camera.FarPlane);
+            Frustum  = new BoundingFrustum(camera.Vista * nuevaProyeccion);
             this.getPlanes();
         }
 
         public void UpdateFrustum(Camaras.Camera  camera)
         {
-            Frustum.Matrix = camera.Vista * camera.Proyeccion;
+            Matrix nuevaProyeccion = Matrix.CreatePerspectiveFieldOfView(
+               camera.FieldOfView + 0.3f , camera.AspectRatio, camera.NearPlane, camera.FarPlane);
+            Frustum.Matrix = camera.Vista * nuevaProyeccion;
             this.getPlanes();
         }
 
