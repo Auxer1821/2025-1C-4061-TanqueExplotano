@@ -54,7 +54,6 @@ namespace TGC.MonoGame.TP
         }
 
         private GraphicsDeviceManager Graphics { get; }
-        private ManagerSonido _managerSonido;
         private SpriteBatch SpriteBatch { get; set; }
         private Matrix View { get; set; }
         private Matrix Projection { get; set; }
@@ -111,8 +110,6 @@ namespace TGC.MonoGame.TP
             // Aca es donde deberiamos cargar todos los contenido necesarios antes de iniciar el juego.
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //cargamos el sonido de fondo
-    
 
             base.LoadContent();
         }
@@ -144,9 +141,6 @@ namespace TGC.MonoGame.TP
                 IsMouseVisible = mouseVisible;
             }
 
-            
-
-          
 
             _directorEscenario.Update(gameTime);
             base.Update(gameTime);
@@ -162,7 +156,6 @@ namespace TGC.MonoGame.TP
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             _directorEscenario.Dibujar();
-
 
         }
 
