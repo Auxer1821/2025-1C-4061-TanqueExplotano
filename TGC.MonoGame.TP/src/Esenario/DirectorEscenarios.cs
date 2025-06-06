@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
+using TGC.MonoGame.TP.src.Managers;
 
 
 namespace TGC.MonoGame.TP.src.Escenarios
@@ -20,11 +21,14 @@ namespace TGC.MonoGame.TP.src.Escenarios
     {
         ///-----------Variables-------------//
         private Escenario _escenarioGameplay;
+        private EscenarioMenu _escenarioMenu;
 
         private IEscenario _esenarioActivo;
         private GraphicsDevice _graphicsDevice; 
         private Matrix _world;
         private ContentManager _content;
+        private ManagerSonido _managerSonido;
+        private string tipoMusica = "menu";
 
         public DirectorEscenarios()
         {
@@ -37,7 +41,13 @@ namespace TGC.MonoGame.TP.src.Escenarios
             _content = content;
             _escenarioGameplay = new Escenario();
             _escenarioGameplay.Initialize(_graphicsDevice,_world,_content);
-            _esenarioActivo = _escenarioGameplay;
+            
+            _escenarioMenu = new EscenarioMenu();
+            _escenarioMenu.Initialize(graphicsDevice, content);
+            _esenarioActivo = _escenarioMenu; //TODO: cambiar para que sea el menu
+
+            _managerSonido = new ManagerSonido(content);
+            _managerSonido.InstanciarMusica();
         }
 
         public void Dibujar(){
@@ -50,6 +60,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
         public void Update(GameTime gameTime)
         {
             _esenarioActivo.Update(gameTime);
+            this._managerSonido.reproducirMusica(tipoMusica);
 
         }
         public void CambiarEsenarioActivo(TipoEsenario esenario)
@@ -58,10 +69,12 @@ namespace TGC.MonoGame.TP.src.Escenarios
             {
                 case TipoEsenario.Gameplay:
                     _esenarioActivo = this._escenarioGameplay;
+                    this.tipoMusica = "accion";
                     break;
                 default:
                     //--Cambiar a menu--//
                     _esenarioActivo = this._escenarioGameplay;
+                    this.tipoMusica = "menu";
                     break;
 
             }

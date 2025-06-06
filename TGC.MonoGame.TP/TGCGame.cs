@@ -26,7 +26,7 @@ namespace TGC.MonoGame.TP
         public const string ContentFolderTextures = "Textures/";
 
 
-        public bool mouseVisible = false;
+        public bool mouseVisible = true;
 
 
         /// <summary>
@@ -97,7 +97,6 @@ namespace TGC.MonoGame.TP
             //_escenario.Initialize(GraphicsDevice, Matrix.Identity, View, Projection, Content);
             _directorEscenario.Initialize(GraphicsDevice, Matrix.Identity, Content);
 
-            _managerSonido = new ManagerSonido(Content);
 
             base.Initialize();
         }
@@ -113,7 +112,6 @@ namespace TGC.MonoGame.TP
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             //cargamos el sonido de fondo
-            _managerSonido.InstanciarMusica();
     
 
             base.LoadContent();
@@ -148,7 +146,6 @@ namespace TGC.MonoGame.TP
 
             
 
-            this._managerSonido.reproducirMusica("accion");
           
 
             _directorEscenario.Update(gameTime);
