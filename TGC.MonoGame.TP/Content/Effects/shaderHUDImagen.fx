@@ -21,8 +21,8 @@ sampler TextureSampler = sampler_state
     MagFilter = Linear;
     MinFilter = Linear;
     MipFilter = Linear;
-    AddressU = Wrap;
-    AddressV = Wrap;
+    AddressU = Clamp;
+    AddressV = Clamp;
 };
 float4x4 WorldViewProjection;
 
@@ -104,5 +104,14 @@ technique Recarga
 		AlphaBlendEnable = true;
         SrcBlend = SrcAlpha;
         DestBlend = InvSrcAlpha;
+	}
+}
+
+technique Fondo
+{
+	pass P0
+	{
+		VertexShader = compile VS_SHADERMODEL MainVS();
+		PixelShader = compile PS_SHADERMODEL MainPS();
 	}
 }

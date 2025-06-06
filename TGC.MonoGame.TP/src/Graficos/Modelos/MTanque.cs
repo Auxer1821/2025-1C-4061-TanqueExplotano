@@ -32,10 +32,11 @@ namespace TGC.MonoGame.TP.src.Tanques
         Texture2D texturaNormalTanque;
         Texture2D texturaNormalCinta;
         float giroTorreta = 0f;
-        float alturaTorreta = -0.6f;
+        float alturaTorreta = 0.1f;
         Vector2 rotacionRuedas = new Vector2(0f, 0f);
         Vector2 offsetCintas = new Vector2(0f, 0f);
         float modificadorDanio = 1.0f;
+        ContentManager Content;
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public MTanque(TipoTanque tipoTanque)
@@ -51,12 +52,13 @@ namespace TGC.MonoGame.TP.src.Tanques
 
         protected override void ConfigurarModelo(ContentManager Content)
         {
-            this._modelo = Content.Load<Model>(@"Models/tgc-tanks" + this._tipoTanque.directorioModelo());
-            tanqueTexture = Content.Load<Texture2D>(@"Models/tgc-tanks" + this._tipoTanque.directorioTextura());
+            this.Content = Content;
+            this._modelo = this.Content.Load<Model>(@"Models/tgc-tanks" + this._tipoTanque.directorioModelo());
+            tanqueTexture = this.Content.Load<Texture2D>(@"Models/tgc-tanks" + this._tipoTanque.directorioTextura());
 
-            texturaCinta = Content.Load<Texture2D>(@"Models/tgc-tanks" + this._tipoTanque.directorioTexturaCinta());
-            texturaNormalTanque = Content.Load<Texture2D>(@"Models/tgc-tanks" + this._tipoTanque.directorioTexturaNormal());
-            texturaNormalCinta = Content.Load<Texture2D>(@"Models/tgc-tanks" + this._tipoTanque.directorioTexturaCintaNormal());
+            texturaCinta = this.Content.Load<Texture2D>(@"Models/tgc-tanks" + this._tipoTanque.directorioTexturaCinta());
+            texturaNormalTanque = this.Content.Load<Texture2D>(@"Models/tgc-tanks" + this._tipoTanque.directorioTexturaNormal());
+            texturaNormalCinta = this.Content.Load<Texture2D>(@"Models/tgc-tanks" + this._tipoTanque.directorioTexturaCintaNormal());
             offsetCintas = getAnimacionTanque(Animacion.Detenido, 0.01f, offsetCintas); // esta es la animacion por defecto, 0 = detenido
             rotacionRuedas = getAnimacionTanque(Animacion.Detenido, 0.1f, rotacionRuedas); // esta es la animacion por defecto, 0 = detenido
         }
@@ -328,6 +330,30 @@ namespace TGC.MonoGame.TP.src.Tanques
                 giroTorreta = MathHelper.Pi;
             else if (giroTorreta < -MathHelper.Pi)
                 giroTorreta = -MathHelper.Pi;
+        }
+
+        public void CambiarTexturaT90(string textura)
+        {
+            if(this._tipoTanque.directorioModelo().Contains("Panzer"))
+            {
+                // no se puede cambiar la textura del Panzer
+                return;
+            }
+            if (textura == "1")
+            {
+                tanqueTexture = Content.Load<Texture2D>(@"Models/tgc-tanks/T90/textures_mod/hullA2");
+                this._effect2.Parameters["Texture"].SetValue(tanqueTexture);
+            }
+            else if (textura == "2")
+            {
+                tanqueTexture = Content.Load<Texture2D>(@"Models/tgc-tanks/T90/textures_mod/hullB2");
+                this._effect2.Parameters["Texture"].SetValue(tanqueTexture);
+            }else if (textura == "3")
+            {
+                tanqueTexture = Content.Load<Texture2D>(@"Models/tgc-tanks/T90/textures_mod/hullC");
+                this._effect2.Parameters["Texture"].SetValue(tanqueTexture);
+            }
+
         }
     }
 }

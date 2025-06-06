@@ -24,33 +24,38 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private EscenarioMenu _escenarioMenu;
 
         private IEscenario _esenarioActivo;
-        private GraphicsDevice _graphicsDevice; 
+        private GraphicsDevice _graphicsDevice;
         private Matrix _world;
         private ContentManager _content;
         private ManagerSonido _managerSonido;
         private string tipoMusica = "menu";
+
+        private TGCGame _game;
 
         public DirectorEscenarios()
         {
 
         }
 
-        public void Initialize(GraphicsDevice graphicsDevice, Matrix world, ContentManager content){
-            _graphicsDevice = graphicsDevice; 
+        public void Initialize(GraphicsDevice graphicsDevice, Matrix world, ContentManager content, TGCGame game)
+        {
+            _graphicsDevice = graphicsDevice;
             _world = world;
             _content = content;
+            _game = game;
             _escenarioGameplay = new Escenario();
-            _escenarioGameplay.Initialize(_graphicsDevice,_world,_content);
-            
+            _escenarioGameplay.Initialize(_graphicsDevice, _world, _content);
+
             _escenarioMenu = new EscenarioMenu();
-            _escenarioMenu.Initialize(graphicsDevice, content);
+            _escenarioMenu.Initialize(graphicsDevice, content, this);
             _esenarioActivo = _escenarioMenu; //TODO: cambiar para que sea el menu
 
             _managerSonido = new ManagerSonido(content);
             _managerSonido.InstanciarMusica();
         }
 
-        public void Dibujar(){
+        public void Dibujar()
+        {
 
             //logica de dibujado del escenario
             _esenarioActivo.Dibujar(this._graphicsDevice);
@@ -78,6 +83,11 @@ namespace TGC.MonoGame.TP.src.Escenarios
                     break;
 
             }
+        }
+        
+        public TGCGame GetGame()
+        {
+            return _game;
         }
 
     }

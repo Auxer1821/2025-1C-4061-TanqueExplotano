@@ -95,7 +95,7 @@ namespace TGC.MonoGame.TP
             //_Escenario = new Escenario(GraphicsDevice);
             _directorEscenario = new DirectorEscenarios();
             //_escenario.Initialize(GraphicsDevice, Matrix.Identity, View, Projection, Content);
-            _directorEscenario.Initialize(GraphicsDevice, Matrix.Identity, Content);
+            _directorEscenario.Initialize(GraphicsDevice, Matrix.Identity, Content,this);
 
 
             base.Initialize();
