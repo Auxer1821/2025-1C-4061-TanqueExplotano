@@ -18,6 +18,11 @@ namespace TGC.MonoGame.TP.src.Managers
         private SoundEffectInstance _sonidoFondoSuspensoInstance;
         private SoundEffectInstance _sonidoFondoMenuInstance;
 
+        // Sonidos menu
+        private SoundEffectInstance _sonidoMenuSeleccionInstance;
+        private SoundEffectInstance _sonidoMenuCambioBotonInstance;
+        private SoundEffectInstance _sonidoMenuCambioTanqueInstance;
+
         // Sonido de tanque
         private SoundEffectInstance _sonidoDisparoInstance;
         private SoundEffectInstance _sonidoMovimientoInstance;
@@ -157,7 +162,7 @@ namespace TGC.MonoGame.TP.src.Managers
             SoundEffect sonidoFondoSuspenso = _contentManager.Load<SoundEffect>(@"Music/musicaEpicaTranquila");
             this._sonidoFondoSuspensoInstance = sonidoFondoSuspenso.CreateInstance();
             _sonidoFondoSuspensoInstance.IsLooped = true;
-            _sonidoFondoSuspensoInstance.Volume = _volumenMaestro;
+            _sonidoFondoSuspensoInstance.Volume = _volumenMaestro * 2;
 
             SoundEffect sonidoFondoMenu = _contentManager.Load<SoundEffect>(@"Music/musicaTranquila");
             this._sonidoFondoMenuInstance = sonidoFondoMenu.CreateInstance();
@@ -186,6 +191,51 @@ namespace TGC.MonoGame.TP.src.Managers
                     {
                         _sonidoFondoMenuInstance.Play();
                     }
+                    break;
+            }
+        }
+
+        public void InstanciarSonidosMenu()
+        {
+            SoundEffect sonidoMenuSeleccion = _contentManager.Load<SoundEffect>(@"Sounds/sonidoArcade");
+            this._sonidoMenuSeleccionInstance = sonidoMenuSeleccion.CreateInstance();
+            _sonidoMenuSeleccionInstance.IsLooped = false;
+            _sonidoMenuSeleccionInstance.Volume = _volumenMaestro *3f;
+
+            SoundEffect sonidoMenuCambioBoton = _contentManager.Load<SoundEffect>(@"Sounds/clickModerno");
+            this._sonidoMenuCambioBotonInstance = sonidoMenuCambioBoton.CreateInstance();
+            _sonidoMenuCambioBotonInstance.IsLooped = false;
+            _sonidoMenuCambioBotonInstance.Volume = _volumenMaestro *3f;
+
+            SoundEffect sonidoMenuCambioTanque = _contentManager.Load<SoundEffect>(@"Sounds/otroClickModerno");
+            this._sonidoMenuCambioTanqueInstance = sonidoMenuCambioTanque.CreateInstance();
+            _sonidoMenuCambioTanqueInstance.IsLooped = false;
+            _sonidoMenuCambioTanqueInstance.Volume = _volumenMaestro *3f;
+        }
+
+        public void ReproducirSonidoMenu(string sonido)
+        {
+            switch (sonido)
+            {
+                case "seleccion":
+                    if (_sonidoMenuSeleccionInstance.State != SoundState.Playing)
+                    {
+                        _sonidoMenuSeleccionInstance.Play();
+                    }
+                    break;
+                case "cambioBoton":
+                        if (_sonidoMenuCambioBotonInstance.State == SoundState.Playing)
+                        {
+                            _sonidoMenuCambioBotonInstance.Stop();
+                        }
+                        _sonidoMenuCambioBotonInstance.Play();
+                    break;
+                case "cambioTanque":
+                    if (_sonidoMenuCambioTanqueInstance.State == SoundState.Playing)
+                    {
+                        _sonidoMenuCambioTanqueInstance.Stop();
+                    }
+                        _sonidoMenuCambioTanqueInstance.Play();
                     break;
             }
         }

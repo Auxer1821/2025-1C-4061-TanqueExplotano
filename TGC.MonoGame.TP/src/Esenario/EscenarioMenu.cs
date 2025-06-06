@@ -33,7 +33,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private float _velocidadDeGiro;
         
          private MTanque _tanque;
-         private string _texturaTanque = "1";
+         private string _texturaTanque = "2";
          private float Rotation = 0.0f;
 
         private float _tamanioNormalBoton = 0.1f;
@@ -42,7 +42,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private float _tiempoDeCambio = 1.0f;
 
         private DirectorEscenarios _dEsenarios;
-
+        private Managers.ManagerSonido _managerSonido;
 
 
         //---------------Metodos--------------------------//
@@ -61,20 +61,18 @@ namespace TGC.MonoGame.TP.src.Escenarios
             this._TituloJuego.Initialize(new Vector2(0.0f, 0.7f), Content, "Textures/ui/cooltext483425277740560");
             this._TituloJuego.setQuad(0.4f, device);
 
-    
-
 
             this._botonJugar = new BotonMenuJugar();
-            this._botonJugar.CargarImagen(device, Content, "Textures/ui/cooltext483425676931020",new Vector2(0.0f, -0.2f));
+            this._botonJugar.CargarImagen(device, Content, "Textures/ui/cooltext483425676931020", new Vector2(0.0f, -0.2f));
             this._botonJugar.Inicializar(_dEsenarios);
-            
+
             this._botonOpciones = new BotonMenuOpciones();
             this._botonOpciones.CargarImagen(device, Content, "Textures/ui/cooltext483425703672866", new Vector2(0.0f, -0.5f));
 
             this._botonSalir = new BotonMenuSalir();
-            this._botonSalir.CargarImagen(device, Content, "Textures/ui/cooltext483425720746578",new Vector2(0.0f, -0.8f));
+            this._botonSalir.CargarImagen(device, Content, "Textures/ui/cooltext483425720746578", new Vector2(0.0f, -0.8f));
             this._botonSalir.Inicializar(_dEsenarios.GetGame());
-            
+
 
 
             this._botonJugar.CargarBotones(this._botonSalir, this._botonOpciones);
@@ -89,7 +87,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             this._botonTanqueSig = new HImagen();
             this._botonTanqueSig.Initialize(new Vector2(0.3f, 0.1f), Content, "Textures/ui/cooltext483425751817305");
             this._botonTanqueSig.setQuad(0.05f, device);
-            
+
             this._botonTanqueAnt = new HImagen();
             this._botonTanqueAnt.Initialize(new Vector2(-0.3f, 0.1f), Content, "Textures/ui/cooltext483425762595384");
             this._botonTanqueAnt.setQuad(0.05f, device);
@@ -108,8 +106,11 @@ namespace TGC.MonoGame.TP.src.Escenarios
             Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, device.Viewport.AspectRatio, 1, 250);
             _tanque.EfectCamera(View, Projection);
 
-            
-            this._velocidadDeGiro = 5;
+
+            this._velocidadDeGiro = 3;
+
+            this._managerSonido = new Managers.ManagerSonido(Content);
+            this._managerSonido.InstanciarSonidosMenu();
             
         }
         public void Update(GameTime gameTime)
@@ -136,26 +137,31 @@ namespace TGC.MonoGame.TP.src.Escenarios
             if (Keyboard.GetState().IsKeyDown(Keys.Up) || Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 this.CambiarBoton(_botonElecto.Up());
+                this._managerSonido.ReproducirSonidoMenu("cambioBoton");
                 this._tiempoDeCambio =0.25f;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Down) || Keyboard.GetState().IsKeyDown(Keys.S))
             {
                 this.CambiarBoton(_botonElecto.Down());
+                this._managerSonido.ReproducirSonidoMenu("cambioBoton");
                 this._tiempoDeCambio =0.25f;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Right) || Keyboard.GetState().IsKeyDown(Keys.D))
             {
                 this.CambiarTextura("sig");
+                this._managerSonido.ReproducirSonidoMenu("cambioTanque");
                 this._tiempoDeCambio =0.25f;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Left) || Keyboard.GetState().IsKeyDown(Keys.A))
             {
                 this.CambiarTextura("ant");
+                this._managerSonido.ReproducirSonidoMenu("cambioTanque");
                 this._tiempoDeCambio =0.25f;
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Enter) || Keyboard.GetState().IsKeyDown(Keys.Space))
             {
+                this._managerSonido.ReproducirSonidoMenu("selecccion");
                 this._botonElecto.Enter();
                 this._tiempoDeCambio =0.25f;
             }

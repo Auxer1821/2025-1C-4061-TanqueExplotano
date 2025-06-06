@@ -689,6 +689,12 @@
 /processorParam:Quality=Best
 /build:Music/musicaTranquila.wav
 
+#begin Sounds/clickModerno.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/clickModerno.wav
+
 #begin Sounds/disparo.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -718,6 +724,18 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/explocion3.wav
+
+#begin Sounds/otroClickModerno.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/otroClickModerno.wav
+
+#begin Sounds/sonidoArcade.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/sonidoArcade.wav
 
 #begin Sounds/tankMove.wav
 /importer:WavImporter
