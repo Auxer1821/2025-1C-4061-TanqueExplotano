@@ -115,10 +115,12 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var arbol = new EArbol();
                 float x = random.Next(-300, 300);
                 float z = random.Next(100, 500);
+                float rotacion = random.Next(0, 360);
+                float tamano = random.Next(10, 20)/10;
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
-                    arbol.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this);
+                    arbol.Initialize(graphicsDevice, Matrix.CreateScale(tamano) * Matrix.CreateRotationY(MathHelper.ToRadians(rotacion)) * world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this);
                     arbol.SetMolde(moldeArbol);
                     this.AgregarACrear(arbol);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
@@ -135,10 +137,12 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var roca = new ERoca();
                 float x = random.Next(-300, 300);
                 float z = random.Next(-300, 300);
+                float rotacion = random.Next(0, 360);
+                float tamano = random.Next(10, 20) / 10;
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
-                    roca.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this);
+                    roca.Initialize(graphicsDevice, Matrix.CreateScale(tamano) * Matrix.CreateRotationY(MathHelper.ToRadians(rotacion)) * world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this);
                     roca.SetMolde(moldeRoca);
                     this.AgregarACrear(roca);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
@@ -213,10 +217,12 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var pasto = new Entidades.EPasto();
                 float x = random.Next(-300, 300);
                 float z = random.Next(-300, 300);
+                float rotacion = random.Next(0, 360);
+                float tamano = random.Next(10, 20) / 10;
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
-                    pasto.Initialize(graphicsDevice, world * Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z) + 1f, z), content, this);
+                    pasto.Initialize(graphicsDevice, Matrix.CreateScale(tamano) * Matrix.CreateRotationY(MathHelper.ToRadians(rotacion)) *world * Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z) + 1f, z), content, this);
                     pasto.SetMolde(moldePasto);
                     this._managerGrafico.AgregarPasto(pasto);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
