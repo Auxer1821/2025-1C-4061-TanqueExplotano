@@ -55,6 +55,12 @@
 /processorParam:DebugMode=Auto
 /build:Effects/shaderMontana.fx
 
+#begin Effects/shaderParticula.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/shaderParticula.fx
+
 #begin Effects/shaderPasto.fx
 /importer:EffectImporter
 /processor:EffectProcessor
@@ -952,6 +958,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/misiles/R.png
+
+#begin Textures/particula/particula.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/particula/particula.png
 
 #begin Textures/ui/CaracteresBlanco.png
 /importer:TextureImporter

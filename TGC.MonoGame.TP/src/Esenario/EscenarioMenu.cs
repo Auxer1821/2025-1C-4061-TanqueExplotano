@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.HUD;
 using TGC.MonoGame.TP.src.Entidades;
 using TGC.MonoGame.TP.src.Tanques;
-using BepuPhysics.Collidables;
+using TGC.MonoGame.TP.src.Graficos.Temporales;
 
 
 
@@ -43,6 +43,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
         private DirectorEscenarios _dEsenarios;
         private Managers.ManagerSonido _managerSonido;
+        private EmisorParticula _emisorParticula;
 
 
         //---------------Metodos--------------------------//
@@ -111,7 +112,11 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
             this._managerSonido = new Managers.ManagerSonido(Content);
             this._managerSonido.InstanciarSonidosMenu();
-            
+
+            /*
+            this._emisorParticula = new EmisorParticula();
+            this._emisorParticula.Initialize(Content, device, 50, new Vector3(0, 0, 0), new Vector3(0.1f, 0.1f, 0));
+            */
         }
         public void Update(GameTime gameTime)
         {
@@ -166,6 +171,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 this._tiempoDeCambio =0.25f;
             }
 
+            //_emisorParticula.Update(gameTime);
 
         }
 
@@ -182,18 +188,22 @@ namespace TGC.MonoGame.TP.src.Escenarios
             graphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
             _fondo.Dibujado(graphicsDevice);
 
-            
+
             graphicsDevice.DepthStencilState = DepthStencilState.Default;
             _tanque.Dibujar(graphicsDevice);
+            graphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
             _TituloJuego.Dibujado(_graphicsDevice);
 
+            graphicsDevice.DepthStencilState = DepthStencilState.Default;
             _botonJugar.Dibujar(_graphicsDevice);
             _botonOpciones.Dibujar(_graphicsDevice);
             _botonSalir.Dibujar(_graphicsDevice);
 
-            
+
             _botonTanqueSig.Dibujado(_graphicsDevice);
             _botonTanqueAnt.Dibujado(_graphicsDevice);
+
+            //_emisorParticula.Dibujar();
         }
         
         private void CambiarTextura(string movimiento){
