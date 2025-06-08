@@ -43,12 +43,12 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             // Velocidad aleatoria en forma esférica (explosión radial)
             Vector3 direction = new Vector3(
                 (float)(random.NextDouble() * 2 - 1),
-                (float)(random.NextDouble() * 2 - 1),
+                (float)(random.NextDouble() * 2 - 1f),
                 (float)(random.NextDouble() * 2 - 1)
             );
             direction.Normalize();
             
-            this._velocidad = direction * (float)(random.NextDouble() * 3f + 3f); // Velocidad aleatoria entre 0.5 y 1.0
+            this._velocidad = direction * (float)(random.NextDouble() * 2f + 2f); // Velocidad aleatoria entre 0.5 y 1.0
             this._velocidadInicial = this._velocidad; // Guardar la velocidad inicial
             this._desaceleracion = -this._velocidad * 1.5f; // Desaceleración basada en la velocidad inicial
             this._desaceleracion.Y += -0.4f; // Aumentar la desaceleración en Y para simular gravedad
@@ -60,6 +60,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         public void Dibujar(GraphicsDevice Graphics, IndexBuffer indexBuffer, VertexBuffer vertexBuffer)
         {
             //_efecto.Parameters["PorcentaClaridad"]?.SetValue(_PorcentaClaridad);
+            this._efecto.Parameters["World"]?.SetValue(Matrix.Identity * Matrix.CreateScale(10f) * Matrix.CreateTranslation(_coordenadas));
             this._efecto.Parameters["ParticlePosition"]?.SetValue(_coordenadas);
             this._efecto.Parameters["ParticleSize"]?.SetValue(_tamanio);
 

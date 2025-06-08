@@ -57,7 +57,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._boundingVolume = new BoundingsVolumes.BVEsfera(5.0f, this._posicion);
 
             this._particulasDisparo = new EmisorParticula();
-            this._particulasDisparo.Initialize(Content, Graphics, 60, new Vector3(0, 0, 0));
+            this._particulasDisparo.Initialize(Content, Graphics, 60, new Vector3(0, 2, 0));
 
             //Cargar el sonido
             this._managerSonido = new Managers.ManagerSonido(Content);
@@ -133,6 +133,12 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             this._particulasDisparo.Dibujar();
             base.Dibujar(Graphics);
+        }
+
+        public override void EfectCamera(Matrix vista, Matrix proyeccion)
+        {
+            this._particulasDisparo.SetVistaProyeccion(vista, proyeccion);
+            base.EfectCamera(vista, proyeccion);
         }
 
         private void ActualicarModeloTanque()
@@ -292,8 +298,8 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._bala.ActualizarDatos(this._dirApuntado, this._posicionSalidaBala); //TODO - Cambiar lugar de disparo para que no se autodestruya
             this._escenario.AgregarACrear(this._bala); //temporal
 
+            this._particulasDisparo.SetNuevaPosicion(new Vector3(this._posicion.X/11, 0.2f, this._posicion.Z/11));
             this._particulasDisparo.SetPuedeDibujar();
-            this._particulasDisparo.SetNuevaPosicion(Vector3.Zero);
 
             //sonido disparo
             //this._managerSonido.reproducirSonido("disparo");

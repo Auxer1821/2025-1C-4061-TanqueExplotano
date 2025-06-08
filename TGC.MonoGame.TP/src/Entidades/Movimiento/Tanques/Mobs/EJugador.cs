@@ -22,13 +22,12 @@ namespace TGC.MonoGame.TP.src.Entidades
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public EJugador() { }
         // es necesario hacer un override?
-        /*
+        
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
         {
             base.Initialize(Graphics, Mundo, Content, escenario);
         }
-        */
-
+       
         public void setCamara(Cameras.FreeCamera Camara)
         {
             _Camara = Camara;

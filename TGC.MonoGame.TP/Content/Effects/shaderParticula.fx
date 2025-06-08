@@ -15,7 +15,9 @@
 // Parámetros del efecto
 // Parameters.fx
 
-float4x4 WorldViewProjection;
+float4x4 World;
+float4x4 View;
+float4x4 Projection;
 float3 ParticlePosition;  // Posición en espacio mundial
 float4 ParticleColor;    // Color RGB + Alpha
 float ParticleSize;       // Tamaño relativo
@@ -51,6 +53,10 @@ VertexOutput VS(VertexInput input)
 {
     VertexOutput output;
     
+    // Transformación final
+    float4x4 WorldView = mul(World, View);
+    float4x4 WorldViewProjection = mul(WorldView, Projection);
+    
     // Billboarding: Transformamos un cuadrado 2D para que siempre mire a cámara
     float3 cameraRight = float3(WorldViewProjection._11, WorldViewProjection._21, WorldViewProjection._31);
     float3 cameraUp = float3(WorldViewProjection._12, WorldViewProjection._22, WorldViewProjection._32);
@@ -59,8 +65,7 @@ VertexOutput VS(VertexInput input)
     float3 worldPosition = ParticlePosition + 
                           (input.Position.x * cameraRight * ParticleSize) + 
                           (input.Position.y * cameraUp * ParticleSize);
-    
-    // Transformación final
+
     output.Position = mul(float4(worldPosition, 1.0), WorldViewProjection);
     output.TexCoord = input.TexCoord;
     output.Color = ParticleColor;

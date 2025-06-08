@@ -33,7 +33,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             _graphicsDevice = graphics;
             _efecto = Content.Load<Effect>(@"Effects/shaderParticula");
             _texture = Content.Load<Texture2D>(@"Textures/particula/particula");
-            _efecto.Parameters["WorldViewProjection"]?.SetValue(Matrix.Identity);
+            _efecto.Parameters["World"]?.SetValue(Matrix.Identity * Matrix.CreateScale(10f));
             _efecto.Parameters["Texture"].SetValue(_texture);
             _efecto.Parameters["ParticleSize"]?.SetValue(0.3f);
             _efecto.Parameters["ParticleColor"]?.SetValue(new Vector4(Color.LightGray.ToVector3(), 0.5f));
@@ -72,7 +72,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             // Calcular el deltaTime
             _deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             // Actualizar cada partícula
-            if (_tiempoVida <= 3.0f && _tiempoVida > 0)
+            if (_tiempoVida <= 0.3f && _tiempoVida > 0)
             {
             foreach (var particula in _particulas)
             {

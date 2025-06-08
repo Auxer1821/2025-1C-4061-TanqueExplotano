@@ -39,7 +39,7 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             //2. Setear giro = giro.angulo
             //this._anguloActual = this._tipoTanque.anguloRotacionMovimiento() * mseg /8;
-            //this.Disparar();
+            this.Disparar();
             base.Update(gameTime);
         }
         
