@@ -68,6 +68,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
             this._botonOpciones = new BotonMenuOpciones();
             this._botonOpciones.CargarImagen(device, Content, "Textures/ui/cooltext483425703672866", new Vector2(0.0f, -0.5f));
+            this._botonOpciones.Inicializar(_dEsenarios);
 
             this._botonSalir = new BotonMenuSalir();
             this._botonSalir.CargarImagen(device, Content, "Textures/ui/cooltext483425720746578", new Vector2(0.0f, -0.8f));

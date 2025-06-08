@@ -22,6 +22,10 @@ namespace TGC.MonoGame.TP.src.Managers
         private SoundEffectInstance _sonidoMenuSeleccionInstance;
         private SoundEffectInstance _sonidoMenuCambioBotonInstance;
         private SoundEffectInstance _sonidoMenuCambioTanqueInstance;
+        //Sonidos de Victoria
+        private SoundEffectInstance _sonidoVictoriaInstance;
+        //Sonidos de Derrota
+        private SoundEffectInstance _sonidoDerrotaInstance;
 
         // Sonido de tanque
         private SoundEffectInstance _sonidoDisparoInstance;
@@ -175,22 +179,13 @@ namespace TGC.MonoGame.TP.src.Managers
             switch (musica)
             {
                 case "accion":
-                    if (_sonidoFondoAccionInstance.State != SoundState.Playing)
-                    {
-                        _sonidoFondoAccionInstance.Play();
-                    }
+                    reproducirMusica(_sonidoFondoAccionInstance);
                     break;
                 case "suspenso":
-                    if (_sonidoFondoSuspensoInstance.State != SoundState.Playing)
-                    {
-                        _sonidoFondoSuspensoInstance.Play();
-                    }
+                    reproducirMusica(_sonidoFondoSuspensoInstance);
                     break;
                 case "menu":
-                    if (_sonidoFondoMenuInstance.State != SoundState.Playing)
-                    {
-                        _sonidoFondoMenuInstance.Play();
-                    }
+                    reproducirMusica(_sonidoFondoMenuInstance);
                     break;
             }
         }
@@ -200,17 +195,27 @@ namespace TGC.MonoGame.TP.src.Managers
             SoundEffect sonidoMenuSeleccion = _contentManager.Load<SoundEffect>(@"Sounds/sonidoArcade");
             this._sonidoMenuSeleccionInstance = sonidoMenuSeleccion.CreateInstance();
             _sonidoMenuSeleccionInstance.IsLooped = false;
-            _sonidoMenuSeleccionInstance.Volume = _volumenMaestro *3f;
+            _sonidoMenuSeleccionInstance.Volume = _volumenMaestro * 3f;
 
             SoundEffect sonidoMenuCambioBoton = _contentManager.Load<SoundEffect>(@"Sounds/clickModerno");
             this._sonidoMenuCambioBotonInstance = sonidoMenuCambioBoton.CreateInstance();
             _sonidoMenuCambioBotonInstance.IsLooped = false;
-            _sonidoMenuCambioBotonInstance.Volume = _volumenMaestro *3f;
+            _sonidoMenuCambioBotonInstance.Volume = _volumenMaestro * 3f;
 
             SoundEffect sonidoMenuCambioTanque = _contentManager.Load<SoundEffect>(@"Sounds/otroClickModerno");
             this._sonidoMenuCambioTanqueInstance = sonidoMenuCambioTanque.CreateInstance();
             _sonidoMenuCambioTanqueInstance.IsLooped = false;
-            _sonidoMenuCambioTanqueInstance.Volume = _volumenMaestro *3f;
+            _sonidoMenuCambioTanqueInstance.Volume = _volumenMaestro * 3f;
+
+            SoundEffect sonidoVictoria = _contentManager.Load<SoundEffect>(@"Sounds/victoria");
+            this._sonidoVictoriaInstance = sonidoVictoria.CreateInstance();
+            _sonidoVictoriaInstance.IsLooped = false;
+            _sonidoVictoriaInstance.Volume = _volumenMaestro * 3f;
+
+            SoundEffect sonidoDerrota = _contentManager.Load<SoundEffect>(@"Sounds/sonidoInquietante");
+            this._sonidoDerrotaInstance = sonidoDerrota.CreateInstance();
+            _sonidoDerrotaInstance.IsLooped = false;
+            _sonidoDerrotaInstance.Volume = _volumenMaestro * 3f;
         }
 
         public void ReproducirSonidoMenu(string sonido)
@@ -218,26 +223,39 @@ namespace TGC.MonoGame.TP.src.Managers
             switch (sonido)
             {
                 case "seleccion":
-                    if (_sonidoMenuSeleccionInstance.State != SoundState.Playing)
-                    {
-                        _sonidoMenuSeleccionInstance.Play();
-                    }
+                    this.reproducirSonido(_sonidoMenuSeleccionInstance);
                     break;
                 case "cambioBoton":
-                        if (_sonidoMenuCambioBotonInstance.State == SoundState.Playing)
-                        {
-                            _sonidoMenuCambioBotonInstance.Stop();
-                        }
-                        _sonidoMenuCambioBotonInstance.Play();
+                    this.reproducirSonido(_sonidoMenuCambioBotonInstance);
                     break;
                 case "cambioTanque":
-                    if (_sonidoMenuCambioTanqueInstance.State == SoundState.Playing)
-                    {
-                        _sonidoMenuCambioTanqueInstance.Stop();
-                    }
-                        _sonidoMenuCambioTanqueInstance.Play();
+                    this.reproducirSonido(_sonidoMenuCambioTanqueInstance);
+                    break;
+
+                case "victoria":
+                    this.reproducirSonido(_sonidoVictoriaInstance);
+                    break;
+                case "derrota":
+                    this.reproducirSonido(_sonidoDerrotaInstance);
                     break;
             }
+        }
+        private void stopMusica(){
+            _sonidoFondoAccionInstance.Stop();
+            _sonidoFondoSuspensoInstance.Stop();
+            _sonidoFondoMenuInstance.Stop();
+        }
+        private void reproducirMusica(SoundEffectInstance musica){
+            if (musica.State != SoundState.Playing)
+            {
+                this.stopMusica();
+                musica.Play();
+            }
+        }
+
+        private void reproducirSonido(SoundEffectInstance instanciaSonido) {
+            if (instanciaSonido.State == SoundState.Playing) instanciaSonido.Stop();
+            instanciaSonido.Play();
         }
 
     }

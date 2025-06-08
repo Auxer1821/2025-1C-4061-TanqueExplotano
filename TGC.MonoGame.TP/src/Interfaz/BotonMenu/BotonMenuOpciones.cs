@@ -14,8 +14,17 @@ namespace TGC.MonoGame.TP.src.HUD
     /// </summary>
     public class BotonMenuOpciones : IBotonMenu
     {
-        public BotonMenuOpciones(){}
-        public override void Enter(){}
+        private Escenarios.DirectorEscenarios _escenarioDirector;
+        public BotonMenuOpciones() { }
+        internal void Inicializar(Escenarios.DirectorEscenarios escenarioDirector )
+        {
+            _escenarioDirector = escenarioDirector;
+        }
+        public override void Enter()
+        {
+            //TODO - Temporal para pruebas - enviar a Pantalla Derrota
+            this._escenarioDirector.CambiarEsenarioActivo(Escenarios.TipoEsenario.Derrota);
+        }
 
 
     }

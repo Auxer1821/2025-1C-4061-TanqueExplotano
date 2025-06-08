@@ -743,6 +743,12 @@
 /processorParam:Quality=Best
 /build:Sounds/sonidoArcade.wav
 
+#begin Sounds/sonidoInquietante.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/sonidoInquietante.wav
+
 #begin Sounds/tankMove.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -754,6 +760,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/tankStop.wav
+
+#begin Sounds/victoria.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/victoria.wav
 
 #begin Textures/icono/icono.png
 /importer:TextureImporter
@@ -1079,6 +1091,30 @@
 /processorParam:TextureFormat=Color
 /build:Textures/ui/cooltext483425762595384.png
 
+#begin Textures/ui/Defeat.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/ui/Defeat.png
+
+#begin Textures/ui/Derrota.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/ui/Derrota.png
+
 #begin Textures/ui/fondo1.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1114,4 +1150,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Textures/ui/fondo3.jpg
+
+#begin Textures/ui/Victoria.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Textures/ui/Victoria.png
 

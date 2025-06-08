@@ -22,6 +22,8 @@ namespace TGC.MonoGame.TP.src.Escenarios
         ///-----------Variables-------------//
         private Escenario _escenarioGameplay;
         private EscenarioMenu _escenarioMenu;
+        private EscenarioVictoria _escenarioVictoria;
+        private EscenarioDerrota _escenarioDerrota;
 
         private IEscenario _esenarioActivo;
         private GraphicsDevice _graphicsDevice;
@@ -48,10 +50,19 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
             _escenarioMenu = new EscenarioMenu();
             _escenarioMenu.Initialize(graphicsDevice, content, this);
+
+
+            _escenarioVictoria = new EscenarioVictoria();
+            _escenarioVictoria.Initialize(graphicsDevice, content, this);
+
+            _escenarioDerrota = new EscenarioDerrota();
+            _escenarioDerrota.Initialize(graphicsDevice, content, this);
+
             _esenarioActivo = _escenarioMenu; //TODO: cambiar para que sea el menu
 
             _managerSonido = new ManagerSonido(content);
             _managerSonido.InstanciarMusica();
+            _managerSonido.InstanciarSonidosMenu();
         }
 
         public void Dibujar()
@@ -74,11 +85,25 @@ namespace TGC.MonoGame.TP.src.Escenarios
             {
                 case TipoEsenario.Gameplay:
                     _esenarioActivo = this._escenarioGameplay;
+                    
                     this.tipoMusica = "accion";
                     break;
+                case TipoEsenario.Victoria:
+                    _esenarioActivo = this._escenarioVictoria;
+                    this._managerSonido.ReproducirSonidoMenu("victoria");
+                    this.tipoMusica = "accion";
+                    break;
+                case TipoEsenario.Derrota:
+                    _esenarioActivo = this._escenarioDerrota;
+                    this._managerSonido.ReproducirSonidoMenu("derrota");
+                    this.tipoMusica = "suspenso";
+                    break;
+                case TipoEsenario.Menu:
+                    _esenarioActivo = this._escenarioMenu;
+                    this.tipoMusica = "menu";
+                    break;
                 default:
-                    //--Cambiar a menu--//
-                    _esenarioActivo = this._escenarioGameplay;
+                    _esenarioActivo = this._escenarioMenu;
                     this.tipoMusica = "menu";
                     break;
 
