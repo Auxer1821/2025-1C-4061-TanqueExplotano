@@ -60,7 +60,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         public void Dibujar(GraphicsDevice Graphics, IndexBuffer indexBuffer, VertexBuffer vertexBuffer)
         {
             //_efecto.Parameters["PorcentaClaridad"]?.SetValue(_PorcentaClaridad);
-            this._efecto.Parameters["World"]?.SetValue(Matrix.Identity * Matrix.CreateScale(10f) * Matrix.CreateTranslation(_coordenadas));
+            this._efecto.Parameters["World"]?.SetValue(Matrix.Identity * Matrix.CreateScale(5f) * Matrix.CreateTranslation(_coordenadas));
             this._efecto.Parameters["ParticlePosition"]?.SetValue(_coordenadas);
             this._efecto.Parameters["ParticleSize"]?.SetValue(_tamanio);
 

@@ -32,7 +32,7 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         //variables de sonido
         public Managers.ManagerSonido _managerSonido;
-        private EmisorParticula _particulasDisparo;
+        public EmisorParticula _particulasDisparo;
 
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -57,7 +57,8 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._boundingVolume = new BoundingsVolumes.BVEsfera(5.0f, this._posicion);
 
             this._particulasDisparo = new EmisorParticula();
-            this._particulasDisparo.Initialize(Content, Graphics, 60, new Vector3(0, 2, 0));
+            this._particulasDisparo.Initialize(Content, Graphics, 30, new Vector3(0, 2, 0));
+            this._particulasDisparo.SetNuevaPosicion(new Vector3(this._posicion.X/6, 0, this._posicion.Z/6) + new Vector3(_dirApuntado.X/6, 0.05f, _dirApuntado.Z/6));
 
             //Cargar el sonido
             this._managerSonido = new Managers.ManagerSonido(Content);
@@ -126,6 +127,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             if (this._particulasDisparo != null)
             {
                 this._particulasDisparo.Update(gameTime);
+                this._particulasDisparo.SetNuevaPosicion(new Vector3(this._posicion.X/6, 0, this._posicion.Z/6) + new Vector3(_dirApuntado.X/6, 0.05f, _dirApuntado.Z/6));
             }
         }
 
@@ -194,6 +196,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._escenario.AgregarAEliminar(this);
             this._escenario.AgregarACrear(this);
 
+            this._particulasDisparo.SetPuedeDibujar(false);
             this._managerSonido.reproducirSonido("muerte");
         }
 
@@ -298,8 +301,8 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._bala.ActualizarDatos(this._dirApuntado, this._posicionSalidaBala); //TODO - Cambiar lugar de disparo para que no se autodestruya
             this._escenario.AgregarACrear(this._bala); //temporal
 
-            this._particulasDisparo.SetNuevaPosicion(new Vector3(this._posicion.X/11, 0.2f, this._posicion.Z/11));
-            this._particulasDisparo.SetPuedeDibujar();
+            this._particulasDisparo.SetNuevaPosicion(this._posicion/6 + new Vector3(_dirApuntado.X/6 *7f, 0.6f , _dirApuntado.Z/6 *7f));
+            this._particulasDisparo.SetPuedeDibujar(true);
 
             //sonido disparo
             //this._managerSonido.reproducirSonido("disparo");

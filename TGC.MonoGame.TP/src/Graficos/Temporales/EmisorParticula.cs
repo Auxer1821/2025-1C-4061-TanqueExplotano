@@ -33,7 +33,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             _graphicsDevice = graphics;
             _efecto = Content.Load<Effect>(@"Effects/shaderParticula");
             _texture = Content.Load<Texture2D>(@"Textures/particula/particula");
-            _efecto.Parameters["World"]?.SetValue(Matrix.Identity * Matrix.CreateScale(10f));
+            _efecto.Parameters["World"]?.SetValue(Matrix.Identity * Matrix.CreateScale(5f));
             _efecto.Parameters["Texture"].SetValue(_texture);
             _efecto.Parameters["ParticleSize"]?.SetValue(0.3f);
             _efecto.Parameters["ParticleColor"]?.SetValue(new Vector4(Color.LightGray.ToVector3(), 0.5f));
@@ -124,9 +124,9 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             }
         }
 
-        public void SetPuedeDibujar()
+        public void SetPuedeDibujar(bool puedeDibujar)
         {
-            _puedeDibujar = true; // Actualizar la bandera para controlar el dibujado
+            _puedeDibujar = puedeDibujar; // Actualizar la bandera para controlar el dibujado
         }
 
         public void SetVistaProyeccion(Matrix Vista, Matrix Proyeccion)

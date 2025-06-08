@@ -80,6 +80,7 @@ namespace TGC.MonoGame.TP.src.Entidades
                 if (raton.LeftButton == ButtonState.Pressed)
                 {
                     this.Disparar();
+                    this._particulasDisparo.SetNuevaPosicion(this._posicion/6 + new Vector3(_dirApuntado.X/6 *7f, this._dirApuntado.Y/6 , _dirApuntado.Z/6 *7f));
                     this._cooldownActual = 0;
                     //efecto de camara
                     _Camara.setSacudida(true);
@@ -124,6 +125,7 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         //---------------------------------------------MOVIMIENTO-Y-APUNTADO---------------------------------------------------//
 
+      
 
     }
 }
