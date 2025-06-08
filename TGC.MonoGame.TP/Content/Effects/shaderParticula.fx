@@ -81,7 +81,7 @@ float4 PS(VertexOutput input) : COLOR
     float3 finalColor = ParticleColor.rgb * (1.0 - texColor.r); // Invertimos porque la textura es negra
     
     // Mantenemos el alpha de la textura y aplicamos el alpha del color
-    float finalAlpha = texColor.a;
+    float finalAlpha = texColor.a * ParticleColor.a;
 
     //if (finalAlpha < 0.5) // Umbral para evitar partículas invisibles
     {

@@ -15,13 +15,16 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
     public class Particula
     {
         //----------------------------------------------Variables--------------------------------------------------//
+        private Vector3 _posicionInicial;
         private Vector3 _coordenadas;
+        private Vector3 _velocidadInicial = Vector3.Zero; // Velocidad inicial en cero
         private Vector3 _velocidad;
-        private float _vida = 3.0f;
+        private Vector3 _desaceleracion = Vector3.Zero; // Desaceleración inicial en cero
+        private float _vida = 0.3f;
+        private float _tamanio = 0.1f; // Tamaño de la partícula
         Effect _efecto;
 
         private string _tecnica = "Default"; // Nombre de la técnica de sombreado a utilizar
-        private float _PorcentaClaridad;
 
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -29,23 +32,28 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         {
         }
         // Inicializar recursos necesarios para el HUD
-        public void Initialize(Vector3 coordenadas, Vector3 velocidad, Effect efecto)
+        public void Initialize(Vector3 coordenadas, Effect efecto, Random random)
         {
             _efecto = efecto;
             _efecto.Parameters["WorldViewProjection"]?.SetValue(Matrix.Identity);
-            _PorcentaClaridad = 1.0f;
             this._tecnica = "Particle";
             this._coordenadas = coordenadas;
-            // Variación aleatoria en velocidad (ajusta los valores según necesites)
-            float variacionX = (float)(new Random().NextDouble() * 0.4f - 0.2f); // -0.2 a +0.2 en X
-            float variacionY = (float)(new Random().NextDouble() * 0.5f + 0.5f); // +0.5 a +1.0 en Y (para que suban)
-            float variacionZ = (float)(new Random().NextDouble() * 0.4f - 0.2f); // -0.2 a +0.2 en Z
+            this._posicionInicial = coordenadas;
 
-            this._velocidad = new Vector3(
-                velocidad.X + variacionX,
-                velocidad.Y + variacionY, // Asegura que Y sea positivo (para que suban)
-                velocidad.Z + variacionZ
+            // Velocidad aleatoria en forma esférica (explosión radial)
+            Vector3 direction = new Vector3(
+                (float)(random.NextDouble() * 2 - 1),
+                (float)(random.NextDouble() * 2 - 1),
+                (float)(random.NextDouble() * 2 - 1)
             );
+            direction.Normalize();
+            
+            this._velocidad = direction * (float)(random.NextDouble() * 3f + 3f); // Velocidad aleatoria entre 0.5 y 1.0
+            this._velocidadInicial = this._velocidad; // Guardar la velocidad inicial
+            this._desaceleracion = -this._velocidad * 1.5f; // Desaceleración basada en la velocidad inicial
+            this._desaceleracion.Y += -0.4f; // Aumentar la desaceleración en Y para simular gravedad
+            //this._vida = (float)(random.NextDouble() * 2.0f + 1.0f);
+            this._tamanio = (float)(random.NextDouble() * 0.5f + 0.1f);
         }
 
         //----------------------------------------------Funciones-Principales--------------------------------------------------//
@@ -53,6 +61,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         {
             //_efecto.Parameters["PorcentaClaridad"]?.SetValue(_PorcentaClaridad);
             this._efecto.Parameters["ParticlePosition"]?.SetValue(_coordenadas);
+            this._efecto.Parameters["ParticleSize"]?.SetValue(_tamanio);
 
             Graphics.SetVertexBuffer(vertexBuffer);
             Graphics.Indices = indexBuffer;
@@ -68,25 +77,34 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         public void Update(GameTime gameTime)
         {
             // Actualizar la posición de la partícula
+            //_velocidad.Y -= 0.3f * (float)gameTime.ElapsedGameTime.TotalSeconds; // Aumentar la velocidad en Y para simular gravedad
+            _velocidad += _desaceleracion * (float)gameTime.ElapsedGameTime.TotalSeconds; // Aplicar desaceleración
             _coordenadas += _velocidad * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Reducir la vida de la partícula
             _vida -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+            this._tamanio -= (float)gameTime.ElapsedGameTime.TotalSeconds * 0.4f; // Reducir tamaño con el tiempo
+            if (_tamanio < 0.01f) // Evitar que el tamaño sea demasiado pequeño
+            {
+                _tamanio = 0.01f;
+            }
 
             // Si la vida es menor o igual a cero, se puede eliminar o reiniciar la partícula
             if (_vida <= 0)
             {
                 // Reiniciar o eliminar la partícula según sea necesario
-                _vida = 3.0f; // Reiniciar vida para este ejemplo
-                _coordenadas = Vector3.Zero; // Reiniciar posición para este ejemplo
+                _vida = 0.3f; // Reiniciar vida para este ejemplo
+                _coordenadas = _posicionInicial; // Reiniciar posición para este ejemplo
+                _tamanio = 0.2f; // Reiniciar tamaño para este ejemplo
+                _velocidad = _velocidadInicial; // Reiniciar velocidad a la inicial
             }
         }
 
-
-        public void SetClaridad(float claridad)
+        public void ActualizarPosicionInicial(Vector3 nuevaPosicion)
         {
-            _PorcentaClaridad = claridad;
+            _posicionInicial = nuevaPosicion;
         }
+
 
         public void ModificarPosicion(Vector3 nuevaPosicion)
         {

@@ -43,7 +43,6 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
         private DirectorEscenarios _dEsenarios;
         private Managers.ManagerSonido _managerSonido;
-        private EmisorParticula _emisorParticula;
 
 
         //---------------Metodos--------------------------//
@@ -113,10 +112,6 @@ namespace TGC.MonoGame.TP.src.Escenarios
             this._managerSonido = new Managers.ManagerSonido(Content);
             this._managerSonido.InstanciarSonidosMenu();
 
-            /*
-            this._emisorParticula = new EmisorParticula();
-            this._emisorParticula.Initialize(Content, device, 50, new Vector3(0, 0, 0), new Vector3(0.1f, 0.1f, 0));
-            */
         }
         public void Update(GameTime gameTime)
         {
@@ -171,8 +166,6 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 this._tiempoDeCambio =0.25f;
             }
 
-            //_emisorParticula.Update(gameTime);
-
         }
 
         private bool PuedeCambiarBoton()
@@ -203,7 +196,6 @@ namespace TGC.MonoGame.TP.src.Escenarios
             _botonTanqueSig.Dibujado(_graphicsDevice);
             _botonTanqueAnt.Dibujado(_graphicsDevice);
 
-            //_emisorParticula.Dibujar();
         }
         
         private void CambiarTextura(string movimiento){

@@ -20,28 +20,34 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         private List<Particula> _particulas = new List<Particula>();
         private GraphicsDevice _graphicsDevice;
         float _deltaTime;
+        bool _puedeDibujar = false; // Bandera para controlar si se pueden dibujar las partículas
+        private float _tiempoVida = 0.3f; // Tiempo de vida de las partículas, se puede ajustar según sea necesario
         public EmisorParticula()
         {
         }
-        public void Initialize(ContentManager Content, GraphicsDevice graphics, int cantidadParticulas, Vector3 posicionInicial, Vector3 velocidadInicial)
+        public void Initialize(ContentManager Content, GraphicsDevice graphics, int cantidadParticulas, Vector3 posicionInicial)
         {
             // Crear el quad que se usará para las partículas
-            crearQuad(0.2f, graphics);
+            this.CrearQuad(0.2f, graphics);
 
             _graphicsDevice = graphics;
             _efecto = Content.Load<Effect>(@"Effects/shaderParticula");
             _texture = Content.Load<Texture2D>(@"Textures/particula/particula");
             _efecto.Parameters["WorldViewProjection"]?.SetValue(Matrix.Identity);
             _efecto.Parameters["Texture"].SetValue(_texture);
-            _efecto.Parameters["ParticleSize"]?.SetValue(0.2f);
-            _efecto.Parameters["ParticleColor"]?.SetValue(Color.DimGray.ToVector4());
+            _efecto.Parameters["ParticleSize"]?.SetValue(0.3f);
+            _efecto.Parameters["ParticleColor"]?.SetValue(new Vector4(Color.LightGray.ToVector3(), 0.5f));
 
             // Inicializar las partículas
-            this.InicializarParticulas(posicionInicial, velocidadInicial, cantidadParticulas);
+            this.InicializarParticulas(posicionInicial, cantidadParticulas);
         }
 
         public void Dibujar()
         {
+            if (!_puedeDibujar)
+            {
+                return; // Si no se puede dibujar, salir del método
+            }
             // Configurar el estado del gráfico
             _graphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
             _graphicsDevice.BlendState = BlendState.AlphaBlend;
@@ -66,24 +72,61 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             // Calcular el deltaTime
             _deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             // Actualizar cada partícula
+            if (_tiempoVida <= 3.0f && _tiempoVida > 0)
+            {
             foreach (var particula in _particulas)
             {
                 particula.Update(gameTime);
             }
+            }
+
+            // Actualizar el tiempo de vida del emisor
+            if (_puedeDibujar)
+            {
+                _tiempoVida -= _deltaTime;
+            }
+            else
+            {
+                // Si no se puede dibujar, reiniciar el tiempo de vida
+                _tiempoVida = 0.3f;
+            }
+
+            if (_tiempoVida <= 0)
+            {
+                _puedeDibujar = false; // Desactivar el dibujado si el tiempo de vida es 0 o menor
+                _tiempoVida = 0.3f; // Reiniciar el tiempo de vida si es necesario
+            }
         }
 
-        public void InicializarParticulas(Vector3 posicionInicial, Vector3 velocidadInicial, int cantidadParticulas)
+        public void SetNuevaPosicion(Vector3 nuevaPosicion)
+        {
+            // Actualizar la posición inicial de todas las partículas
+            foreach (var particula in _particulas)
+            {
+                particula.ActualizarPosicionInicial(nuevaPosicion);
+            }
+        }
+
+        public void InicializarParticulas(Vector3 posicionInicial, int cantidadParticulas)
         {
             // Limpiar la lista de partículas
             _particulas.Clear();
+
+            // Crear un generador de números aleatorios
+            Random random = new Random();
 
             // Crear nuevas partículas
             for (int i = 0; i < cantidadParticulas; i++)
             {
                 var particula = new Particula();
-                particula.Initialize(posicionInicial, velocidadInicial, _efecto);
+                particula.Initialize(posicionInicial, _efecto, random);
                 _particulas.Add(particula);
             }
+        }
+
+        public void SetPuedeDibujar()
+        {
+            _puedeDibujar = true; // Actualizar la bandera para controlar el dibujado
         }
 
         public void SetVistaProyeccion(Matrix Vista, Matrix Proyeccion)
@@ -91,8 +134,11 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             _efecto.Parameters["View"]?.SetValue(Vista);
             _efecto.Parameters["Projection"]?.SetValue(Proyeccion);
         }
-
-        private void crearQuad(float halfSize, GraphicsDevice _graphicsDevice)
+        public void SetQuad(float halfSize, GraphicsDevice device)
+        {
+            CrearQuad(halfSize, device);
+        }
+        private void CrearQuad(float halfSize, GraphicsDevice _graphicsDevice)
         {
             // 1. Definir los vértices (4 vértices para un quad)
             var vertices = new VertexPositionNormalTexture[4];

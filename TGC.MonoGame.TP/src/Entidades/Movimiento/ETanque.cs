@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.BoundingsVolumes;
 using TGC.MonoGame.TP.src.Tanques;
 using Microsoft.Xna.Framework.Audio;
+using TGC.MonoGame.TP.src.Graficos.Temporales;
 
 namespace TGC.MonoGame.TP.src.Entidades
 {
@@ -31,6 +32,7 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         //variables de sonido
         public Managers.ManagerSonido _managerSonido;
+        private EmisorParticula _particulasDisparo;
 
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -53,6 +55,9 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             //this._boundingVolume = new BVCuboOBB(this.CalcularCentro(_posicion), new Vector3(4.0f, 8.0f, 8.0f) , Matrix.Identity);
             this._boundingVolume = new BoundingsVolumes.BVEsfera(5.0f, this._posicion);
+
+            this._particulasDisparo = new EmisorParticula();
+            this._particulasDisparo.Initialize(Content, Graphics, 60, new Vector3(0, 0, 0));
 
             //Cargar el sonido
             this._managerSonido = new Managers.ManagerSonido(Content);
@@ -113,9 +118,21 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             if (!this.PuedeDisparar())
             {
-                this._cooldownActual += 1*deltaTime;
+                this._cooldownActual += 1 * deltaTime;
             }
             this.tiempoUltimoImpacto += deltaTime;
+
+            // Actualizar partículas de disparo
+            if (this._particulasDisparo != null)
+            {
+                this._particulasDisparo.Update(gameTime);
+            }
+        }
+
+        public override void Dibujar(GraphicsDevice Graphics)
+        {
+            this._particulasDisparo.Dibujar();
+            base.Dibujar(Graphics);
         }
 
         private void ActualicarModeloTanque()
@@ -274,6 +291,9 @@ namespace TGC.MonoGame.TP.src.Entidades
             this.setPosicionSalidaBala();
             this._bala.ActualizarDatos(this._dirApuntado, this._posicionSalidaBala); //TODO - Cambiar lugar de disparo para que no se autodestruya
             this._escenario.AgregarACrear(this._bala); //temporal
+
+            this._particulasDisparo.SetPuedeDibujar();
+            this._particulasDisparo.SetNuevaPosicion(Vector3.Zero);
 
             //sonido disparo
             //this._managerSonido.reproducirSonido("disparo");
