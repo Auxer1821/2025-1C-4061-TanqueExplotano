@@ -48,7 +48,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             this.CrearQuad();
 
             this._fondo = new HImagen();
-            this._fondo.Initialize(new Vector2(0f, 0f), Content, "Textures/ui/fondo1");
+            this._fondo.Initialize(new Vector2(0f, 0f), Content, "Textures/ui/fondo4");
             this._fondo.setQuad(1f, device);
             this._fondo.cambioDeTecnica("Fondo");
 
@@ -86,7 +86,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
             
             this._mensajeVolverMenu = new HTexto();
-            this._mensajeVolverMenu.Initialize(new Vector2(-0.95f, -0.1f), "/PULSA ESPACIO PARA VOLVER AL MENU");
+            this._mensajeVolverMenu.Initialize(new Vector2(-0.95f, -0.1f), "/PULSA   ESPACIO   PARA VOLVER AL MENU");
 
             this._managerSonido = new Managers.ManagerSonido(Content);
             this._managerSonido.InstanciarSonidosMenu();
@@ -105,8 +105,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
             // Botones del menu
 
-            //if (Keyboard.GetState().IsKeyDown(Keys.Enter) || Keyboard.GetState().IsKeyDown(Keys.Space))
-            if (Keyboard.GetState().IsKeyDown(Keys.M))
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter) || Keyboard.GetState().IsKeyDown(Keys.Space))
             {
                 this._managerSonido.ReproducirSonidoMenu("selecccion");
                 this._dEsenarios.CambiarEsenarioActivo(Escenarios.TipoEsenario.Menu);

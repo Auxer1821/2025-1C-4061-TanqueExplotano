@@ -7,6 +7,7 @@ using TGC.MonoGame.TP.src.BoundingsVolumes;
 using TGC.MonoGame.TP.src.Tanques;
 using Microsoft.Xna.Framework.Audio;
 using TGC.MonoGame.TP.src.Graficos.Temporales;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace TGC.MonoGame.TP.src.Entidades
 {
@@ -27,8 +28,9 @@ namespace TGC.MonoGame.TP.src.Entidades
         protected float _cooldownActual;
         protected float _velocidadActual;
         protected float _anguloActual;
-        float time = 0.0f;
-        float deltaTime = 0.0f;
+        protected float time = 0.0f;
+        protected float deltaTime = 0.0f;
+        protected float _killCount = 0.0f;
 
         //variables de sonido
         public Managers.ManagerSonido _managerSonido;
@@ -50,19 +52,24 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._bala.Initialize(Graphics, Mundo, Content, escenario);
             this._bala.setDanio(this._tipoTanque.danio());
             this._cooldownActual = 0.0f;
+            this._bala.setTanque(this);
             //TODO - Crear Bounding Volume especializados // Eliminarlo de EntidadFull
             base.Initialize(Graphics, Mundo, Content, escenario);
 
-            //this._boundingVolume = new BVCuboOBB(this.CalcularCentro(_posicion), new Vector3(4.0f, 8.0f, 8.0f) , Matrix.Identity);
             this._boundingVolume = new BoundingsVolumes.BVEsfera(5.0f, this._posicion);
+            //this._boundingVolume = new BoundingsVolumes.BVCilindroOBB(Vector3.Zero, 5.0f, 7.0f, new Vector3(_dirMovimiento.X, 0, _dirMovimiento.Y));
+            //this._boundingVolume.Transformar(this._posicion, this._angulo, 1f);
 
             this._particulasDisparo = new EmisorParticula();
-            this._particulasDisparo.Initialize(Content, Graphics, 30, new Vector3(0, 2, 0));
+            this._particulasDisparo.Initialize(Content, Graphics, 10, new Vector3(0, 2, 0));
             this._particulasDisparo.SetNuevaPosicion(new Vector3(this._posicion.X/6, 0, this._posicion.Z/6) + new Vector3(_dirApuntado.X/6, 0.05f, _dirApuntado.Z/6));
 
             //Cargar el sonido
             this._managerSonido = new Managers.ManagerSonido(Content);
             this._managerSonido.InstanciarSonidosTanque();
+
+
+            
         }
 
 
@@ -129,6 +136,9 @@ namespace TGC.MonoGame.TP.src.Entidades
                 this._particulasDisparo.Update(gameTime);
                 this._particulasDisparo.SetNuevaPosicion(new Vector3(this._posicion.X/6, 0, this._posicion.Z/6) + new Vector3(_dirApuntado.X/6, 0.05f, _dirApuntado.Z/6));
             }
+
+            //actualizar BV
+            this._boundingVolume.Transformar(this._posicion, this._angulo, 1f);
         }
 
         public override void Dibujar(GraphicsDevice Graphics)
@@ -184,11 +194,14 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             this._managerSonido.reproducirSonido("impactoBala");
             // Chequear destrucción
-            if (!this._tipoTanque.EstaVivo()) this.Destruir();
+            if (!this._tipoTanque.EstaVivo()){   
+                this.Destruir();
+                bala.Kill();
+            }
         }
 
 
-        private void Destruir()
+        public virtual void Destruir()
         {
             // Lógica de destrucción:  explosionar, etc.
             this._activo = false;
@@ -318,7 +331,21 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._dirApuntado = apuntado;
         }
 
+        internal void Kill()
+        {
+            this._killCount++;
+            this.logicaKill();
+        }
 
+        public virtual void logicaKill()
+        {
+            throw new NotImplementedException();
+        }
 
+        public float GetKills(){
+            return this._killCount;
+        }
+
+        
     }
 }

@@ -161,7 +161,7 @@ namespace TGC.MonoGame.TP.src.Managers
             SoundEffect sonidoFondoAccion = _contentManager.Load<SoundEffect>(@"Music/epico");
             this._sonidoFondoAccionInstance = sonidoFondoAccion.CreateInstance();
             _sonidoFondoAccionInstance.IsLooped = true;
-            _sonidoFondoAccionInstance.Volume = _volumenMaestro * 2;
+            _sonidoFondoAccionInstance.Volume = _volumenMaestro;
 
             SoundEffect sonidoFondoSuspenso = _contentManager.Load<SoundEffect>(@"Music/musicaEpicaTranquila");
             this._sonidoFondoSuspensoInstance = sonidoFondoSuspenso.CreateInstance();

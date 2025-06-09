@@ -17,17 +17,20 @@ namespace TGC.MonoGame.TP.src.Entidades
     {
         private Cameras.FreeCamera _Camara;
 
+        private float _tiempoRestante;
+
 
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public EJugador() { }
         // es necesario hacer un override?
-        
+
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
         {
+            _tiempoRestante = 80f;
             base.Initialize(Graphics, Mundo, Content, escenario);
         }
-       
+
         public void setCamara(Cameras.FreeCamera Camara)
         {
             _Camara = Camara;
@@ -35,13 +38,16 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         //----------------------------------------------Metodos-Logica--------------------------------------------------//
 
-
-
-
         public override void Update(GameTime gameTime)
         {
             //------setear los valores de movimiento y disparo-------//
             float mseg = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            this._tiempoRestante -= mseg;
+
+            if(_tiempoRestante<0f){
+                this.Perder();
+            }
+            
             var teclado = Keyboard.GetState();
             var raton = Mouse.GetState();
 
@@ -80,7 +86,7 @@ namespace TGC.MonoGame.TP.src.Entidades
                 if (raton.LeftButton == ButtonState.Pressed)
                 {
                     this.Disparar();
-                    this._particulasDisparo.SetNuevaPosicion(this._posicion/6 + new Vector3(_dirApuntado.X/6 *7f, this._dirApuntado.Y/6 , _dirApuntado.Z/6 *7f));
+                    this._particulasDisparo.SetNuevaPosicion(this._posicion / 6 + new Vector3(_dirApuntado.X / 6 * 7f, this._dirApuntado.Y / 6 * 0.5f, _dirApuntado.Z / 6 * 7f));
                     this._cooldownActual = 0;
                     //efecto de camara
                     _Camara.setSacudida(true);
@@ -100,11 +106,6 @@ namespace TGC.MonoGame.TP.src.Entidades
             base.Update(gameTime);
         }
 
-        internal int getKills() //TODO
-        {
-            throw new NotImplementedException();
-        }
-
         internal float porcentajeRecargado() //TODO
         {
             return 1.0f - (this._tipoTanque.cooldown() - _cooldownActual) / this._tipoTanque.cooldown();
@@ -115,17 +116,40 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._posicionSalidaBala = _Camara.Position;
         }
 
-        
+
         //el jugador siempre se dibuja, para evitar que se vea el escenario sin el tanque
         public override bool ExcluidoDelFrustumCulling()
         {
             return true;
         }
+        public override void Destruir()
+        {
+            this.Perder();
+        }
+
+        private void Perder()
+        {
+            this._escenario.FinJuegoPerder();
+        }
+        private void Ganar()
+        {
+            this._escenario.FinJuegoGanar();
+        }
+
+        internal float tiempoRestante()
+        {
+            return _tiempoRestante;
+        }
+
+        public override void logicaKill(){
+            if(this.GetKills() >= 3f)
+            this._escenario.FinJuegoGanar();
+        }
 
 
         //---------------------------------------------MOVIMIENTO-Y-APUNTADO---------------------------------------------------//
 
-      
+
 
     }
 }

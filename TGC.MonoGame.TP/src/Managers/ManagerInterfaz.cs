@@ -103,16 +103,11 @@ namespace TGC.MonoGame.TP.src.Managers
             }
         }
 
-        public void Update(GameTime gameTime)
+        public void Update()
         {
-            //TODO: recibe el tiempo restante de otro lado
-            float mseg = 300 - (float)gameTime.TotalGameTime.TotalSeconds;
-            /*
-            mseg = get.tiempro_restante 
-            //TODO
-            */
             _vida.setValor("vida:" + ((int)_jugador.getVida()).ToString());
-            //_progreso.setValor( (int)_jugador.getKills() + "/5");//TODO
+            _progreso.setValor( (int)_jugador.GetKills() + "/3");//TODO
+            float mseg = this._jugador.tiempoRestante();
             int minuto = (int) mseg / 60;
             int seg = (int) mseg % 60;
             _tiempo.setValor(minuto.ToString() + ":" + seg.ToString());//DIFERENCIA DE TIMES O ALGO

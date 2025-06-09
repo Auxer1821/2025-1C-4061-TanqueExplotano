@@ -45,11 +45,12 @@ namespace TGC.MonoGame.TP.src.Escenarios
             _world = world;
             _content = content;
             _game = game;
-            _escenarioGameplay = new Escenario();
-            _escenarioGameplay.Initialize(_graphicsDevice, _world, _content);
+            /*_escenarioGameplay = new Escenario();
+            _escenarioGameplay.Initialize(_graphicsDevice, _world, _content, this);
 
             _escenarioMenu = new EscenarioMenu();
-            _escenarioMenu.Initialize(graphicsDevice, content, this);
+            _escenarioMenu.Initialize(graphicsDevice, content, this);*/
+            this.cargarJuego();
 
 
             _escenarioVictoria = new EscenarioVictoria();
@@ -99,6 +100,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                     this.tipoMusica = "suspenso";
                     break;
                 case TipoEsenario.Menu:
+                    this.cargarJuego();
                     _esenarioActivo = this._escenarioMenu;
                     this.tipoMusica = "menu";
                     break;
@@ -118,6 +120,15 @@ namespace TGC.MonoGame.TP.src.Escenarios
         public TGCGame GetGame()
         {
             return _game;
+        }
+
+
+        private void cargarJuego(){
+            _escenarioMenu = new EscenarioMenu();
+            _escenarioMenu.Initialize(_graphicsDevice, _content, this);
+
+            _escenarioGameplay = new Escenario();
+            _escenarioGameplay.Initialize(_graphicsDevice, _world, _content, this);
         }
 
     }

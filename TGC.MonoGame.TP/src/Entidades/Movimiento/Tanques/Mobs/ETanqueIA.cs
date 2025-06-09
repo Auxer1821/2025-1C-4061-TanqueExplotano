@@ -44,6 +44,13 @@ namespace TGC.MonoGame.TP.src.Entidades
         }
         
 
+        public override void logicaKill()
+        {
+            if (this._killCount >= 1f)
+            {
+                this._escenario.FinJuegoPerder();
+            }
+        }
 
 
 //---------------------------------------------MOVIMIENTO-Y-APUNTADO---------------------------------------------------//

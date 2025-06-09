@@ -19,6 +19,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         private float _tiempo;
         private Vector3 _direccion;
         public float _danio { get; set; }
+        private Etanque _tanque;
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public EBala()
@@ -29,6 +30,9 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             this._tipo = TipoEntidad.Bala;
             base.Initialize(Graphics, Mundo, Content, escenario);
+        }
+        public void setTanque( Etanque tanque){
+            _tanque = tanque;
         }
         public void setDanio(float danio)
         {
@@ -68,6 +72,11 @@ namespace TGC.MonoGame.TP.src.Entidades
             {
                 this._escenario.AgregarAEliminar(this);
             }
+        }
+
+        internal void Kill()
+        {
+            this._tanque.Kill();
         }
     }
 }

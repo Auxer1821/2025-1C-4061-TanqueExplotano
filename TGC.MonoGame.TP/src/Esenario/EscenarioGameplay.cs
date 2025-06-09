@@ -29,6 +29,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private List<Entidad> _entidadesCrear;
         private bool _faltaCrear;
         private List<IMolde> _moldes;
+        private DirectorEscenarios _director;
 
 
         private Cameras.FreeCamera _camara;
@@ -51,8 +52,9 @@ namespace TGC.MonoGame.TP.src.Escenarios
             _faltaCrear = false;
         }
 
-        public void Initialize(GraphicsDevice graphicsDevice, Matrix world, ContentManager content)
+        public void Initialize(GraphicsDevice graphicsDevice, Matrix world, ContentManager content, DirectorEscenarios directorEscenarios)
         {
+            this._director = directorEscenarios;
             var screenSize = new Point(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2);
             _camara = new Cameras.FreeCamera(graphicsDevice.Viewport.AspectRatio, Vector3.UnitZ * 150, screenSize);
             Matrix view = _camara.Vista;
@@ -116,7 +118,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 float x = random.Next(-300, 300);
                 float z = random.Next(100, 500);
                 float rotacion = random.Next(0, 360);
-                float tamano = random.Next(10, 20)/10;
+                float tamano = random.Next(10, 20) / 10;
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
@@ -192,7 +194,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
             //----IA---//
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 5; i++)
             {
                 var tank = new ETanqueIA();
                 tank.SetTipoTanque("Panzer");
@@ -222,7 +224,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
-                    pasto.Initialize(graphicsDevice, Matrix.CreateScale(tamano) * Matrix.CreateRotationY(MathHelper.ToRadians(rotacion)) *world * Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z) + 1f, z), content, this);
+                    pasto.Initialize(graphicsDevice, Matrix.CreateScale(tamano) * Matrix.CreateRotationY(MathHelper.ToRadians(rotacion)) * world * Matrix.CreateScale(0.5f) * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z) + 1f, z), content, this);
                     pasto.SetMolde(moldePasto);
                     this._managerGrafico.AgregarPasto(pasto);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
@@ -265,7 +267,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
             _managerGameplay.Update(gameTime);
             _managerColision.VerificarColisiones();
-            _managerInterfaz.Update(gameTime);
+            _managerInterfaz.Update();
             this.ActualizarCamara(gameTime);
             _managerGrafico.ActualizarCamera();
             _managerGrafico.ActualizarAnimacion(gameTime);//actualiza todos los moldes
@@ -328,6 +330,15 @@ namespace TGC.MonoGame.TP.src.Escenarios
         public void SetSkinTanque(string skin)
         {
             this.jugador.SetSkinTanque(skin);
+        }
+
+        public void FinJuegoGanar()
+        {
+            this._director.CambiarEsenarioActivo(TipoEsenario.Victoria);
+        }
+        public void FinJuegoPerder()
+        {
+            this._director.CambiarEsenarioActivo(TipoEsenario.Derrota);
         }
     }
 

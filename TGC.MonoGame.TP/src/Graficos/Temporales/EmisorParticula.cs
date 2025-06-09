@@ -22,13 +22,15 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         float _deltaTime;
         bool _puedeDibujar = false; // Bandera para controlar si se pueden dibujar las partículas
         private float _tiempoVida = 0.3f; // Tiempo de vida de las partículas, se puede ajustar según sea necesario
+        private Vector4 _colorParticula = new Vector4(Color.Red.ToVector3(), 0.5f); // Color de la partícula
+        private Vector4 _colorParticulaInicial = new Vector4(Color.Red.ToVector3(), 0.5f); // Color de la partícula
         public EmisorParticula()
         {
         }
         public void Initialize(ContentManager Content, GraphicsDevice graphics, int cantidadParticulas, Vector3 posicionInicial)
         {
             // Crear el quad que se usará para las partículas
-            this.CrearQuad(0.2f, graphics);
+            this.CrearQuad(0.1f, graphics);
 
             _graphicsDevice = graphics;
             _efecto = Content.Load<Effect>(@"Effects/shaderParticula");
@@ -36,7 +38,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             _efecto.Parameters["World"]?.SetValue(Matrix.Identity * Matrix.CreateScale(5f));
             _efecto.Parameters["Texture"].SetValue(_texture);
             _efecto.Parameters["ParticleSize"]?.SetValue(0.3f);
-            _efecto.Parameters["ParticleColor"]?.SetValue(new Vector4(Color.LightGray.ToVector3(), 0.5f));
+            _efecto.Parameters["ParticleColor"]?.SetValue(new Vector4(Color.Red.ToVector3(), 0.5f));
 
             // Inicializar las partículas
             this.InicializarParticulas(posicionInicial, cantidadParticulas);
@@ -59,6 +61,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             // Dibujar cada partícula
             foreach (var particula in _particulas)
             {
+                _efecto.Parameters["ParticleColor"]?.SetValue(_colorParticula);
                 particula.Dibujar(_graphicsDevice, _indexBuffer, _vertexBuffer);
             }
 
@@ -74,6 +77,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             // Actualizar cada partícula
             if (_tiempoVida <= 0.3f && _tiempoVida > 0)
             {
+            _colorParticula = Vector4.Lerp(_colorParticulaInicial, new Vector4(Color.Yellow.ToVector3(), 05f), 1 - (_tiempoVida / 0.3f));
             foreach (var particula in _particulas)
             {
                 particula.Update(gameTime);
@@ -95,6 +99,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             {
                 _puedeDibujar = false; // Desactivar el dibujado si el tiempo de vida es 0 o menor
                 _tiempoVida = 0.3f; // Reiniciar el tiempo de vida si es necesario
+                _colorParticula = _colorParticulaInicial; // Reiniciar el color de la partícula
             }
         }
 
