@@ -86,7 +86,6 @@ namespace TGC.MonoGame.TP.src.Entidades
                 if (raton.LeftButton == ButtonState.Pressed)
                 {
                     this.Disparar();
-                    this._particulasDisparo.SetNuevaPosicion(this._posicion / 6 + new Vector3(_dirApuntado.X / 6 * 7f, this._dirApuntado.Y / 6 * 0.5f, _dirApuntado.Z / 6 * 7f));
                     this._cooldownActual = 0;
                     //efecto de camara
                     _Camara.setSacudida(true);
@@ -109,6 +108,12 @@ namespace TGC.MonoGame.TP.src.Entidades
         internal float porcentajeRecargado() //TODO
         {
             return 1.0f - (this._tipoTanque.cooldown() - _cooldownActual) / this._tipoTanque.cooldown();
+        }
+
+        public override void SetDibujadoParticulas(bool dibujarParticulas)
+        {
+            this._particulasDisparo.SetNuevaPosicion(this._posicion + new Vector3(_dirApuntado.X * 12f, this._dirApuntado.Y + 4f, _dirApuntado.Z * 12f));
+            this._particulasDisparo.SetPuedeDibujar(dibujarParticulas);
         }
 
         public override void setPosicionSalidaBala()

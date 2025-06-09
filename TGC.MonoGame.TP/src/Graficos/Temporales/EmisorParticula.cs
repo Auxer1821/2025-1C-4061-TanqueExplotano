@@ -21,27 +21,32 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         private GraphicsDevice _graphicsDevice;
         float _deltaTime;
         bool _puedeDibujar = false; // Bandera para controlar si se pueden dibujar las partículas
-        private float _tiempoVida = 0.3f; // Tiempo de vida de las partículas, se puede ajustar según sea necesario
-        private Vector4 _colorParticula = new Vector4(Color.Red.ToVector3(), 0.5f); // Color de la partícula
-        private Vector4 _colorParticulaInicial = new Vector4(Color.Red.ToVector3(), 0.5f); // Color de la partícula
+        private float _tiempoVida; // Tiempo de vida de las partículas, se puede ajustar según sea necesario
+        private float _tiempoVidaInicial = 0.8f; // Tiempo de vida inicial de las partículas
+        private Vector4 _colorParticula = new Vector4(Color.Red.ToVector3(), 0.8f); // Color de la partícula
+        private Vector4 _colorParticulaInicial = new Vector4(Color.Red.ToVector3(), 0.8f); // Color de la partícula
         public EmisorParticula()
         {
         }
         public void Initialize(ContentManager Content, GraphicsDevice graphics, int cantidadParticulas, Vector3 posicionInicial)
         {
             // Crear el quad que se usará para las partículas
-            this.CrearQuad(0.1f, graphics);
+            this.CrearQuad(0.5f, graphics);
 
             _graphicsDevice = graphics;
             _efecto = Content.Load<Effect>(@"Effects/shaderParticula");
             _texture = Content.Load<Texture2D>(@"Textures/particula/particula");
-            _efecto.Parameters["World"]?.SetValue(Matrix.Identity * Matrix.CreateScale(5f));
+            _efecto.Parameters["World"]?.SetValue(Matrix.Identity);
             _efecto.Parameters["Texture"].SetValue(_texture);
-            _efecto.Parameters["ParticleSize"]?.SetValue(0.3f);
+            _efecto.Parameters["ParticleSize"]?.SetValue(1f);
             _efecto.Parameters["ParticleColor"]?.SetValue(new Vector4(Color.Red.ToVector3(), 0.5f));
 
+            this._tiempoVida = _tiempoVidaInicial; // Inicializar el tiempo de vida de las partículas
+
             // Inicializar las partículas
-            this.InicializarParticulas(posicionInicial, cantidadParticulas);
+            this.InicializarParticulas(posicionInicial, cantidadParticulas, _tiempoVida);
+
+
         }
 
         public void Dibujar()
@@ -75,9 +80,9 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             // Calcular el deltaTime
             _deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             // Actualizar cada partícula
-            if (_tiempoVida <= 0.3f && _tiempoVida > 0)
+            if (_tiempoVida <= _tiempoVidaInicial && _tiempoVida > 0)
             {
-            _colorParticula = Vector4.Lerp(_colorParticulaInicial, new Vector4(Color.Yellow.ToVector3(), 05f), 1 - (_tiempoVida / 0.3f));
+            _colorParticula = Vector4.Lerp(_colorParticulaInicial, new Vector4(Color.Yellow.ToVector3(), 0.4f), 1 - (_tiempoVida / _tiempoVidaInicial));
             foreach (var particula in _particulas)
             {
                 particula.Update(gameTime);
@@ -92,19 +97,20 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             else
             {
                 // Si no se puede dibujar, reiniciar el tiempo de vida
-                _tiempoVida = 0.3f;
+                _tiempoVida = _tiempoVidaInicial; // Reiniciar el tiempo de vida si no se puede dibujar
             }
 
             if (_tiempoVida <= 0)
             {
                 _puedeDibujar = false; // Desactivar el dibujado si el tiempo de vida es 0 o menor
-                _tiempoVida = 0.3f; // Reiniciar el tiempo de vida si es necesario
+                _tiempoVida = _tiempoVidaInicial; // Reiniciar el tiempo de vida si es necesario
                 _colorParticula = _colorParticulaInicial; // Reiniciar el color de la partícula
             }
         }
 
         public void SetNuevaPosicion(Vector3 nuevaPosicion)
         {
+            if (_tiempoVida < _tiempoVidaInicial) return; // si esta en proceso de dibujado, no cambiar la posición
             // Actualizar la posición inicial de todas las partículas
             foreach (var particula in _particulas)
             {
@@ -112,7 +118,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             }
         }
 
-        public void InicializarParticulas(Vector3 posicionInicial, int cantidadParticulas)
+        public void InicializarParticulas(Vector3 posicionInicial, int cantidadParticulas, float tiempoVida)
         {
             // Limpiar la lista de partículas
             _particulas.Clear();
@@ -124,7 +130,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             for (int i = 0; i < cantidadParticulas; i++)
             {
                 var particula = new Particula();
-                particula.Initialize(posicionInicial, _efecto, random);
+                particula.Initialize(posicionInicial, _efecto, random, tiempoVida);
                 _particulas.Add(particula);
             }
         }

@@ -62,7 +62,7 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             this._particulasDisparo = new EmisorParticula();
             this._particulasDisparo.Initialize(Content, Graphics, 10, new Vector3(0, 2, 0));
-            this._particulasDisparo.SetNuevaPosicion(new Vector3(this._posicion.X/6, 0, this._posicion.Z/6) + new Vector3(_dirApuntado.X/6, 0.05f, _dirApuntado.Z/6));
+            this._particulasDisparo.SetNuevaPosicion(this._posicion  + new Vector3(_dirApuntado.X , this._dirApuntado.Y, _dirApuntado.Z ));
 
             //Cargar el sonido
             this._managerSonido = new Managers.ManagerSonido(Content);
@@ -134,7 +134,6 @@ namespace TGC.MonoGame.TP.src.Entidades
             if (this._particulasDisparo != null)
             {
                 this._particulasDisparo.Update(gameTime);
-                this._particulasDisparo.SetNuevaPosicion(new Vector3(this._posicion.X/6, 0, this._posicion.Z/6) + new Vector3(_dirApuntado.X/6, 0.05f, _dirApuntado.Z/6));
             }
 
             //actualizar BV
@@ -143,8 +142,8 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         public override void Dibujar(GraphicsDevice Graphics)
         {
-            this._particulasDisparo.Dibujar();
             base.Dibujar(Graphics);
+            this._particulasDisparo.Dibujar();
         }
 
         public override void EfectCamera(Matrix vista, Matrix proyeccion)
@@ -314,16 +313,21 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._bala.ActualizarDatos(this._dirApuntado, this._posicionSalidaBala); //TODO - Cambiar lugar de disparo para que no se autodestruya
             this._escenario.AgregarACrear(this._bala); //temporal
 
-            this._particulasDisparo.SetNuevaPosicion(this._posicion/6 + new Vector3(_dirApuntado.X/6 *7f, 0.6f , _dirApuntado.Z/6 *7f));
-            this._particulasDisparo.SetPuedeDibujar(true);
+            this.SetDibujadoParticulas(true);
 
             //sonido disparo
             //this._managerSonido.reproducirSonido("disparo");
         }
 
+        public virtual void SetDibujadoParticulas(bool dibujarParticulas)
+        {
+            this._particulasDisparo.SetNuevaPosicion(this._posicion + new Vector3(_dirApuntado.X*9f, this._dirApuntado.Y + 4f , _dirApuntado.Z*9f));
+            this._particulasDisparo.SetPuedeDibujar(dibujarParticulas);
+        }
+
         public virtual void setPosicionSalidaBala()
         {
-            this._posicionSalidaBala=this._posicion;
+            this._posicionSalidaBala = this._posicion;
         }
 
         protected void ActualizarApuntado(Vector3 apuntado)

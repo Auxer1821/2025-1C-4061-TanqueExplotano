@@ -20,8 +20,9 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         private Vector3 _velocidadInicial = Vector3.Zero; // Velocidad inicial en cero
         private Vector3 _velocidad;
         private Vector3 _desaceleracion = Vector3.Zero; // Desaceleración inicial en cero
-        private float _vida = 0.3f;
-        private float _tamanio = 0.1f; // Tamaño de la partícula
+        private float _vidaInicial; // Vida inicial de la partícula
+        private float _vida;
+        private float _tamanio = 1f; // Tamaño de la partícula
         Effect _efecto;
 
         private string _tecnica = "Default"; // Nombre de la técnica de sombreado a utilizar
@@ -32,35 +33,45 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         {
         }
         // Inicializar recursos necesarios para el HUD
-        public void Initialize(Vector3 coordenadas, Effect efecto, Random random)
+        public void Initialize(Vector3 coordenadas, Effect efecto, Random random, float vida)
         {
             _efecto = efecto;
-            _efecto.Parameters["WorldViewProjection"]?.SetValue(Matrix.Identity);
             this._tecnica = "Particle";
             this._coordenadas = coordenadas;
             this._posicionInicial = coordenadas;
 
+            float velocidadBase = 18.0f;  // Aumentamos la velocidad base
+            float variacionVelocidad = 4.0f;
+            float gravedad = 15.5f;  // Gravedad más suave
             // Velocidad aleatoria en forma esférica (explosión radial)
             Vector3 direction = new Vector3(
-                (float)(random.NextDouble() * 2 - 1),
-                (float)(random.NextDouble() * 2 - 1f),
-                (float)(random.NextDouble() * 2 - 1)
+            (float)(random.NextDouble() * 2 - 1),  // Rango -1 a 1
+            (float)(random.NextDouble() * 2 - 1),
+            (float)(random.NextDouble() * 2 - 1)
             );
             direction.Normalize();
-            
-            this._velocidad = direction * (float)(random.NextDouble() * 2f + 2f); // Velocidad aleatoria entre 0.5 y 1.0
-            this._velocidadInicial = this._velocidad; // Guardar la velocidad inicial
-            this._desaceleracion = -this._velocidad * 1.5f; // Desaceleración basada en la velocidad inicial
-            this._desaceleracion.Y += -0.4f; // Aumentar la desaceleración en Y para simular gravedad
-            //this._vida = (float)(random.NextDouble() * 2.0f + 1.0f);
+
+
+            // Velocidad inicial más fuerte con variación aleatoria
+            this._velocidad = direction * (float)(random.NextDouble() * variacionVelocidad + velocidadBase) ;
+            this._velocidadInicial = this._velocidad;
+
+            // Desaceleración más suave e independiente de la velocidad inicial
+            this._desaceleracion = new Vector3(
+                -Math.Sign(this._velocidad.X) * 0.8f,  // Valor fijo para desaceleración
+                -Math.Sign(this._velocidad.Y) * 0.5f + -gravedad,  // Gravedad adicional en Y
+                -Math.Sign(this._velocidad.Z) * 0.8f
+            );
+
+            this._vidaInicial = vida; // Vida inicial de la partícula
+            this._vida = _vidaInicial;
             this._tamanio = (float)(random.NextDouble() * 0.5f + 0.1f);
         }
 
         //----------------------------------------------Funciones-Principales--------------------------------------------------//
         public void Dibujar(GraphicsDevice Graphics, IndexBuffer indexBuffer, VertexBuffer vertexBuffer)
         {
-            //_efecto.Parameters["PorcentaClaridad"]?.SetValue(_PorcentaClaridad);
-            this._efecto.Parameters["World"]?.SetValue(Matrix.Identity * Matrix.CreateScale(5f) * Matrix.CreateTranslation(_coordenadas));
+
             this._efecto.Parameters["ParticlePosition"]?.SetValue(_coordenadas);
             this._efecto.Parameters["ParticleSize"]?.SetValue(_tamanio);
 
@@ -78,13 +89,12 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         public void Update(GameTime gameTime)
         {
             // Actualizar la posición de la partícula
-            //_velocidad.Y -= 0.3f * (float)gameTime.ElapsedGameTime.TotalSeconds; // Aumentar la velocidad en Y para simular gravedad
             _velocidad += _desaceleracion * (float)gameTime.ElapsedGameTime.TotalSeconds; // Aplicar desaceleración
             _coordenadas += _velocidad * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Reducir la vida de la partícula
             _vida -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-            this._tamanio -= (float)gameTime.ElapsedGameTime.TotalSeconds * 0.4f; // Reducir tamaño con el tiempo
+            this._tamanio -= (float)gameTime.ElapsedGameTime.TotalSeconds * 0.6f; // Reducir tamaño con el tiempo
             if (_tamanio < 0.01f) // Evitar que el tamaño sea demasiado pequeño
             {
                 _tamanio = 0.01f;
@@ -94,9 +104,9 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             if (_vida <= 0)
             {
                 // Reiniciar o eliminar la partícula según sea necesario
-                _vida = 0.3f; // Reiniciar vida para este ejemplo
+                _vida = _vidaInicial; // Reiniciar vida para este ejemplo
                 _coordenadas = _posicionInicial; // Reiniciar posición para este ejemplo
-                _tamanio = 0.2f; // Reiniciar tamaño para este ejemplo
+                _tamanio = 1f; // Reiniciar tamaño para este ejemplo
                 _velocidad = _velocidadInicial; // Reiniciar velocidad a la inicial
             }
         }
