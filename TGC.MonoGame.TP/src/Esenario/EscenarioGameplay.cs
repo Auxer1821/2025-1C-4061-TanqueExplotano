@@ -92,9 +92,9 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
             //-------Crear un pequeño pueblo (casas y cajas)-----------//
 
-            for (int x = -50; x <= 50; x += 20)
+            for (int x = -100; x <= 100; x += 40)
             {
-                for (int z = -50; z <= 50; z += 20)
+                for (int z = -100; z <= 100; z += 30)
                 {
                     var casa = new ECasa();
                     casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this, new Vector3(x, _terreno.GetHeightAt(x, z), z));
@@ -116,7 +116,11 @@ namespace TGC.MonoGame.TP.src.Escenarios
             {
                 var arbol = new EArbol();
                 float x = random.Next(-300, 300);
-                float z = random.Next(100, 500);
+                float z;
+                if (random.Next(2) == 0) // 50% de probabilidad para cada zona
+                    z = random.Next(-500, -200); // Zona sur (z negativa)
+                else
+                    z = random.Next(200, 500); // Zona norte (z positiva)
                 float rotacion = random.Next(0, 360);
                 float tamano = random.Next(10, 20) / 10;
                 var pos = new Vector2(x, z);
@@ -174,14 +178,14 @@ namespace TGC.MonoGame.TP.src.Escenarios
             //-------------------Crear tanks--------------------//
             //---Jugador---//
             jugador = new EJugador();
-            float Jx = random.Next(-150, 150);
-            float Jz = random.Next(-150, 150);
+            float Jx = random.Next(-100, 100);
+            float Jz = random.Next(-100, 100);
             var Jpos = new Vector2(Jx, Jz);
 
             while (!PosicionesLibre(Jpos, posicionesUsadas, 10))    //ENCONTRAR UNA POS LIBRE
             {
-                Jx = random.Next(-150, 150);
-                Jz = random.Next(-150, 150);
+                Jx = random.Next(-100, 100);
+                Jz = random.Next(-100, 100);
                 Jpos = new Vector2(Jx, Jz);
             }
 
@@ -199,7 +203,13 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var tank = new ETanqueIA();
                 tank.SetTipoTanque("Panzer");
                 float Ax = random.Next(-150, 150);
-                float Az = random.Next(-150, 150);
+                //float Az = random.Next(-150, 150);
+                float Az;
+                if (random.Next(2) == 0) // 50% de probabilidad para cada zona
+                    Az = random.Next(-500, -150); // Zona sur (z negativa)
+                else
+                    Az = random.Next(150, 500); // Zona norte (z positiva)
+
                 var pos = new Vector2(Ax, Az);
                 if (PosicionesLibre(pos, posicionesUsadas, 10))
                 {
