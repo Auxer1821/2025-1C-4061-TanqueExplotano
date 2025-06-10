@@ -131,13 +131,12 @@ namespace TGC.MonoGame.TP.src.Entidades
             this.tiempoUltimoImpacto += deltaTime;
 
             // Actualizar partículas de disparo
-            if (this._particulasDisparo != null)
-            {
-                this._particulasDisparo.Update(gameTime);
-            }
+            this._particulasDisparo.Update(gameTime);
+            this.SetPosicionParticulas();
 
             //actualizar BV
             this._boundingVolume.Transformar(this._posicion, this._angulo, 1f);
+
         }
 
         public override void Dibujar(GraphicsDevice Graphics)
@@ -313,16 +312,15 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._bala.ActualizarDatos(this._dirApuntado, this._posicionSalidaBala); //TODO - Cambiar lugar de disparo para que no se autodestruya
             this._escenario.AgregarACrear(this._bala); //temporal
 
-            this.SetDibujadoParticulas(true);
+            this._particulasDisparo.SetPuedeDibujar(true);
 
             //sonido disparo
             //this._managerSonido.reproducirSonido("disparo");
         }
 
-        public virtual void SetDibujadoParticulas(bool dibujarParticulas)
+        public virtual void SetPosicionParticulas()
         {
             this._particulasDisparo.SetNuevaPosicion(this._posicion + new Vector3(_dirApuntado.X*9f, this._dirApuntado.Y + 4f , _dirApuntado.Z*9f));
-            this._particulasDisparo.SetPuedeDibujar(dibujarParticulas);
         }
 
         public virtual void setPosicionSalidaBala()

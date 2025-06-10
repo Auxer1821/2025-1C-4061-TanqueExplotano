@@ -42,7 +42,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
 
             float velocidadBase = 18.0f;  // Aumentamos la velocidad base
             float variacionVelocidad = 4.0f;
-            float gravedad = 15.5f;  // Gravedad más suave
+            float gravedad = 25.5f;  // Gravedad más suave
             // Velocidad aleatoria en forma esférica (explosión radial)
             Vector3 direction = new Vector3(
             (float)(random.NextDouble() * 2 - 1),  // Rango -1 a 1
@@ -88,13 +88,15 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
 
         public void Update(GameTime gameTime)
         {
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds; // Tiempo transcurrido desde el último frame
+
             // Actualizar la posición de la partícula
-            _velocidad += _desaceleracion * (float)gameTime.ElapsedGameTime.TotalSeconds; // Aplicar desaceleración
-            _coordenadas += _velocidad * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _velocidad += _desaceleracion * deltaTime; // Aplicar desaceleración
+            _coordenadas += _velocidad * deltaTime;
 
             // Reducir la vida de la partícula
-            _vida -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-            this._tamanio -= (float)gameTime.ElapsedGameTime.TotalSeconds * 0.6f; // Reducir tamaño con el tiempo
+            _vida -= deltaTime;
+            this._tamanio -= deltaTime * 0.6f; // Reducir tamaño con el tiempo
             if (_tamanio < 0.01f) // Evitar que el tamaño sea demasiado pequeño
             {
                 _tamanio = 0.01f;
@@ -115,19 +117,6 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         {
             _posicionInicial = nuevaPosicion;
         }
-
-
-        public void ModificarPosicion(Vector3 nuevaPosicion)
-        {
-            _coordenadas += nuevaPosicion * _velocidad;
-        }
-
-        public void ModificarVelocidad(Vector3 nuevaVelocidad)
-        {
-            _velocidad = nuevaVelocidad;
-        }
-
-
 
 
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------//

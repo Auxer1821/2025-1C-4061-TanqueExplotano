@@ -79,25 +79,15 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         {
             // Calcular el deltaTime
             _deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            // Actualizar cada partícula
-            if (_tiempoVida <= _tiempoVidaInicial && _tiempoVida > 0)
-            {
-            _colorParticula = Vector4.Lerp(_colorParticulaInicial, new Vector4(Color.Yellow.ToVector3(), 0.4f), 1 - (_tiempoVida / _tiempoVidaInicial));
-            foreach (var particula in _particulas)
-            {
-                particula.Update(gameTime);
-            }
-            }
-
             // Actualizar el tiempo de vida del emisor
             if (_puedeDibujar)
             {
+                foreach (var particula in _particulas)
+                {
+                    particula.Update(gameTime);
+                }
                 _tiempoVida -= _deltaTime;
-            }
-            else
-            {
-                // Si no se puede dibujar, reiniciar el tiempo de vida
-                _tiempoVida = _tiempoVidaInicial; // Reiniciar el tiempo de vida si no se puede dibujar
+                _colorParticula = Vector4.Lerp(_colorParticulaInicial, new Vector4(Color.Yellow.ToVector3(), 0.4f), 1 - (_tiempoVida / _tiempoVidaInicial));
             }
 
             if (_tiempoVida <= 0)
@@ -110,7 +100,6 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
 
         public void SetNuevaPosicion(Vector3 nuevaPosicion)
         {
-            if (_tiempoVida < _tiempoVidaInicial) return; // si esta en proceso de dibujado, no cambiar la posición
             // Actualizar la posición inicial de todas las partículas
             foreach (var particula in _particulas)
             {

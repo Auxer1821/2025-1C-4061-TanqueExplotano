@@ -110,10 +110,9 @@ namespace TGC.MonoGame.TP.src.Entidades
             return 1.0f - (this._tipoTanque.cooldown() - _cooldownActual) / this._tipoTanque.cooldown();
         }
 
-        public override void SetDibujadoParticulas(bool dibujarParticulas)
+        public override void SetPosicionParticulas()
         {
             this._particulasDisparo.SetNuevaPosicion(this._posicion + new Vector3(_dirApuntado.X * 12f, this._dirApuntado.Y + 4f, _dirApuntado.Z * 12f));
-            this._particulasDisparo.SetPuedeDibujar(dibujarParticulas);
         }
 
         public override void setPosicionSalidaBala()
