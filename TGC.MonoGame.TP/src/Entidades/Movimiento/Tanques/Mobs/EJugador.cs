@@ -113,6 +113,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         public override void SetPosicionParticulas()
         {
             this._particulasDisparo.SetNuevaPosicion(this._posicion + new Vector3(_dirApuntado.X * 12f, this._dirApuntado.Y + 4f, _dirApuntado.Z * 12f));
+            this._particulasDisparo.SetPosiciones(this._posicion + new Vector3(_dirApuntado.X * 12f, this._dirApuntado.Y + 4f, _dirApuntado.Z * 12f));
         }
 
         public override void setPosicionSalidaBala()

@@ -61,8 +61,8 @@ namespace TGC.MonoGame.TP.src.Entidades
             //this._boundingVolume.Transformar(this._posicion, this._angulo, 1f);
 
             this._particulasDisparo = new EmisorParticula();
-            this._particulasDisparo.Initialize(Content, Graphics, 10, new Vector3(0, 2, 0));
-            this._particulasDisparo.SetNuevaPosicion(this._posicion  + new Vector3(_dirApuntado.X , this._dirApuntado.Y, _dirApuntado.Z ));
+            this._particulasDisparo.Initialize(Content, Graphics, 40, new Vector3(0, 2, 0));
+            this.SetPosicionParticulas();
 
             //Cargar el sonido
             this._managerSonido = new Managers.ManagerSonido(Content);
@@ -132,7 +132,6 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             // Actualizar partículas de disparo
             this._particulasDisparo.Update(gameTime);
-            this.SetPosicionParticulas();
 
             //actualizar BV
             this._boundingVolume.Transformar(this._posicion, this._angulo, 1f);
@@ -312,6 +311,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._bala.ActualizarDatos(this._dirApuntado, this._posicionSalidaBala); //TODO - Cambiar lugar de disparo para que no se autodestruya
             this._escenario.AgregarACrear(this._bala); //temporal
 
+            this.SetPosicionParticulas();
             this._particulasDisparo.SetPuedeDibujar(true);
 
             //sonido disparo

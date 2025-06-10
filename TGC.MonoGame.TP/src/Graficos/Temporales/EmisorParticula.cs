@@ -22,7 +22,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         float _deltaTime;
         bool _puedeDibujar = false; // Bandera para controlar si se pueden dibujar las partículas
         private float _tiempoVida; // Tiempo de vida de las partículas, se puede ajustar según sea necesario
-        private float _tiempoVidaInicial = 0.8f; // Tiempo de vida inicial de las partículas
+        private float _tiempoVidaInicial = 0.6f; // Tiempo de vida inicial de las partículas
         private Vector4 _colorParticula = new Vector4(Color.Red.ToVector3(), 0.8f); // Color de la partícula
         private Vector4 _colorParticulaInicial = new Vector4(Color.Red.ToVector3(), 0.8f); // Color de la partícula
         public EmisorParticula()
@@ -106,7 +106,14 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
                 particula.ActualizarPosicionInicial(nuevaPosicion);
             }
         }
-
+        public void SetPosiciones(Vector3 nuevaPosicion)
+        {
+            // Actualizar la posición inicial de todas las partículas
+            foreach (var particula in _particulas)
+            {
+                particula.ActualizarPosicion(nuevaPosicion);
+            }
+        }
         public void InicializarParticulas(Vector3 posicionInicial, int cantidadParticulas, float tiempoVida)
         {
             // Limpiar la lista de partículas

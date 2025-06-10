@@ -124,9 +124,10 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         {
             _tecnica = nombreTecnica;
         }
-        
-       
 
-        
+        internal void ActualizarPosicion(Vector3 nuevaPosicion)
+        {
+            _coordenadas = nuevaPosicion; // Actualizar la posición actual de la partícula
+        }
     }
 }
