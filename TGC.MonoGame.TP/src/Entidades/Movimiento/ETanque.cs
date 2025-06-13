@@ -35,6 +35,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         //variables de sonido
         public Managers.ManagerSonido _managerSonido;
         public EmisorParticula _particulasDisparo;
+        public EmisorParticula _particulasExplosion;
 
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -61,8 +62,11 @@ namespace TGC.MonoGame.TP.src.Entidades
             //this._boundingVolume.Transformar(this._posicion, this._angulo, 1f);
 
             this._particulasDisparo = new EmisorParticula();
-            this._particulasDisparo.Initialize(Content, Graphics, 40, new Vector3(0, 2, 0));
+            this._particulasDisparo.Initialize(Content, Graphics, 40, this._posicion ,"disparo");
             this.SetPosicionParticulas();
+
+            this._particulasExplosion = new EmisorParticula();
+            this._particulasExplosion.Initialize(Content, Graphics, 30, this._posicion, "explosion");
 
             //Cargar el sonido
             this._managerSonido = new Managers.ManagerSonido(Content);
@@ -132,6 +136,8 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             // Actualizar partículas de disparo
             this._particulasDisparo.Update(gameTime);
+            // Actualizar partículas de explosión
+            this._particulasExplosion.Update(gameTime);
 
             //actualizar BV
             this._boundingVolume.Transformar(this._posicion, this._angulo, 1f);
@@ -142,11 +148,13 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             base.Dibujar(Graphics);
             this._particulasDisparo.Dibujar();
+            this._particulasExplosion.Dibujar();
         }
 
         public override void EfectCamera(Matrix vista, Matrix proyeccion)
         {
             this._particulasDisparo.SetVistaProyeccion(vista, proyeccion);
+            this._particulasExplosion.SetVistaProyeccion(vista, proyeccion);
             base.EfectCamera(vista, proyeccion);
         }
 
@@ -185,7 +193,9 @@ namespace TGC.MonoGame.TP.src.Entidades
             this.tiempoUltimoImpacto = 0.0f;
 
             // Efectos visuales
-            // MostrarChispa(choque._puntoContacto);
+            this._particulasExplosion.SetNuevaPosicion(this._posicion + new Vector3(0, 1.5f, 0));
+            this._particulasExplosion.SetPosiciones(this._posicion + new Vector3(0, 1.5f, 0));
+            this._particulasExplosion.SetPuedeDibujar(true);
             // ReproducirSonidoImpacto();
             // Modificar la mesh del modelo para simular el impacto (Entrega 4)
 

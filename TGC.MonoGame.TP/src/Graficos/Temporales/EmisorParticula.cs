@@ -23,12 +23,13 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         bool _puedeDibujar = false; // Bandera para controlar si se pueden dibujar las partículas
         private float _tiempoVida; // Tiempo de vida de las partículas, se puede ajustar según sea necesario
         private float _tiempoVidaInicial = 0.6f; // Tiempo de vida inicial de las partículas
-        private Vector4 _colorParticula = new Vector4(Color.Red.ToVector3(), 0.8f); // Color de la partícula
-        private Vector4 _colorParticulaInicial = new Vector4(Color.Red.ToVector3(), 0.8f); // Color de la partícula
+        private Vector4 _colorParticula = new Vector4(Color.Red.ToVector3(), 0.9f); // Color de la partícula
+        private Vector4 _colorParticulaInicial = new Vector4(Color.Red.ToVector3(), 0.9f); // Color de la partícula
+        private Vector4 _colorParticulaFinal = new Vector4(Color.Yellow.ToVector3(), 0.3f);
         public EmisorParticula()
         {
         }
-        public void Initialize(ContentManager Content, GraphicsDevice graphics, int cantidadParticulas, Vector3 posicionInicial)
+        public void Initialize(ContentManager Content, GraphicsDevice graphics, int cantidadParticulas, Vector3 posicionInicial, String tipo)
         {
             // Crear el quad que se usará para las partículas
             this.CrearQuad(0.5f, graphics);
@@ -41,10 +42,11 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             _efecto.Parameters["ParticleSize"]?.SetValue(1f);
             _efecto.Parameters["ParticleColor"]?.SetValue(new Vector4(Color.Red.ToVector3(), 0.5f));
 
-            this._tiempoVida = _tiempoVidaInicial; // Inicializar el tiempo de vida de las partículas
 
             // Inicializar las partículas
-            this.InicializarParticulas(posicionInicial, cantidadParticulas, _tiempoVida);
+            this.inicializarTipo(tipo); // Configurar el tipo de partícula (explosión, humo, fuego, etc.)
+            this._tiempoVida = _tiempoVidaInicial; // Inicializar el tiempo de vida de las partículas
+            this.InicializarParticulas(posicionInicial, cantidadParticulas, _tiempoVida, tipo);
 
 
         }
@@ -58,6 +60,8 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             // Configurar el estado del gráfico
             _graphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
             _graphicsDevice.BlendState = BlendState.AlphaBlend;
+            //_graphicsDevice.BlendState = BlendState.Additive; // Usar BlendState.Additive para partículas
+            //_graphicsDevice.BlendState = BlendState.NonPremultiplied;
 
             // Establecer el VertexBuffer y IndexBuffer
             _graphicsDevice.SetVertexBuffer(_vertexBuffer);
@@ -87,7 +91,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
                     particula.Update(gameTime);
                 }
                 _tiempoVida -= _deltaTime;
-                _colorParticula = Vector4.Lerp(_colorParticulaInicial, new Vector4(Color.Yellow.ToVector3(), 0.4f), 1 - (_tiempoVida / _tiempoVidaInicial));
+                _colorParticula = Vector4.Lerp(_colorParticulaInicial, _colorParticulaFinal, 1 - (_tiempoVida / _tiempoVidaInicial));
             }
 
             if (_tiempoVida <= 0)
@@ -95,6 +99,38 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
                 _puedeDibujar = false; // Desactivar el dibujado si el tiempo de vida es 0 o menor
                 _tiempoVida = _tiempoVidaInicial; // Reiniciar el tiempo de vida si es necesario
                 _colorParticula = _colorParticulaInicial; // Reiniciar el color de la partícula
+            }
+        }
+
+        private void inicializarTipo(String tipo)
+        {
+            switch (tipo)
+            {
+                case "disparo":
+                    _tiempoVidaInicial = 1.0f; // Tiempo de vida para explosiones
+                    _colorParticulaInicial = new Vector4(Color.OrangeRed.ToVector3(), 0.7f);
+                    _colorParticulaFinal = new Vector4(Color.Yellow.ToVector3(), 0.3f);
+                    break;
+                case "explosion":
+                    _tiempoVidaInicial = 1.2f; // Tiempo de vida para explosiones
+                    _colorParticulaInicial = new Vector4(Color.Red.ToVector3(), 0.8f);
+                    _colorParticulaFinal = new Vector4(Color.Yellow.ToVector3(), 0.3f);
+                    break;
+                case "humo":
+                    _tiempoVidaInicial = 1.2f; // Tiempo de vida para humo
+                    _colorParticulaInicial = new Vector4(Color.Gray.ToVector3(), 0.5f);
+                    _colorParticulaFinal = new Vector4(Color.Transparent.ToVector3(), 0.1f);
+                    break;
+                case "fuego":
+                    _tiempoVidaInicial = 1.3f; // Tiempo de vida para fuego
+                    _colorParticulaInicial = new Vector4(Color.Yellow.ToVector3(), 0.8f);
+                    _colorParticulaFinal = new Vector4(Color.Red.ToVector3(), 0.2f);
+                    break;
+                default:
+                    _tiempoVidaInicial = 0.6f; // Tiempo de vida por defecto
+                    _colorParticulaInicial = new Vector4(Color.White.ToVector3(), 0.5f);
+                    _colorParticulaFinal = new Vector4(Color.Transparent.ToVector3(), 0.1f);
+                    break;
             }
         }
 
@@ -114,7 +150,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
                 particula.ActualizarPosicion(nuevaPosicion);
             }
         }
-        public void InicializarParticulas(Vector3 posicionInicial, int cantidadParticulas, float tiempoVida)
+        public void InicializarParticulas(Vector3 posicionInicial, int cantidadParticulas, float tiempoVida, string tipo)
         {
             // Limpiar la lista de partículas
             _particulas.Clear();
@@ -126,7 +162,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             for (int i = 0; i < cantidadParticulas; i++)
             {
                 var particula = new Particula();
-                particula.Initialize(posicionInicial, _efecto, random, tiempoVida);
+                particula.Initialize(posicionInicial, _efecto, random, tiempoVida, tipo);
                 _particulas.Add(particula);
             }
         }
