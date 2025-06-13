@@ -81,17 +81,9 @@ namespace TGC.MonoGame.TP.src.Entidades
 
 
             this._dirApuntado = _Camara.getDireccion();
-            if (this.PuedeDisparar())
+            if (raton.LeftButton == ButtonState.Pressed)
             {
-                if (raton.LeftButton == ButtonState.Pressed)
-                {
-                    this.Disparar();
-                    this._cooldownActual = 0;
-                    //efecto de camara
-                    _Camara.setSacudida(true);
-                    //efecto de sonido
-                    this._managerSonido.reproducirSonido("disparo");
-                }
+                this.Disparar();
             }
 
             //---------------------Logica-Camara-----------------------//
@@ -103,6 +95,15 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._managerSonido.sonidoDetenido(_velocidadActual == 0);
 
             base.Update(gameTime);
+        }
+
+        public override void Disparar(){
+            if(!this.PuedeDisparar()) return;
+            base.Disparar();
+            //efecto de camara
+            _Camara.setSacudida(true);
+            //efecto de sonido
+            this._managerSonido.reproducirSonido("disparo");
         }
 
         internal float porcentajeRecargado() //TODO

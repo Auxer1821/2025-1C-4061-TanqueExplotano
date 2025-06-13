@@ -98,7 +98,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 {
                     var casa = new ECasa();
                     casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this, new Vector3(x, _terreno.GetHeightAt(x, z), z));
-                    casa.SetMolde(moldeCasa);/*SEGUIR DESDE AQUI*/
+                    casa.SetMolde(moldeCasa);//SEGUIR DESDE AQUI
                     this.AgregarACrear(casa);
                     posicionesUsadas.Add(new Vector3(x, z, 4));
 
@@ -112,7 +112,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
             //--------Crear un bosque (árboles)---------------//
             Random random = new Random(0);
-            for (int i = 0; i < 500; i++)
+                for (int i = 0; i < 500; i++)
             {
                 var arbol = new EArbol();
                 float x = random.Next(-300, 300);
@@ -198,7 +198,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
             //----IA---//
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 20; i++)
             {
                 var tank = new ETanqueIA();
                 tank.SetTipoTanque("Panzer");
@@ -349,6 +349,11 @@ namespace TGC.MonoGame.TP.src.Escenarios
         public void FinJuegoPerder()
         {
             this._director.CambiarEsenarioActivo(TipoEsenario.Derrota);
+        }
+
+        internal EJugador GetJugador()
+        {
+            return this.jugador;
         }
     }
 

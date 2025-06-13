@@ -69,7 +69,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             this._managerSonido.InstanciarSonidosTanque();
 
 
-            
+
         }
 
 
@@ -177,8 +177,8 @@ namespace TGC.MonoGame.TP.src.Entidades
         protected virtual void RecibirDaño(DataChoque choque, EBala bala)
         {
             if (this.tiempoUltimoImpacto < 0.5 || bala == this._bala || !this._tipoTanque.EstaVivo())
-            return;
-            
+                return;
+
             // Restar vida (suponiendo que existe una propiedad 'Vida')
             this._tipoTanque.RecibirDanio(bala._danio);
             this._modelo.EfectoDaño(Math.Clamp(this._tipoTanque.Vida() / this._tipoTanque.VidaMaxima(), 0.2f, 1.0f));
@@ -191,7 +191,8 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             this._managerSonido.reproducirSonido("impactoBala");
             // Chequear destrucción
-            if (!this._tipoTanque.EstaVivo()){   
+            if (!this._tipoTanque.EstaVivo())
+            {
                 this.Destruir();
                 bala.Kill();
             }
@@ -305,22 +306,30 @@ namespace TGC.MonoGame.TP.src.Entidades
             //TODO: direccion de la mira
         }
         // 
-        public void Disparar()
+        public virtual void Disparar()
         {
+            if (!this.PuedeDisparar()) return;
+            
             this.setPosicionSalidaBala();
-            this._bala.ActualizarDatos(this._dirApuntado, this._posicionSalidaBala); //TODO - Cambiar lugar de disparo para que no se autodestruya
+            this.ActualizarBala(); //TODO - Cambiar lugar de disparo para que no se autodestruya
             this._escenario.AgregarACrear(this._bala); //temporal
 
             this.SetPosicionParticulas();
             this._particulasDisparo.SetPuedeDibujar(true);
+            this._cooldownActual = 0.0f;
 
             //sonido disparo
             //this._managerSonido.reproducirSonido("disparo");
         }
+        protected virtual void ActualizarBala()
+        {
+            this._bala.ActualizarDatos(this._dirApuntado, this._posicionSalidaBala);
+        }
 
         public virtual void SetPosicionParticulas()
         {
-            this._particulasDisparo.SetNuevaPosicion(this._posicion + new Vector3(_dirApuntado.X*9f, this._dirApuntado.Y + 4f , _dirApuntado.Z*9f));
+            this._particulasDisparo.SetNuevaPosicion(this._posicion + new Vector3(_dirApuntado.X * 9f, this._dirApuntado.Y + 4f, _dirApuntado.Z * 9f));
+            this._particulasDisparo.SetPosiciones( this._posicion + new Vector3(_dirApuntado.X * 9f, this._dirApuntado.Y + 4f, _dirApuntado.Z * 9f));
         }
 
         public virtual void setPosicionSalidaBala()
@@ -344,8 +353,14 @@ namespace TGC.MonoGame.TP.src.Entidades
             throw new NotImplementedException();
         }
 
-        public float GetKills(){
+        public float GetKills()
+        {
             return this._killCount;
+        }
+        
+        public Vector2 GetPosition()
+        {
+            return new Vector2(this._posicion.X, this._posicion.Z);
         }
 
         
