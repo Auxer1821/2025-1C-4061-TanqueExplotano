@@ -19,11 +19,20 @@ namespace TGC.MonoGame.TP.src.Moldes
     {
         private Model _modelo;
         Texture2D _rocaTexture;
-        public MoldeRoca(ContentManager Content) {
+        public MoldeRoca(ContentManager Content)
+        {
             this._modelo = Content.Load<Model>(@"Models/Stone/Stone");
             this._efecto = Content.Load<Effect>(@"Effects/shaderRoca");
             this._rocaTexture = Content.Load<Texture2D>(@"Models/Stone/roca3");
             this._efecto.Parameters["Texture"].SetValue(_rocaTexture);
+
+            this._efecto.Parameters["ambientColor"].SetValue(Color.White.ToVector3());
+            this._efecto.Parameters["diffuseColor"].SetValue(Color.White.ToVector3());
+            this._efecto.Parameters["specularColor"].SetValue(Color.Transparent.ToVector3());
+            this._efecto.Parameters["KAmbient"].SetValue(0.5f);
+            this._efecto.Parameters["KDiffuse"].SetValue(0.8f);
+            this._efecto.Parameters["KSpecular"].SetValue(0.2f);
+            this._efecto.Parameters["shininess"].SetValue(1.0f);
 
 
             foreach (var mesh in _modelo.Meshes)
@@ -36,15 +45,19 @@ namespace TGC.MonoGame.TP.src.Moldes
             }
         }
 
-        public override void Draw(Matrix mundo, GraphicsDevice Graphics){
+        public override void Draw(Matrix mundo, GraphicsDevice Graphics)
+        {
             _efecto.Parameters["World"].SetValue(mundo);
+            
 
             foreach (var mesh in _modelo.Meshes)
             {
                 _efecto.Parameters["World"].SetValue(mesh.ParentBone.Transform * mundo);
+                _efecto.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(mundo)));
                 mesh.Draw();
             }
         }
+    
 
 
 

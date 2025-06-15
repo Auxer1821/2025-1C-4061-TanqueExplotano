@@ -32,7 +32,6 @@ namespace TGC.MonoGame.TP.src.Moldes
             this._efecto.Parameters["KDiffuse"].SetValue(1.0f);
             this._efecto.Parameters["KSpecular"].SetValue(0.8f);
             this._efecto.Parameters["shininess"].SetValue(16.0f);
-            this._efecto.Parameters["lightPosition"].SetValue(new Vector3(0.0f,0.0f,0.0f));
             this.ConfigPuntos(Graphics);
         }
         public override void Draw(Matrix mundo, GraphicsDevice graphics){
@@ -103,12 +102,7 @@ namespace TGC.MonoGame.TP.src.Moldes
             _indices.SetData(Indices);
         }
 
-        //borrar despues de implementar a todos los moldes
-        public override void setCamara(Vector3 posicion)
-        {
-            _efecto.Parameters["eyePosition"].SetValue(posicion);
-            _efecto.Parameters["lightPosition"].SetValue(posicion + new Vector3(0, 10, 0));
-        }
+        
         // Método para calcular la normal de un triángulo
         Vector3 CalculateNormal(Vector3 a, Vector3 b, Vector3 c)
         {

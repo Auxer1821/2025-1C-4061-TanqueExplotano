@@ -104,7 +104,8 @@ namespace TGC.MonoGame.TP.src.Escenarios
                     posicionesUsadas.Add(new Vector3(x, z, 4));
 
                     var caja = new ECaja();
-                    caja.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x + 8, _terreno.GetHeightAt(x, z), z + 8), content, this);
+                    float rotacion = 270;
+                    caja.Initialize(graphicsDevice, Matrix.CreateRotationY(MathHelper.ToRadians(rotacion)) * world * Matrix.CreateTranslation(x + 8, _terreno.GetHeightAt(x, z), z + 8), content, this);
                     caja.SetMolde(moldeCaja);
                     this.AgregarACrear(caja);
                     posicionesUsadas.Add(new Vector3(x + 8, z + 8, 2));
@@ -123,7 +124,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 else
                     z = random.Next(200, 500); // Zona norte (z positiva)
                 //float rotacion = random.Next(0, 360);
-                float rotacion = 0;
+                float rotacion = 90;
                 float tamano = random.Next(10, 20) / 10;
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
@@ -145,12 +146,14 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var roca = new ERoca();
                 float x = random.Next(-300, 300);
                 float z = random.Next(-300, 300);
-                float rotacion = random.Next(0, 360);
+                //float rotacion = random.Next(0, 360);
+                //float rotacionX = 90;
+                float rotacionY = 250;
                 float tamano = random.Next(10, 20) / 10;
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
-                    roca.Initialize(graphicsDevice, Matrix.CreateScale(tamano) * Matrix.CreateRotationY(MathHelper.ToRadians(rotacion)) * world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this);
+                    roca.Initialize(graphicsDevice, Matrix.CreateScale(tamano) * Matrix.CreateRotationY(MathHelper.ToRadians(rotacionY)) * world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this);
                     roca.SetMolde(moldeRoca);
                     this.AgregarACrear(roca);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
@@ -176,11 +179,6 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 montana.SetMolde(moldeMontana);
                 this.AgregarACrear(montana);
             }
-            //---------MONTAÑA DE PRUEBA----BORRAR----------------//
-                var montana1 = new EMontana();
-                montana1.Initialize(graphicsDevice, world * Matrix.CreateTranslation(900, 400, -1000), content, this);
-                montana1.SetMolde(moldeMontana);
-                this.AgregarACrear(montana1);
 
             //-------------------Crear tanks--------------------//
             //---Jugador---//

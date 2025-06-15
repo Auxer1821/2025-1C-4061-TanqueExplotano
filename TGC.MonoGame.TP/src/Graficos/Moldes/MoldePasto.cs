@@ -93,5 +93,14 @@ namespace TGC.MonoGame.TP.src.Moldes
             _indices.SetData(Indices);
         }
 
+        public override void setCamara(Vector3 position)
+        {
+        }
+        public override void SetPosSOL(Vector3 position){
+
+        }
+
+
+
     }
 }

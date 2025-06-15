@@ -36,6 +36,14 @@ namespace TGC.MonoGame.TP.src.Moldes
             _efecto.Parameters["TextureTecho"].SetValue(_techoTexture);
             _efecto.Parameters["TextureVentana"].SetValue(_marcoTexture);
 
+            this._efecto.Parameters["ambientColor"].SetValue(Color.White.ToVector3());
+            this._efecto.Parameters["diffuseColor"].SetValue(Color.White.ToVector3());
+            this._efecto.Parameters["specularColor"].SetValue(Color.Transparent.ToVector3());
+            this._efecto.Parameters["KAmbient"].SetValue(0.5f);
+            this._efecto.Parameters["KDiffuse"].SetValue(0.8f);
+            this._efecto.Parameters["KSpecular"].SetValue(0.2f);
+            this._efecto.Parameters["shininess"].SetValue(1.0f);
+
             foreach (var mesh in _modelo.Meshes)
             {
                 // Un mesh puede tener mas de 1 mesh part (cada 1 puede tener su propio efecto).
@@ -47,7 +55,7 @@ namespace TGC.MonoGame.TP.src.Moldes
         }
         public override void Draw(Matrix mundo, GraphicsDevice graphics){
             _efecto.Parameters["World"].SetValue(mundo);
-
+            _efecto.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(mundo)));
             foreach (var mesh in _modelo.Meshes)
             {
                 if (mesh.Name.Contains("Roof"))

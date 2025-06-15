@@ -39,7 +39,7 @@ struct PhongShaderInput
 float4 PhongShader(float4 color, PhongShaderInput phongInput)
 {
    // Base vectors
-    float3 lightDirection = normalize(-phongInput.lightPosition + phongInput.WorldPosition.xyz);
+    float3 lightDirection = normalize(phongInput.lightPosition - phongInput.WorldPosition.xyz);
     float3 viewDirection = normalize(phongInput.eyePosition - phongInput.WorldPosition.xyz);
     float3 halfVector = normalize(lightDirection + viewDirection);
     

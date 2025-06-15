@@ -23,7 +23,7 @@ namespace TGC.MonoGame.TP.src.Moldes
         }
         public virtual void setCamara(Vector3 camaraPosition)
         {
-            //_efecto.Parameters["eyePosition"].SetValue(camaraPosition);
+            _efecto.Parameters["eyePosition"].SetValue(camaraPosition);
         }
 
 
@@ -35,7 +35,7 @@ namespace TGC.MonoGame.TP.src.Moldes
 
         public virtual void SetPosSOL(Vector3 posSOL)
         {
-            //_efecto.Parameters["lightPosition"].SetValue(posSOL);
+            _efecto.Parameters["lightPosition"].SetValue(posSOL);
         }
     }
 }

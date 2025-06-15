@@ -40,7 +40,6 @@ namespace TGC.MonoGame.TP.src.Moldes
             this._efecto.Parameters["KDiffuse"].SetValue(0.8f);
             this._efecto.Parameters["KSpecular"].SetValue(0.2f);
             this._efecto.Parameters["shininess"].SetValue(1.0f);
-            this._efecto.Parameters["lightPosition"].SetValue(new Vector3(0.0f, 300.0f, 0.0f));
 
             foreach (var mesh in _modelo.Meshes)
             {
@@ -73,21 +72,6 @@ namespace TGC.MonoGame.TP.src.Moldes
             // Aquí podrías actualizar parámetros relacionados con el tiempo si es necesario
             // Por ejemplo, podrías modificar la velocidad del viento o la fuerza del viento en función del tiempo
             _efecto.Parameters["Time"].SetValue((float)time.TotalGameTime.TotalSeconds);
-            
-            _timer += (float)time.ElapsedGameTime.TotalSeconds;
-            var lightPosition = new Vector3((float)Math.Cos(_timer) * 700f, 800f, (float)Math.Sin(_timer) * 700f);
-            _efecto.Parameters["lightPosition"].SetValue(lightPosition);
-        }
-
-        //borrar despues de implementar a todos los moldes
-        public override void setCamara(Vector3 posicion)
-        {
-            _efecto.Parameters["eyePosition"].SetValue(posicion);
-            
-            //_efecto.Parameters["lightPosition"].SetValue(posicion + new Vector3(0, 10, 0));
-        }
-        public override void SetPosSOL(Vector3 posicion){
-            _efecto.Parameters["lightPosition"].SetValue(posicion);
         }
 
 
