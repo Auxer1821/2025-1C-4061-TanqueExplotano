@@ -14,6 +14,7 @@
 // HLSL Semantics - https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics
 // Parámetros del efecto
 
+#include "utilities/PhongShader.fx"
 texture2D Texture;
 sampler TextureSampler = sampler_state
 {
@@ -28,25 +29,23 @@ sampler TextureSampler = sampler_state
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
-float3 LightDirection = normalize(float3(1, -1, 1));
-float4 LightColor = float4(1, 1, 1, 1);
-float4 AmbientColor = float4(0.2, 0.2, 0.2, 1);
+
 
 float Time = 0;
 
 struct VertexShaderInput
 {
 	float4 Position : POSITION0;
-	float3 Normal : NORMAL0;
+	float4 Normal : NORMAL0;
 	float2 TexCoord : TEXCOORD0;
 };
 
 struct VertexShaderOutput
 {
 	float4 Position : SV_POSITION;
-	//float3 Normal : TEXCOORD0;
- 	float2 TexCoord : TEXCOORD1;
-	//float3 LightDirection : TEXCOORD2;
+ 	float2 TexCoord : TEXCOORD0;
+    float4 WorldPosition : TEXCOORD1;
+	float3 Normal : TEXCOORD3;
 };
 
 VertexShaderOutput MainVS(in VertexShaderInput input)
@@ -55,13 +54,15 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 	VertexShaderOutput output = (VertexShaderOutput)0;
     // Model space to World space
     float4 worldPosition = mul(input.Position, World);
+	output.WorldPosition = worldPosition;
     // World space to View space
     float4 viewPosition = mul(worldPosition, View);	
 	// View space to Projection space
     output.Position = mul(viewPosition, Projection);
 
+    output.Normal = mul(input.Normal, InverseTransposeWorld);
+
 	output.TexCoord = input.TexCoord;
-	//output.LightDirection = LightDirection;
 
     return output;
 }
@@ -72,7 +73,11 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     float4 detailColor = tex2D(TextureSampler, input.TexCoord * 2.0); // Textura detalle
     
     // Mezcla según distancia (implementa tu lógica)
-    return lerp(baseColor, detailColor, 0.5);
+    float4 color = lerp(baseColor, detailColor, 0.5);
+	//Cargamos y corremos el phongshader 
+	PhongShaderInput phongInput = CargarPhoneShaderInput(input.Normal, input.WorldPosition);
+	color = PhongShader(color, phongInput);
+	return color;
 }
 
 technique BasicColorDrawing

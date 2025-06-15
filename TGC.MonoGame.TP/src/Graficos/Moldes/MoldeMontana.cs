@@ -25,10 +25,19 @@ namespace TGC.MonoGame.TP.src.Moldes
             this._efecto = Content.Load<Effect>(@"Effects/shaderMontana");
             _montanaTexture = Content.Load<Texture2D>(@"Models/heightmap/montana");
             _efecto.Parameters["Texture"].SetValue(_montanaTexture);
+            this._efecto.Parameters["ambientColor"].SetValue(Color.White.ToVector3());
+            this._efecto.Parameters["diffuseColor"].SetValue(Color.White.ToVector3());
+            this._efecto.Parameters["specularColor"].SetValue(Color.White.ToVector3());
+            this._efecto.Parameters["KAmbient"].SetValue(0.5f);
+            this._efecto.Parameters["KDiffuse"].SetValue(1.0f);
+            this._efecto.Parameters["KSpecular"].SetValue(0.8f);
+            this._efecto.Parameters["shininess"].SetValue(16.0f);
+            this._efecto.Parameters["lightPosition"].SetValue(new Vector3(0.0f,0.0f,0.0f));
             this.ConfigPuntos(Graphics);
         }
         public override void Draw(Matrix mundo, GraphicsDevice graphics){
             _efecto.Parameters["World"].SetValue(mundo);
+            _efecto.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(mundo)));
 
             graphics.SetVertexBuffer(_vertices);
             graphics.Indices = _indices;
@@ -41,16 +50,44 @@ namespace TGC.MonoGame.TP.src.Moldes
         }
         private  void ConfigPuntos(GraphicsDevice Graphics){
 
-            VertexPositionTexture[] puntos = new VertexPositionTexture[]
+            VertexPositionNormalTexture[] puntos = new VertexPositionNormalTexture[]
             {
-                new VertexPositionTexture(new Vector3(-1f, 0f, -1f), new Vector2(0, 0)),
-                new VertexPositionTexture(new Vector3(1f, 0f, -1f), new Vector2(1, 0)),
-                new VertexPositionTexture(new Vector3(-1f, 0f, 1f), new Vector2(0, 1)),
-                new VertexPositionTexture(new Vector3(1f, 0f, 1f), new Vector2(1, 1)),
-                new VertexPositionTexture(new Vector3(0f, 2f, 0f), new Vector2(0.5f, 0.5f))
+                new VertexPositionNormalTexture(new Vector3(-1f, 0f, -1f),Vector3.Up, new Vector2(0, 0)),
+                new VertexPositionNormalTexture(new Vector3(1f, 0f, -1f),Vector3.Up, new Vector2(1, 0)),
+                new VertexPositionNormalTexture(new Vector3(-1f, 0f, 1f),Vector3.Up, new Vector2(0, 1)),
+                new VertexPositionNormalTexture(new Vector3(1f, 0f, 1f),Vector3.Up, new Vector2(1, 1)),
+                new VertexPositionNormalTexture(new Vector3(0f, 2f, 0f),Vector3.Normalize(new Vector3(0, 0.5f, -0.5f)), new Vector2(0.5f, 0.5f))
             };
 
-            _vertices = new VertexBuffer(Graphics, VertexPositionTexture.VertexDeclaration, puntos.Length , BufferUsage.WriteOnly);
+            Vector3 normalTriangulo1 = CalculateNormal(
+                puntos[0].Position,
+                puntos[1].Position,
+                puntos[4].Position);
+
+            Vector3 normalTriangulo2 = CalculateNormal(
+                puntos[1].Position,
+                puntos[3].Position,
+                puntos[4].Position);
+
+            Vector3 normalTriangulo3 = CalculateNormal(
+                puntos[3].Position,
+                puntos[2].Position,
+                puntos[4].Position);
+
+            Vector3 normalTriangulo4 = CalculateNormal(
+                puntos[2].Position,
+                puntos[0].Position,
+                puntos[4].Position);
+
+            // Asigna normales a los vértices
+            puntos[0].Normal = Vector3.Normalize(normalTriangulo1 + normalTriangulo4);
+            puntos[1].Normal = Vector3.Normalize(normalTriangulo1 + normalTriangulo2);
+            puntos[2].Normal = Vector3.Normalize(normalTriangulo3 + normalTriangulo4);
+            puntos[3].Normal = Vector3.Normalize(normalTriangulo2 + normalTriangulo3);
+            puntos[4].Normal = Vector3.Normalize(
+                normalTriangulo1 + normalTriangulo2 + normalTriangulo3 + normalTriangulo4);
+
+            _vertices = new VertexBuffer(Graphics, VertexPositionNormalTexture.VertexDeclaration, puntos.Length , BufferUsage.WriteOnly);
             _vertices.SetData(puntos);
 
             ushort[] Indices = new ushort[]
@@ -66,7 +103,19 @@ namespace TGC.MonoGame.TP.src.Moldes
             _indices.SetData(Indices);
         }
 
-
+        //borrar despues de implementar a todos los moldes
+        public override void setCamara(Vector3 posicion)
+        {
+            _efecto.Parameters["eyePosition"].SetValue(posicion);
+            _efecto.Parameters["lightPosition"].SetValue(posicion + new Vector3(0, 10, 0));
+        }
+        // Método para calcular la normal de un triángulo
+        Vector3 CalculateNormal(Vector3 a, Vector3 b, Vector3 c)
+        {
+            Vector3 ab = b - a;
+            Vector3 ac = c - a;
+            return Vector3.Cross(ab, ac);
+        }
 
     }
 }

@@ -21,6 +21,10 @@ namespace TGC.MonoGame.TP.src.Moldes
         {
             _efecto.Parameters["View"].SetValue(vista);
         }
+        public virtual void setCamara(Vector3 camaraPosition)
+        {
+            //_efecto.Parameters["eyePosition"].SetValue(camaraPosition);
+        }
 
 
         public abstract void Draw(Matrix Mundo, GraphicsDevice Graphics);
@@ -29,5 +33,9 @@ namespace TGC.MonoGame.TP.src.Moldes
 
         }
 
+        public virtual void SetPosSOL(Vector3 posSOL)
+        {
+            //_efecto.Parameters["lightPosition"].SetValue(posSOL);
+        }
     }
 }

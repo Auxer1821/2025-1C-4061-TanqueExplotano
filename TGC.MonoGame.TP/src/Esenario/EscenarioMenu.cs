@@ -33,14 +33,9 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private float _velocidadDeGiro;
         
          private MTanque _tanque;
-         private string _texturaTanque = "2";
-         private float Rotation = 0.0f;
-
-        private float _tamanioNormalBoton = 0.1f;
-        private float _tamanioElectoBoton = 0.15f;
-
+        private string _texturaTanque = "2";
+        private float Rotation = 0.0f;
         private float _tiempoDeCambio = 1.0f;
-
         private DirectorEscenarios _dEsenarios;
         private Managers.ManagerSonido _managerSonido;
 

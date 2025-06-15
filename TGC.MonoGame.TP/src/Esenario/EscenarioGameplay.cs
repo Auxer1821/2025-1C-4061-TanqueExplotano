@@ -30,6 +30,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private bool _faltaCrear;
         private List<IMolde> _moldes;
         private DirectorEscenarios _director;
+        private short _cantidadEnemigosIA = 0;
 
 
         private Cameras.FreeCamera _camara;
@@ -121,7 +122,8 @@ namespace TGC.MonoGame.TP.src.Escenarios
                     z = random.Next(-500, -200); // Zona sur (z negativa)
                 else
                     z = random.Next(200, 500); // Zona norte (z positiva)
-                float rotacion = random.Next(0, 360);
+                //float rotacion = random.Next(0, 360);
+                float rotacion = 0;
                 float tamano = random.Next(10, 20) / 10;
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
@@ -174,6 +176,11 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 montana.SetMolde(moldeMontana);
                 this.AgregarACrear(montana);
             }
+            //---------MONTAÑA DE PRUEBA----BORRAR----------------//
+                var montana1 = new EMontana();
+                montana1.Initialize(graphicsDevice, world * Matrix.CreateTranslation(900, 400, -1000), content, this);
+                montana1.SetMolde(moldeMontana);
+                this.AgregarACrear(montana1);
 
             //-------------------Crear tanks--------------------//
             //---Jugador---//
@@ -198,7 +205,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
             //----IA---//
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < _cantidadEnemigosIA; i++)
             {
                 var tank = new ETanqueIA();
                 tank.SetTipoTanque("Panzer");

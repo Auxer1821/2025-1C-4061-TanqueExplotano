@@ -15,15 +15,15 @@ namespace TGC.MonoGame.TP.src.Managers
     /// <summary>
     ///     Esta es la clase del escenario donde se controla 
     /// </summary>
-    public class ManagerGrafico 
+    public class ManagerGrafico
     {
         //deberia estar el frostum aca o en coliciones?
         private BoundingsVolumes.BVTrufas _boundingFrustum;
         //ejemplo de uso
         //_boundingFrustum = new BoundingFrustum(_testCamera.View * _testCamera.Projection);
         //_boudingFrustum.intersects(_entidad.BoundingBox);
-         // Update the view projection matrix of the bounding frustum
-            //_boundingFrustum.Matrix = _testCamera.View * _testCamera.Projection;
+        // Update the view projection matrix of the bounding frustum
+        //_boundingFrustum.Matrix = _testCamera.View * _testCamera.Projection;
         private List<Entidades.Entidad> _entidades; // dif listas [arboles,casa,caja,roca,pasto,montaña]
                                                     //effecto particular [arbol,casa,caja,roca,pasto,montaña]
         private List<Entidades.EPasto> _pastos;
@@ -63,11 +63,11 @@ namespace TGC.MonoGame.TP.src.Managers
             if (entidad.PuedeDibujar())
                 _entidades.Add(entidad);
         }
-      
+
 
         public void AgregarPasto(Entidades.EPasto pasto)
         {
-                _pastos.Add(pasto);
+            _pastos.Add(pasto);
         }
         public void RemoverEntidad(Entidades.Entidad entidad)
         {
@@ -77,10 +77,10 @@ namespace TGC.MonoGame.TP.src.Managers
         public void DibujarObjetos(GraphicsDevice graphicsDevice)
         {
             //recorrer por listas separadas
-            _skyBox.EfectCamera(_camera.Vista,_camera.Proyeccion);
+            _skyBox.EfectCamera(_camera.Vista, _camera.Proyeccion);
             _skyBox.Dibujar(graphicsDevice);//se dibuja primero
 
-            _terreno.EfectCamera(_camera.Vista,_camera.Proyeccion);
+            _terreno.EfectCamera(_camera.Vista, _camera.Proyeccion);
             _terreno.Dibujar(graphicsDevice);
 
             //solamente los tanques pasan aqui
@@ -112,10 +112,11 @@ namespace TGC.MonoGame.TP.src.Managers
             */
 
             //TODO de los chunks de minegraft
-            
+
             foreach (var entidad in _entidades)
             {
-                if (_boundingFrustum.colisiona(entidad._boundingVolume) || entidad.ExcluidoDelFrustumCulling()) {
+                if (_boundingFrustum.colisiona(entidad._boundingVolume) || entidad.ExcluidoDelFrustumCulling())
+                {
                     if (entidad._tipo == Entidades.TipoEntidad.Obstaculo)
                     {
                         entidad.GetMolde().Draw(entidad.GetMundo(), graphicsDevice);
@@ -128,22 +129,26 @@ namespace TGC.MonoGame.TP.src.Managers
                 }
             }
 
-            
+
 
             foreach (var pasto in _pastos) //TODO hacer update del efecto pasto
             {
-                if (_boundingFrustum.colisiona(pasto._posicion)){
-                //pasto.EfectCamera(_camera.Vista, _camera.Proyeccion);
-                //pasto.Dibujar(graphicsDevice);
-                pasto.GetMolde().Draw(pasto.GetMundo(), graphicsDevice);
+                if (_boundingFrustum.colisiona(pasto._posicion))
+                {
+                    //pasto.EfectCamera(_camera.Vista, _camera.Proyeccion);
+                    //pasto.Dibujar(graphicsDevice);
+                    pasto.GetMolde().Draw(pasto.GetMundo(), graphicsDevice);
                 }
             }
 
         }
 
-        private void setVistaProjection(Moldes.IMolde molde, Matrix vista, Matrix projection){
+        private void setVistaProjection(Moldes.IMolde molde, Matrix vista, Matrix projection)
+        {
             molde.setProjection(projection);
             molde.setVista(vista);
+            molde.setCamara(_camera.Position);
+            molde.SetPosSOL(new Vector3(900, 400, -1000));
         }
 
         public void ActualizarAnimacion(GameTime gameTime)
@@ -160,9 +165,12 @@ namespace TGC.MonoGame.TP.src.Managers
             }
         }
 
-        public void ActualizarCamera(){
+        public void ActualizarCamera()
+        {
             _boundingFrustum.UpdateFrustum(_camera);
         }
+
+      
 
 
     }
