@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Objetos;
 using System.Linq;
 using TGC.MonoGame.TP.src.Modelos;
+using System.Numerics;
 
 
 
@@ -62,8 +63,9 @@ namespace TGC.MonoGame.TP.src.Moldes
                 {
                     _efecto.CurrentTechnique = _efecto.Techniques["Hojas"];
                 }
-                _efecto.Parameters["World"].SetValue(mesh.ParentBone.Transform * Mundo);
-                _efecto.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(Mundo)));
+                Matrix MundoShader = mesh.ParentBone.Transform * Mundo;
+                _efecto.Parameters["World"].SetValue(MundoShader);
+                _efecto.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                 mesh.Draw();
             }
         }

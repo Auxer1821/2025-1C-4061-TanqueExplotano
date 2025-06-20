@@ -55,8 +55,8 @@ float4 PhongShader(float4 color, PhongShaderInput phongInput)
     float3 specularLight = sign(NdotL) * phongInput.KSpecular * phongInput.specularColor * pow(saturate(NdotH), phongInput.shininess);
     
     // Final calculation
-    //float4 finalColor = float4(saturate(ambientLight + diffuseLight) * color.rgb + specularLight, color.a);
-    float4 finalColor = float4 (phongInput.Normal.xyz, color.a);
+    float4 finalColor = float4(saturate(ambientLight + diffuseLight) * color.rgb + specularLight, color.a);
+    //float4 finalColor = float4 (phongInput.Normal.xyz, color.a); //Pruebas de colores (normal)
     return finalColor;
 }
 

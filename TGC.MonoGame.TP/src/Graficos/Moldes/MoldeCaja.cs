@@ -49,71 +49,95 @@ namespace TGC.MonoGame.TP.src.Moldes
         }
 
 
-        
-        private  void ConfigPuntos(GraphicsDevice Graphics){
 
-            VertexPositionNormalTexture[] puntos = new VertexPositionNormalTexture[]
-            {
-                new VertexPositionNormalTexture(new Vector3(0f, 0f, 0f),Vector3.Zero, new Vector2(0,0)),
-                new VertexPositionNormalTexture(new Vector3(1f, 0f, 0f),Vector3.Zero, new Vector2(1,0)),
-                new VertexPositionNormalTexture(new Vector3(0f, 1f, 0f),Vector3.Zero, new Vector2(0,1)),
-                new VertexPositionNormalTexture(new Vector3(1f, 1f, 0f),Vector3.Zero, new Vector2(1,1)),
-                new VertexPositionNormalTexture(new Vector3(0f, 0f, 1f),Vector3.Zero, new Vector2(0,0)),
-                new VertexPositionNormalTexture(new Vector3(1f, 0f, 1f),Vector3.Zero, new Vector2(1,0)),
-                new VertexPositionNormalTexture(new Vector3(0f, 1f, 1f),Vector3.Zero, new Vector2(0,1)),
-                new VertexPositionNormalTexture(new Vector3(1f, 1f, 1f),Vector3.Zero, new Vector2(1,1))
-            };
+        private void ConfigPuntos(GraphicsDevice Graphics)
+        {
+
+            /*
+                        VertexPositionNormalTexture[] puntos = new VertexPositionNormalTexture[]
+                        {
+                            new VertexPositionNormalTexture(new Vector3(0f, 0f, 0f),Vector3.Zero, new Vector2(0,0)),
+                            new VertexPositionNormalTexture(new Vector3(1f, 0f, 0f),Vector3.Zero, new Vector2(1,0)),
+                            new VertexPositionNormalTexture(new Vector3(0f, 1f, 0f),Vector3.Zero, new Vector2(0,1)),
+                            new VertexPositionNormalTexture(new Vector3(1f, 1f, 0f),Vector3.Zero, new Vector2(1,1)),
+                            new VertexPositionNormalTexture(new Vector3(0f, 0f, 1f),Vector3.Zero, new Vector2(0,0)),
+                            new VertexPositionNormalTexture(new Vector3(1f, 0f, 1f),Vector3.Zero, new Vector2(1,0)),
+                            new VertexPositionNormalTexture(new Vector3(0f, 1f, 1f),Vector3.Zero, new Vector2(0,1)),
+                            new VertexPositionNormalTexture(new Vector3(1f, 1f, 1f),Vector3.Zero, new Vector2(1,1))
+                        };
+                        */
+            // Definición de vértices (sin normales iniciales)
+            VertexPositionNormalTexture[] puntos = new VertexPositionNormalTexture[8];
+            puntos[0] = new VertexPositionNormalTexture(new Vector3(0f, 0f, 0f), Vector3.Zero, new Vector2(0, 0));
+            puntos[1] = new VertexPositionNormalTexture(new Vector3(1f, 0f, 0f), Vector3.Zero, new Vector2(1, 0));
+            puntos[2] = new VertexPositionNormalTexture(new Vector3(0f, 1f, 0f), Vector3.Zero, new Vector2(0, 1));
+            puntos[3] = new VertexPositionNormalTexture(new Vector3(1f, 1f, 0f), Vector3.Zero, new Vector2(1, 1));
+            puntos[4] = new VertexPositionNormalTexture(new Vector3(0f, 0f, 1f), Vector3.Zero, new Vector2(0, 0));
+            puntos[5] = new VertexPositionNormalTexture(new Vector3(1f, 0f, 1f), Vector3.Zero, new Vector2(1, 0));
+            puntos[6] = new VertexPositionNormalTexture(new Vector3(0f, 1f, 1f), Vector3.Zero, new Vector2(0, 1));
+            puntos[7] = new VertexPositionNormalTexture(new Vector3(1f, 1f, 1f), Vector3.Zero, new Vector2(1, 1));
 
             // Inicializa listas para acumular normales
             Vector3[] normalesAcumuladas = new Vector3[8];
             int[] contadorNormales = new int[8];
 
+            /*
+                        ushort[] Indices = new ushort[]
+                        {
+                            0,1,2, 1,2,3, //Cara Trasera
+                            4,5,6, 5,6,7, //Cara delantera
+                            0,4,5, 0,1,5, //Cara abajo
+                            2,6,7, 2,3,7, //Cara superior
+                            7,5,1, 1,7,3, //Cara derecha
+                            0,4,6, 0,6,2  //Cara izquierda
+                        };
+                        */
             ushort[] Indices = new ushort[]
+ {
+        // Cara Trasera (Z = 0)
+        0, 2, 1, 1, 2, 3,
+        
+        // Cara Frontal (Z = 1)
+        5, 6, 4, 5, 7, 6,
+        
+        // Cara Inferior (Y = 0)
+        4, 1, 5, 4, 0, 1,
+        
+        // Cara Superior (Y = 1)
+        2, 7, 3, 2, 6, 7,
+        
+        // Cara Derecha (X = 1)
+        1, 7, 3, 1, 5, 7,
+        
+        // Cara Izquierda (X = 0)
+        4, 6, 0, 0, 6, 2
+ };
+
+            // Normales por cara (fija para cada vértice de la cara)
+            Vector3[] normalesPorCara = new Vector3[6];
+
+            // Calcula normales para cada cara
+            normalesPorCara[0] = Vector3.Backward;  // Trasera
+            normalesPorCara[1] = Vector3.Forward;   // Frontal
+            normalesPorCara[2] = Vector3.Down;      // Inferior
+            normalesPorCara[3] = Vector3.Up;        // Superior
+            normalesPorCara[4] = Vector3.Right;     // Derecha
+            normalesPorCara[5] = Vector3.Left;      // Izquierda
+
+            // Asigna normales a los vértices según su cara
+            for (int i = 0; i < Indices.Length; i++)
             {
-                0,1,2, 1,2,3, //Cara Trasera
-                4,5,6, 5,6,7, //Cara delantera
-                0,4,5, 0,1,5, //Cara abajo
-                2,6,7, 2,3,7, //Cara superior
-                7,5,1, 1,7,3, //Cara derecha
-                0,4,6, 0,6,2  //Cara izquierda
-            };
-
-            // Calcula normales por triángulo y acumula
-            for (int i = 0; i < Indices.Length; i += 3)
-            {
-                ushort i0 = Indices[i];
-                ushort i1 = Indices[i + 1];
-                ushort i2 = Indices[i + 2];
-
-                Vector3 normal = CalculateNormal(
-                    puntos[i0].Position,
-                    puntos[i1].Position,
-                    puntos[i2].Position);
-
-                // Acumula normales para cada vértice del triángulo
-                normalesAcumuladas[i0] += normal;
-                normalesAcumuladas[i1] += normal;
-                normalesAcumuladas[i2] += normal;
-
-                contadorNormales[i0]++;
-                contadorNormales[i1]++;
-                contadorNormales[i2]++;
-            }
-
-            // Promedia y normaliza
-            for (int i = 0; i < puntos.Length; i++)
-            {
-                if (contadorNormales[i] > 0)
-                {
-                    puntos[i].Normal = Vector3.Normalize(normalesAcumuladas[i] / contadorNormales[i]);
-                }
+                int indiceCara = i / 6; // Cada cara tiene 6 índices (2 triángulos)
+                puntos[Indices[i]].Normal = normalesPorCara[indiceCara];
             }
 
             _vertices = new VertexBuffer(Graphics, VertexPositionNormalTexture.VertexDeclaration, puntos.Length, BufferUsage.WriteOnly);
             _vertices.SetData(puntos);
 
-            _indices = new IndexBuffer(Graphics, IndexElementSize.SixteenBits, 36, BufferUsage.None);
+            _indices = new IndexBuffer(Graphics, IndexElementSize.SixteenBits, Indices.Length, BufferUsage.WriteOnly);
             _indices.SetData(Indices);
+
+
         }
         Vector3 CalculateNormal(Vector3 a, Vector3 b, Vector3 c)
         {

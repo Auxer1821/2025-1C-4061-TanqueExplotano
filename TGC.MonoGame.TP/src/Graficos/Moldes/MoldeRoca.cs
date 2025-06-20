@@ -28,7 +28,7 @@ namespace TGC.MonoGame.TP.src.Moldes
 
             this._efecto.Parameters["ambientColor"]?.SetValue(Color.White.ToVector3());
             this._efecto.Parameters["diffuseColor"]?.SetValue(Color.White.ToVector3());
-            this._efecto.Parameters["specularColor"]?.SetValue(Color.Transparent.ToVector3());
+            this._efecto.Parameters["specularColor"]?.SetValue(Color.White.ToVector3());
             this._efecto.Parameters["KAmbient"]?.SetValue(0.5f);
             this._efecto.Parameters["KDiffuse"]?.SetValue(0.8f);
             this._efecto.Parameters["KSpecular"]?.SetValue(0.2f);
@@ -52,8 +52,9 @@ namespace TGC.MonoGame.TP.src.Moldes
 
             foreach (var mesh in _modelo.Meshes)
             {
-                _efecto.Parameters["World"].SetValue(mesh.ParentBone.Transform * mundo);
-                _efecto.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(mundo)));
+                Matrix MundoShader = mesh.ParentBone.Transform * mundo;
+                _efecto.Parameters["World"].SetValue(MundoShader);
+                _efecto.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                 mesh.Draw();
             }
         }

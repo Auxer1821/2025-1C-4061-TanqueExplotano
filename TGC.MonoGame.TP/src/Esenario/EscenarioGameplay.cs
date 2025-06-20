@@ -108,7 +108,8 @@ namespace TGC.MonoGame.TP.src.Escenarios
                     posicionesUsadas.Add(new Vector3(x, z, 4));
 
                     var caja = new ECaja();
-                    float rotacion = 270;
+                    //float rotacion = 270;
+                    float rotacion = 0f;
                     caja.Initialize(graphicsDevice, Matrix.CreateRotationY(MathHelper.ToRadians(rotacion)) * world * Matrix.CreateTranslation(x + 8, _terreno.GetHeightAt(x, z), z + 8), content, this);
                     caja.SetMolde(moldeCaja);
                     this.AgregarACrear(caja);

@@ -35,7 +35,7 @@ namespace TGC.MonoGame.TP.src.Managers
         private SoundEffectInstance _sonidoColicionInstance;
         private SoundEffectInstance _sonidoMuerteInstance;
         // Volumen maestro para todos los sonidos TODO: Separar en volumen musica y efectos de sonido
-        float _volumenMaestro = 0.1f;
+        float _volumenMaestro = 0.01f;
 
         ContentManager _contentManager;
         public ManagerSonido(ContentManager Content)
