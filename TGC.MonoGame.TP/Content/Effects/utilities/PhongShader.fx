@@ -42,6 +42,9 @@ float4 PhongShader(float4 color, PhongShaderInput phongInput)
     float3 lightDirection = normalize(phongInput.lightPosition - phongInput.WorldPosition.xyz);
     float3 viewDirection = normalize(phongInput.eyePosition - phongInput.WorldPosition.xyz);
     float3 halfVector = normalize(lightDirection + viewDirection);
+
+    // Calculate the ambient light
+    float3 ambientLight = phongInput.ambientColor * phongInput.KAmbient;
     
 	// Calculate the diffuse light
     float NdotL = saturate(dot(phongInput.Normal.xyz, lightDirection));
@@ -52,7 +55,8 @@ float4 PhongShader(float4 color, PhongShaderInput phongInput)
     float3 specularLight = sign(NdotL) * phongInput.KSpecular * phongInput.specularColor * pow(saturate(NdotH), phongInput.shininess);
     
     // Final calculation
-    float4 finalColor = float4(saturate(phongInput.ambientColor * phongInput.KAmbient + diffuseLight) * color.rgb + specularLight, color.a);
+    //float4 finalColor = float4(saturate(ambientLight + diffuseLight) * color.rgb + specularLight, color.a);
+    float4 finalColor = float4 (phongInput.Normal.xyz, color.a);
     return finalColor;
 }
 

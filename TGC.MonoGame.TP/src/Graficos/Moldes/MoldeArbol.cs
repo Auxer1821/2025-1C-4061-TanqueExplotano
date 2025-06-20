@@ -23,7 +23,7 @@ namespace TGC.MonoGame.TP.src.Moldes
         private float _timer = 0f;
         public MoldeArbol(ContentManager Content)
         {
-            this._modelo = Content.Load<Model>(@"Models/tree/tree2");
+            this._modelo = Content.Load<Model>(@"Models/tree/arbolMejorado2");
             this._efecto = Content.Load<Effect>(@"Effects/shaderArbol");
             this.troncoTexture = Content.Load<Texture2D>(@"Models/tree/tronco2");
             this.hojasTexture = Content.Load<Texture2D>(@"Models/tree/light-green-texture");
@@ -33,13 +33,13 @@ namespace TGC.MonoGame.TP.src.Moldes
             this._efecto.Parameters["WindSpeed"].SetValue(1.0f);
             this._efecto.Parameters["LeafFlexibility"].SetValue(0.3f);
 
-            this._efecto.Parameters["ambientColor"].SetValue(Color.White.ToVector3());
-            this._efecto.Parameters["diffuseColor"].SetValue(Color.White.ToVector3());
-            this._efecto.Parameters["specularColor"].SetValue(Color.Transparent.ToVector3());
-            this._efecto.Parameters["KAmbient"].SetValue(0.5f);
-            this._efecto.Parameters["KDiffuse"].SetValue(0.8f);
-            this._efecto.Parameters["KSpecular"].SetValue(0.2f);
-            this._efecto.Parameters["shininess"].SetValue(1.0f);
+            this._efecto.Parameters["ambientColor"]?.SetValue(Color.White.ToVector3());
+            this._efecto.Parameters["diffuseColor"]?.SetValue(Color.White.ToVector3());
+            this._efecto.Parameters["specularColor"]?.SetValue(Color.White.ToVector3());
+            this._efecto.Parameters["KAmbient"]?.SetValue(0.5f);
+            this._efecto.Parameters["KDiffuse"]?.SetValue(0.8f);
+            this._efecto.Parameters["KSpecular"]?.SetValue(0.2f);
+            this._efecto.Parameters["shininess"]?.SetValue(1.0f);
 
             foreach (var mesh in _modelo.Meshes)
             {
@@ -54,7 +54,7 @@ namespace TGC.MonoGame.TP.src.Moldes
         {
             foreach (var mesh in _modelo.Meshes)
             {
-                if (mesh.Name.Contains("Zyl")) //asi se llama la mesh de tronco
+                if (mesh.Name.Contains("Zyl") || mesh.Name.Contains("Cyl")) //asi se llama la mesh de tronco
                 {
                     _efecto.CurrentTechnique = _efecto.Techniques["Tronco"];
                 }

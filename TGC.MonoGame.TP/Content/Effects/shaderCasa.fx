@@ -93,7 +93,7 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 	// View space to Projection space
     output.Position = mul(viewPosition, Projection);
 
-    output.Normal = mul(input.Normal, InverseTransposeWorld);
+    output.Normal = mul(input.Normal , InverseTransposeWorld);
 	output.TexCoord = input.TexCoord;
 
     return output;

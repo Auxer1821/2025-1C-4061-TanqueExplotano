@@ -15,7 +15,7 @@ namespace TGC.MonoGame.TP.src.Tanques
     {
         //----------------------------variables------------------------//
         public float vida = 140f;
-        public float velocidad(){return 15f;}
+        public float velocidad(){return 35f;}
         public float anguloRotacionMovimiento(){return 1.0f;}
         public float danio(){return 90f;}
         public string directorioModelo(){return "/T90/T90";}

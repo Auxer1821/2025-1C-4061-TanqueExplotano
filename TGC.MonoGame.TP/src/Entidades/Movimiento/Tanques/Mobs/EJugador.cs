@@ -27,7 +27,7 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
         {
-            _tiempoRestante = 80f;
+            _tiempoRestante = 8884f;
             base.Initialize(Graphics, Mundo, Content, escenario);
         }
 

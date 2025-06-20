@@ -91,14 +91,18 @@ namespace TGC.MonoGame.TP.src.Escenarios
             //-----------------Posiciones usadas----------------------//
             List<Vector3> posicionesUsadas = new List<Vector3>();
 
+            //-----------------Aux----------------------//
+            Random random = new Random(0);            
+            
             //-------Crear un pequeño pueblo (casas y cajas)-----------//
 
             for (int x = -100; x <= 100; x += 40)
             {
                 for (int z = -100; z <= 100; z += 30)
                 {
+                    float rotacionCasa = random.Next(0, 360);
                     var casa = new ECasa();
-                    casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this, new Vector3(x, _terreno.GetHeightAt(x, z), z));
+                    casa.Initialize(graphicsDevice,Matrix.CreateRotationY(MathHelper.ToRadians(rotacionCasa)) * world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this, new Vector3(x, _terreno.GetHeightAt(x, z), z));
                     casa.SetMolde(moldeCasa);//SEGUIR DESDE AQUI
                     this.AgregarACrear(casa);
                     posicionesUsadas.Add(new Vector3(x, z, 4));
@@ -113,7 +117,6 @@ namespace TGC.MonoGame.TP.src.Escenarios
             }
 
             //--------Crear un bosque (árboles)---------------//
-            Random random = new Random(0);
                 for (int i = 0; i < 500; i++)
             {
                 var arbol = new EArbol();
@@ -123,8 +126,9 @@ namespace TGC.MonoGame.TP.src.Escenarios
                     z = random.Next(-500, -200); // Zona sur (z negativa)
                 else
                     z = random.Next(200, 500); // Zona norte (z positiva)
-                //float rotacion = random.Next(0, 360);
-                float rotacion = 90;
+                float rotacion = random.Next(0, 360);
+                //float rotacion = 90;
+                //float rotacion = 0;
                 float tamano = random.Next(10, 20) / 10;
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))

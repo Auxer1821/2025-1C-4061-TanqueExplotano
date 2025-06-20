@@ -26,13 +26,13 @@ namespace TGC.MonoGame.TP.src.Moldes
             this._rocaTexture = Content.Load<Texture2D>(@"Models/Stone/roca3");
             this._efecto.Parameters["Texture"].SetValue(_rocaTexture);
 
-            this._efecto.Parameters["ambientColor"].SetValue(Color.White.ToVector3());
-            this._efecto.Parameters["diffuseColor"].SetValue(Color.White.ToVector3());
-            this._efecto.Parameters["specularColor"].SetValue(Color.Transparent.ToVector3());
-            this._efecto.Parameters["KAmbient"].SetValue(0.5f);
-            this._efecto.Parameters["KDiffuse"].SetValue(0.8f);
-            this._efecto.Parameters["KSpecular"].SetValue(0.2f);
-            this._efecto.Parameters["shininess"].SetValue(1.0f);
+            this._efecto.Parameters["ambientColor"]?.SetValue(Color.White.ToVector3());
+            this._efecto.Parameters["diffuseColor"]?.SetValue(Color.White.ToVector3());
+            this._efecto.Parameters["specularColor"]?.SetValue(Color.Transparent.ToVector3());
+            this._efecto.Parameters["KAmbient"]?.SetValue(0.5f);
+            this._efecto.Parameters["KDiffuse"]?.SetValue(0.8f);
+            this._efecto.Parameters["KSpecular"]?.SetValue(0.2f);
+            this._efecto.Parameters["shininess"]?.SetValue(1.0f);
 
 
             foreach (var mesh in _modelo.Meshes)
