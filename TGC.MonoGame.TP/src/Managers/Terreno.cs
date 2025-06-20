@@ -30,8 +30,8 @@ namespace TGC.MonoGame.TP.src.Terrenos
         {
             //Configuración de matrices
             this._matrixMundo = Matrix.Identity ;
-
             base.Initialize(Graphics);
+            this.inicializadorIluminacion();
 
         }
 
@@ -40,9 +40,22 @@ namespace TGC.MonoGame.TP.src.Terrenos
             heightMap = Content.Load<Texture2D>("Models/heightmap/crater2");
             terrenoTexture = Content.Load<Texture2D>("Models/heightmap/pasto");
             heightData = LoadHeightData(heightMap);
+
             //this._Color = Color.SandyBrown.ToVector3();
             Graphics.SamplerStates[0] = SamplerState.LinearWrap;
             base.Initialize(Graphics, Matrix.CreateScale(5) * Mundo * Matrix.CreateTranslation(Vector3.Down * 10), Content);
+            this.inicializadorIluminacion();
+        }
+
+        private void inicializadorIluminacion()
+        {
+            this._effect2.Parameters["ambientColor"]?.SetValue(Color.White.ToVector3());
+            this._effect2.Parameters["diffuseColor"]?.SetValue(Color.White.ToVector3());
+            this._effect2.Parameters["specularColor"]?.SetValue(Color.White.ToVector3());
+            this._effect2.Parameters["KAmbient"]?.SetValue(0.5f);
+            this._effect2.Parameters["KDiffuse"]?.SetValue(0.7f);
+            this._effect2.Parameters["KSpecular"]?.SetValue(0.4f);
+            this._effect2.Parameters["shininess"]?.SetValue(16.0f);
         }
 
         protected override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
@@ -66,7 +79,7 @@ namespace TGC.MonoGame.TP.src.Terrenos
 
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
             _effect2.Parameters["Texture"].SetValue(terrenoTexture);
-
+            _effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(this._matrixMundo)));
             Graphics.SamplerStates[0] = new SamplerState
             {
                 AddressU = TextureAddressMode.Wrap,
@@ -198,8 +211,12 @@ namespace TGC.MonoGame.TP.src.Terrenos
             // Normalizar
             for (int i = 0; i < vertices.Length; i++)
             {
-                vertices[i].Normal.Normalize();
+                /*if (vertices[i].Normal != Vector3.Zero)
+                vertices[i].Normal.Normalize();*/
+                //vertices[i].Normal = Vector3.UnitX* 100f;
+                //vertices[i].Normal = vertices[i].Normal * 1.4f; // Ajustar la intensidad de la normal si es necesario
             }
+    
         }
         //Configuración de efectos tomados desde la clase padre
 

@@ -148,8 +148,9 @@ namespace TGC.MonoGame.TP.src.Managers
             molde.setProjection(projection);
             molde.setVista(vista);
             molde.setCamara(_camera.Position);
-            molde.SetPosSOL(new Vector3(900, 400, -1000));
-            //molde.SetPosSOL(new Vector3(0, 400, 0));
+            molde.SetPosSOL(new Vector3(900, 400, -1000)); //sol
+            //molde.SetPosSOL(_camera.Position);
+            //molde.SetPosSOL(new Vector3(1000000, 0, 0));
         }
 
         public void ActualizarAnimacion(GameTime gameTime)
