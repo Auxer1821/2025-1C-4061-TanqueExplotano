@@ -29,10 +29,6 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
-float3 DiffuseColor;
-
-float Time = 0;
-
 struct VertexShaderInput
 {
 	float4 Position : POSITION0;
@@ -45,7 +41,7 @@ struct VertexShaderOutput
 	float4 Position : SV_POSITION;
 	float2 TexCoord : TEXCOORD0;
     float4 WorldPosition : TEXCOORD1;
-	float3 Normal : TEXCOORD3;
+	float3 Normal : TEXCOORD2;
 };
 
 VertexShaderOutput MainVS(in VertexShaderInput input)

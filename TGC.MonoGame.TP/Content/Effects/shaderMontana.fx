@@ -31,8 +31,6 @@ float4x4 View;
 float4x4 Projection;
 
 
-float Time = 0;
-
 struct VertexShaderInput
 {
 	float4 Position : POSITION0;
@@ -45,7 +43,7 @@ struct VertexShaderOutput
 	float4 Position : SV_POSITION;
  	float2 TexCoord : TEXCOORD0;
     float4 WorldPosition : TEXCOORD1;
-	float3 Normal : TEXCOORD3;
+	float3 Normal : TEXCOORD2;
 };
 
 VertexShaderOutput MainVS(in VertexShaderInput input)
@@ -60,7 +58,9 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 	// View space to Projection space
     output.Position = mul(viewPosition, Projection);
 
-    output.Normal = mul(input.Normal, InverseTransposeWorld);
+    //output.Normal = mul(input.Normal, InverseTransposeWorld);
+	output.Normal = input.Normal; // Normalización de la normal
+	//output.Normal = normalize(input.Normal); // Si la normal ya está en el espacio correcto
 
 	output.TexCoord = input.TexCoord;
 
@@ -69,11 +69,12 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-	float4 baseColor = tex2D(TextureSampler, input.TexCoord * 0.1); // Textura base (gran escala)
-    float4 detailColor = tex2D(TextureSampler, input.TexCoord * 2.0); // Textura detalle
+	//float4 baseColor = tex2D(TextureSampler, input.TexCoord * 0.1); // Textura base (gran escala)
+    //float4 detailColor = tex2D(TextureSampler, input.TexCoord * 2.0); // Textura detalle
     
     // Mezcla según distancia (implementa tu lógica)
-    float4 color = lerp(baseColor, detailColor, 0.5);
+    //float4 color = lerp(baseColor, detailColor, 0.5);
+	float4 color = tex2D(TextureSampler, input.TexCoord); // Textura base (gran escala)
 	//Cargamos y corremos el phongshader 
 	PhongShaderInput phongInput = CargarPhoneShaderInput(input.Normal, input.WorldPosition);
 	color = PhongShader(color, phongInput);

@@ -23,7 +23,7 @@ namespace TGC.MonoGame.TP.src.Moldes
         public MoldeCaja(ContentManager Content, GraphicsDevice Graphics){
             this._efecto = Content.Load<Effect>(@"Effects/shaderCaja");
             this.cajaTexture = Content.Load<Texture2D>(@"Models/house/tablasMadera");
-            this._efecto.Parameters["Texture"].SetValue(cajaTexture);
+            this._efecto.Parameters["Texture"]?.SetValue(cajaTexture);
             this._efecto.Parameters["ambientColor"]?.SetValue(Color.White.ToVector3());
             this._efecto.Parameters["diffuseColor"]?.SetValue(Color.White.ToVector3());
             this._efecto.Parameters["specularColor"]?.SetValue(Color.White.ToVector3());

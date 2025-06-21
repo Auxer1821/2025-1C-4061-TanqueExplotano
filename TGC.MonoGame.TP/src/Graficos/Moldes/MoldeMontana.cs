@@ -24,82 +24,73 @@ namespace TGC.MonoGame.TP.src.Moldes
         {
             this._efecto = Content.Load<Effect>(@"Effects/shaderMontana");
             _montanaTexture = Content.Load<Texture2D>(@"Models/heightmap/montana");
-            _efecto.Parameters["Texture"].SetValue(_montanaTexture);
+            _efecto.Parameters["Texture"]?.SetValue(_montanaTexture);
             this._efecto.Parameters["ambientColor"]?.SetValue(Color.White.ToVector3());
             this._efecto.Parameters["diffuseColor"]?.SetValue(Color.White.ToVector3());
             this._efecto.Parameters["specularColor"]?.SetValue(Color.White.ToVector3());
             this._efecto.Parameters["KAmbient"]?.SetValue(0.5f);
             this._efecto.Parameters["KDiffuse"]?.SetValue(1.0f);
-            this._efecto.Parameters["KSpecular"]?.SetValue(0.8f);
+            this._efecto.Parameters["KSpecular"]?.SetValue(0.5f);
             this._efecto.Parameters["shininess"]?.SetValue(16.0f);
             this.ConfigPuntos(Graphics);
         }
         public override void Draw(Matrix mundo, GraphicsDevice graphics){
-            _efecto.Parameters["World"].SetValue(mundo);
-            _efecto.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(mundo)));
 
             graphics.SetVertexBuffer(_vertices);
             graphics.Indices = _indices;
 
+            _efecto.Parameters["World"].SetValue(mundo);
+            _efecto.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(mundo)));
+
             foreach (var pass in _efecto.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, 12);
+                graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, this._indices.IndexCount);
             }
         }
         private  void ConfigPuntos(GraphicsDevice Graphics){
 
-            VertexPositionNormalTexture[] puntos = new VertexPositionNormalTexture[]
-            {
-                new VertexPositionNormalTexture(new Vector3(-1f, 0f, -1f),Vector3.Up, new Vector2(0, 0)),
-                new VertexPositionNormalTexture(new Vector3(1f, 0f, -1f),Vector3.Up, new Vector2(1, 0)),
-                new VertexPositionNormalTexture(new Vector3(-1f, 0f, 1f),Vector3.Up, new Vector2(0, 1)),
-                new VertexPositionNormalTexture(new Vector3(1f, 0f, 1f),Vector3.Up, new Vector2(1, 1)),
-                new VertexPositionNormalTexture(new Vector3(0f, 2f, 0f),Vector3.Normalize(new Vector3(0, 0.5f, -0.5f)), new Vector2(0.5f, 0.5f))
-            };
+            VertexPositionNormalTexture[] puntos = new VertexPositionNormalTexture[16];
 
-            Vector3 normalTriangulo1 = CalculateNormal(
-                puntos[0].Position,
-                puntos[1].Position,
-                puntos[4].Position);
+            //cara piso
+            puntos[0] = new VertexPositionNormalTexture(new Vector3(-1f, 0f, -1f), Vector3.Forward, new Vector2(0, 0));
+            puntos[1] =   new VertexPositionNormalTexture(new Vector3(1f, 0f, -1f),Vector3.Forward, new Vector2(1, 0));
+            puntos[2] =   new VertexPositionNormalTexture(new Vector3(-1f, 0f, 1f),Vector3.Forward, new Vector2(0, 1));
+            puntos[3] =   new VertexPositionNormalTexture(new Vector3(1f, 0f, 1f),Vector3.Forward, new Vector2(1, 1));
 
-            Vector3 normalTriangulo2 = CalculateNormal(
-                puntos[1].Position,
-                puntos[3].Position,
-                puntos[4].Position);
+            //cara izquierda
+            puntos[4] = new VertexPositionNormalTexture(new Vector3(-1f, 0f, -1f), Vector3.Left, new Vector2(0, 0));
+            puntos[5] = new VertexPositionNormalTexture(new Vector3(-1f, 0f, 1f), Vector3.Left, new Vector2(1, 0));
+            puntos[6] = new VertexPositionNormalTexture(new Vector3(0f, 2f, 0f), Vector3.Left, new Vector2(0, 1));
 
-            Vector3 normalTriangulo3 = CalculateNormal(
-                puntos[3].Position,
-                puntos[2].Position,
-                puntos[4].Position);
+            //cara trasera
+            puntos[7] = new VertexPositionNormalTexture(new Vector3(-1f, 0f, -1f), Vector3.Forward, new Vector2(0, 0));
+            puntos[8] = new VertexPositionNormalTexture(new Vector3(1f, 0f, -1f), Vector3.Forward, new Vector2(1, 0));
+            puntos[9] = new VertexPositionNormalTexture(new Vector3(0f, 2f, 0f), Vector3.Forward, new Vector2(0.5f, 1));
 
-            Vector3 normalTriangulo4 = CalculateNormal(
-                puntos[2].Position,
-                puntos[0].Position,
-                puntos[4].Position);
+            //cara derecha
+            puntos[10] = new VertexPositionNormalTexture(new Vector3(1f, 0f, -1f), Vector3.Right, new Vector2(0, 0));
+            puntos[11] = new VertexPositionNormalTexture(new Vector3(1f, 0f, 1f), Vector3.Right, new Vector2(1, 0));
+            puntos[12] = new VertexPositionNormalTexture(new Vector3(0f, 2f, 0f), Vector3.Right, new Vector2(0.5f, 1));
 
-            // Asigna normales a los vértices
-            puntos[0].Normal = Vector3.Normalize(normalTriangulo1 + normalTriangulo4);
-            puntos[1].Normal = Vector3.Normalize(normalTriangulo1 + normalTriangulo2);
-            puntos[2].Normal = Vector3.Normalize(normalTriangulo3 + normalTriangulo4);
-            puntos[3].Normal = Vector3.Normalize(normalTriangulo2 + normalTriangulo3);
-            puntos[4].Normal = Vector3.Normalize(
-                normalTriangulo1 + normalTriangulo2 + normalTriangulo3 + normalTriangulo4);
+            //cara delantera
+            puntos[13] = new VertexPositionNormalTexture(new Vector3(-1f, 0f, 1f), Vector3.Backward, new Vector2(0, 0));
+            puntos[14] = new VertexPositionNormalTexture(new Vector3(1f, 0f, 1f), Vector3.Backward, new Vector2(1, 0));
+            puntos[15] = new VertexPositionNormalTexture(new Vector3(0f, 2f, 0f), Vector3.Backward, new Vector2(0.5f, 1));
 
-            _vertices = new VertexBuffer(Graphics, VertexPositionNormalTexture.VertexDeclaration, puntos.Length , BufferUsage.WriteOnly);
-            _vertices.SetData(puntos);
-
-            ushort[] Indices = new ushort[]
+            ushort[] Indices = new ushort[18]
             {
                 0,1,2, 1,2,3, //Cara Piso
-                0,4,2, //Cara izq
-                0,4,1, //Cara trasera
-                1,4,3, //Cara der
-                2,4,3, //Cara delantera
+                4,5,6, //Cara izq
+                7,8,9, //Cara trasera
+                10,11,12, //Cara der
+                13,14,15, //Cara delantera
             };
 
-            _indices = new IndexBuffer(Graphics, IndexElementSize.SixteenBits, 18 , BufferUsage.None);
-            _indices.SetData(Indices);
+            this._vertices = new VertexBuffer(Graphics, VertexPositionNormalTexture.VertexDeclaration, puntos.Length , BufferUsage.WriteOnly);
+            this._vertices.SetData(puntos);
+            this._indices = new IndexBuffer(Graphics, IndexElementSize.SixteenBits, Indices.Length , BufferUsage.WriteOnly);
+            this._indices.SetData(Indices);
         }
 
         
