@@ -56,16 +56,16 @@ namespace TGC.MonoGame.TP.src.Moldes
             VertexPositionNormalTexture[] puntos = new VertexPositionNormalTexture[24]; // 6 caras * 4 vértices cada una
 
             // Cara Trasera (Z = 0)
-            puntos[0] = new VertexPositionNormalTexture(new Vector3(0f, 0f, 0f), Vector3.Backward, new Vector2(0, 0));
-            puntos[1] = new VertexPositionNormalTexture(new Vector3(1f, 0f, 0f), Vector3.Backward, new Vector2(1, 0));
-            puntos[2] = new VertexPositionNormalTexture(new Vector3(0f, 1f, 0f), Vector3.Backward, new Vector2(0, 1));
-            puntos[3] = new VertexPositionNormalTexture(new Vector3(1f, 1f, 0f), Vector3.Backward, new Vector2(1, 1));
+            puntos[0] = new VertexPositionNormalTexture(new Vector3(0f, 0f, 0f), Vector3.Forward, new Vector2(0, 0));
+            puntos[1] = new VertexPositionNormalTexture(new Vector3(1f, 0f, 0f), Vector3.Forward, new Vector2(1, 0));
+            puntos[2] = new VertexPositionNormalTexture(new Vector3(0f, 1f, 0f), Vector3.Forward, new Vector2(0, 1));
+            puntos[3] = new VertexPositionNormalTexture(new Vector3(1f, 1f, 0f), Vector3.Forward, new Vector2(1, 1));
 
             // Cara Frontal (Z = 1)
-            puntos[4] = new VertexPositionNormalTexture(new Vector3(0f, 0f, 1f), Vector3.Forward, new Vector2(0, 0));
-            puntos[5] = new VertexPositionNormalTexture(new Vector3(1f, 0f, 1f), Vector3.Forward, new Vector2(1, 0));
-            puntos[6] = new VertexPositionNormalTexture(new Vector3(0f, 1f, 1f), Vector3.Forward, new Vector2(0, 1));
-            puntos[7] = new VertexPositionNormalTexture(new Vector3(1f, 1f, 1f), Vector3.Forward, new Vector2(1, 1));
+            puntos[4] = new VertexPositionNormalTexture(new Vector3(0f, 0f, 1f), Vector3.Backward, new Vector2(0, 0));
+            puntos[5] = new VertexPositionNormalTexture(new Vector3(1f, 0f, 1f), Vector3.Backward, new Vector2(1, 0));
+            puntos[6] = new VertexPositionNormalTexture(new Vector3(0f, 1f, 1f), Vector3.Backward, new Vector2(0, 1));
+            puntos[7] = new VertexPositionNormalTexture(new Vector3(1f, 1f, 1f), Vector3.Backward, new Vector2(1, 1));
 
             // Cara Inferior (Y = 0)
             puntos[8] = new VertexPositionNormalTexture(new Vector3(0f, 0f, 0f), Vector3.Down, new Vector2(0, 0));

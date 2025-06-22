@@ -80,7 +80,7 @@ float3 DiffuseColor;
 float Opaco = 1.0;
 
 float NormalIntensity = 1.0f;
-float3 CameraPosition = {0, 0, 0}; // Posición de la cámara en espacio mundo
+float3 CameraPosition = {900, 400, -1000}; // Posición de la cámara en espacio mundo
 float Time = 0;
 
 struct VertexShaderInput

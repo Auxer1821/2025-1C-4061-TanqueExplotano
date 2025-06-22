@@ -21,7 +21,6 @@ namespace TGC.MonoGame.TP.src.Moldes
         private Model _modelo;
         Texture2D troncoTexture;
         Texture2D hojasTexture;
-        private float _timer = 0f;
         public MoldeArbol(ContentManager Content)
         {
             this._modelo = Content.Load<Model>(@"Models/tree/arbolMejorado2");
@@ -35,7 +34,7 @@ namespace TGC.MonoGame.TP.src.Moldes
             this._efecto.Parameters["LeafFlexibility"].SetValue(0.3f);
 
             this._efecto.Parameters["ambientColor"]?.SetValue(Color.White.ToVector3());
-            this._efecto.Parameters["diffuseColor"]?.SetValue(Color.White.ToVector3());
+            this._efecto.Parameters["diffuseColor"]?.SetValue(Color.Brown.ToVector3());
             this._efecto.Parameters["specularColor"]?.SetValue(Color.White.ToVector3());
             this._efecto.Parameters["KAmbient"]?.SetValue(0.5f);
             this._efecto.Parameters["KDiffuse"]?.SetValue(0.8f);

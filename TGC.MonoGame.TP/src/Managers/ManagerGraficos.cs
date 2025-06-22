@@ -81,6 +81,7 @@ namespace TGC.MonoGame.TP.src.Managers
             _skyBox.Dibujar(graphicsDevice);//se dibuja primero
 
             _terreno.EfectCamera(_camera.Vista, _camera.Proyeccion);
+            _terreno.setCamara(_camera.Position);
             _terreno.Dibujar(graphicsDevice);
 
             //solamente los tanques pasan aqui
@@ -148,7 +149,7 @@ namespace TGC.MonoGame.TP.src.Managers
             molde.setProjection(projection);
             molde.setVista(vista);
             molde.setCamara(_camera.Position);
-            molde.SetPosSOL(new Vector3(900, 400, -1000)); //sol
+            molde.SetPosSOL(new Vector3(900, 400, -1000)); //sol NO AFECTA AL TERRENO
             //molde.SetPosSOL(_camera.Position);
             //molde.SetPosSOL(new Vector3(1000000, 0, 0));
         }

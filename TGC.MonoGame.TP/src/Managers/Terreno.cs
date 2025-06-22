@@ -52,10 +52,12 @@ namespace TGC.MonoGame.TP.src.Terrenos
             this._effect2.Parameters["ambientColor"]?.SetValue(Color.White.ToVector3());
             this._effect2.Parameters["diffuseColor"]?.SetValue(Color.White.ToVector3());
             this._effect2.Parameters["specularColor"]?.SetValue(Color.White.ToVector3());
-            this._effect2.Parameters["KAmbient"]?.SetValue(0.5f);
-            this._effect2.Parameters["KDiffuse"]?.SetValue(0.7f);
-            this._effect2.Parameters["KSpecular"]?.SetValue(0.4f);
+            this._effect2.Parameters["KAmbient"]?.SetValue(0.55f);
+            this._effect2.Parameters["KDiffuse"]?.SetValue(3.0f);
+            this._effect2.Parameters["KSpecular"]?.SetValue(0.5f);
             this._effect2.Parameters["shininess"]?.SetValue(16.0f);
+            // configuracion de la luz ya que no molde
+            this._effect2.Parameters["lightPosition"]?.SetValue(new Vector3(900, 400, -1000));
         }
 
         protected override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)
@@ -80,14 +82,6 @@ namespace TGC.MonoGame.TP.src.Terrenos
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
             _effect2.Parameters["Texture"].SetValue(terrenoTexture);
             _effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(this._matrixMundo)));
-            Graphics.SamplerStates[0] = new SamplerState
-            {
-                AddressU = TextureAddressMode.Wrap,
-                AddressV = TextureAddressMode.Wrap,
-                Filter = TextureFilter.Anisotropic,
-                MaxAnisotropy = 16, // Valor típico para buen equilibrio calidad/rendimiento
-                MipMapLevelOfDetailBias = -0.5f // Ajusta este valor según necesites
-            };
 
             foreach (EffectPass pass in _effect2.CurrentTechnique.Passes)
             {
@@ -183,9 +177,10 @@ namespace TGC.MonoGame.TP.src.Terrenos
            
         }
 
-        
+
         protected void CalculateNormals(VertexPositionNormalTexture[] vertices, int[] indices)
         {
+            /*
             // Resetear normales
             for (int i = 0; i < vertices.Length; i++)
             {
@@ -211,12 +206,84 @@ namespace TGC.MonoGame.TP.src.Terrenos
             // Normalizar
             for (int i = 0; i < vertices.Length; i++)
             {
-                /*if (vertices[i].Normal != Vector3.Zero)
-                vertices[i].Normal.Normalize();*/
+                if (vertices[i].Normal != Vector3.Zero)
+                    vertices[i].Normal.Normalize();
                 //vertices[i].Normal = Vector3.UnitX* 100f;
                 //vertices[i].Normal = vertices[i].Normal * 1.4f; // Ajustar la intensidad de la normal si es necesario
             }
-    
+            */
+
+            // 1. Resetear normales
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                vertices[i].Normal = Vector3.Zero;
+            }
+
+            // 2. Calcular normales por triángulo
+            for (int i = 0; i < indices.Length; i += 3)
+            {
+                int i1 = indices[i];
+                int i2 = indices[i + 1];
+                int i3 = indices[i + 2];
+
+                Vector3 v1 = vertices[i1].Position;
+                Vector3 v2 = vertices[i2].Position;
+                Vector3 v3 = vertices[i3].Position;
+
+                Vector3 edge1 = v2 - v1;
+                Vector3 edge2 = v3 - v1;
+                Vector3 normal = Vector3.Cross(edge1, edge2);
+
+                // Solo agregar si la normal es válida
+                if (normal != Vector3.Zero)
+                {
+                    vertices[i1].Normal += normal;
+                    vertices[i2].Normal += normal;
+                    vertices[i3].Normal += normal;
+                }
+            }
+
+            // 3. Calcular normales basadas en la estructura de grid (método alternativo)
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    int index = y * width + x;
+
+                    // Solo calcular para vértices interiores
+                    if (x > 0 && x < width - 1 && y > 0 && y < height - 1)
+                    {
+                        float heightL = vertices[y * width + (x - 1)].Position.Y;
+                        float heightR = vertices[y * width + (x + 1)].Position.Y;
+                        float heightD = vertices[(y + 1) * width + x].Position.Y;
+                        float heightU = vertices[(y - 1) * width + x].Position.Y;
+
+                        /*
+                        vertices[index].Normal = new Vector3(
+                            heightL - heightR,  // Pendiente en X
+                            0.3f,              // Factor de escala (ajustar según necesidad)
+                            heightD - heightU   // Pendiente en Z
+                        );
+                        */
+                        vertices[index].Normal = new Vector3(
+                            heightD - heightU,   // Pendiente en Z
+                            0.3f,              // Factor de escala (ajustar según necesidad)
+                            heightL - heightR  // Pendiente en X
+                        );
+                    }
+
+                    // Normalizar
+                    if (vertices[index].Normal != Vector3.Zero)
+                    {
+                        vertices[index].Normal.Normalize();
+                    }
+                    else
+                    {
+                        vertices[index].Normal = Vector3.Up;
+                    }
+                }
+            }
+
         }
         //Configuración de efectos tomados desde la clase padre
 
@@ -270,7 +337,10 @@ namespace TGC.MonoGame.TP.src.Terrenos
 
             return Vector3.Cross(vector1, vector2);
         }
-
+        public virtual void setCamara(Vector3 camaraPosition)
+        {
+            this._effect2.Parameters["eyePosition"]?.SetValue(camaraPosition);
+        }
 
 
     }
