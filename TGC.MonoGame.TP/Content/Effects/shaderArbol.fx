@@ -59,7 +59,7 @@ struct VertexShaderOutput
 	float4 Position : SV_POSITION;
 	float2 TexCoord : TEXCOORD0;
     float4 WorldPosition : TEXCOORD1;
-	float3 Normal : TEXCOORD3;
+	float4 Normal : TEXCOORD3;
 };
 
 VertexShaderOutput TroncoVS(in VertexShaderInput input)
@@ -120,7 +120,7 @@ float4 TroncoPS(VertexShaderOutput input) : COLOR
 {
     float4 color = tex2D(TextureSampler, input.TexCoord);
     
-    PhongShaderInput phongInput = CargarPhoneShaderInput(input.Normal, input.WorldPosition);
+    PhongShaderInput phongInput = CargarPhoneShaderInput(input.Normal.xyz, input.WorldPosition);
 	color = PhongShader(color, phongInput);
 	return color;
 }
@@ -129,7 +129,7 @@ float4 HojasPS(VertexShaderOutput input) : COLOR
 {
     float4 color = tex2D(TextureSampler2, input.TexCoord);
 
-	PhongShaderInput phongInput = CargarPhoneShaderInput(input.Normal, input.WorldPosition);
+	PhongShaderInput phongInput = CargarPhoneShaderInput(input.Normal.xyz, input.WorldPosition);
 	color = PhongShader(color, phongInput);
 	return color;
 }

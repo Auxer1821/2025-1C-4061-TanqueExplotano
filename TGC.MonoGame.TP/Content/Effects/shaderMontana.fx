@@ -43,7 +43,7 @@ struct VertexShaderOutput
 	float4 Position : SV_POSITION;
  	float2 TexCoord : TEXCOORD0;
     float4 WorldPosition : TEXCOORD1;
-	float3 Normal : TEXCOORD2;
+	float4 Normal : TEXCOORD2;
 };
 
 VertexShaderOutput MainVS(in VertexShaderInput input)
@@ -69,14 +69,9 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
-	//float4 baseColor = tex2D(TextureSampler, input.TexCoord * 0.1); // Textura base (gran escala)
-    //float4 detailColor = tex2D(TextureSampler, input.TexCoord * 2.0); // Textura detalle
-    
-    // Mezcla según distancia (implementa tu lógica)
-    //float4 color = lerp(baseColor, detailColor, 0.5);
 	float4 color = tex2D(TextureSampler, input.TexCoord); // Textura base (gran escala)
 	//Cargamos y corremos el phongshader 
-	PhongShaderInput phongInput = CargarPhoneShaderInput(input.Normal, input.WorldPosition);
+	PhongShaderInput phongInput = CargarPhoneShaderInput(input.Normal.xyz, input.WorldPosition);
 	color = PhongShader(color, phongInput);
 	return color;
 }
