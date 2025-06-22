@@ -276,13 +276,30 @@ namespace TGC.MonoGame.TP.src.Entidades
             // Calcular el ángulo de inclinación del tanque en función de la altura del terreno
             var distanciaZ = Vector2.Distance(punto1, new Vector2(_posicion.X, _posicion.Z));
             var AlturaZ = this._escenario.getAltura(new Vector3(punto1.X, 0f, punto1.Y)) - _posicion.Y;
-            var ArcoSenoZ = (float)Math.Asin(AlturaZ / distanciaZ);
+            //var ArcoSenoZ = (float)Math.Asin(AlturaZ / distanciaZ);
+
+            // Validación para evitar NaN
+            float ArcoSenoZ = 0f;
+            if (Math.Abs(distanciaZ) > 0.001f) // Evitar división por cero
+            {
+                float ratioZ = AlturaZ / distanciaZ;
+                // Clampear al rango válido para Math.Asin
+                ratioZ = MathHelper.Clamp(ratioZ, -1f, 1f);
+                ArcoSenoZ = (float)Math.Asin(ratioZ);
+            }
 
             //altura entre los puntos 2 y 3
             var distanciaX = Vector2.Distance(punto2, punto3);
             var AlturaX = this._escenario.getAltura(new Vector3(punto2.X, 0f, punto2.Y)) - this._escenario.getAltura(new Vector3(punto3.X, 0f, punto3.Y));
 
-            var ArcoSenoX = (float)Math.Asin(AlturaX / distanciaX);
+            //var ArcoSenoX = (float)Math.Asin(AlturaX / distanciaX);
+            float ArcoSenoX = 0f;
+            if (Math.Abs(distanciaX) > 0.001f) // Evitar división por cero
+            {
+                float ratioX = AlturaX / distanciaX;
+                ratioX = MathHelper.Clamp(ratioX, -1f, 1f);
+                ArcoSenoX = (float)Math.Asin(ratioX);
+            }
 
             //suavizado de angulo para que no se vea tan brusco
             var anguloObjetivo = new Vector3(ArcoSenoZ, -ArcoSenoX, 0f);
@@ -301,7 +318,7 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             var posAux = this._posicion;
             posAux.Y = this._escenario.getAltura(punto1, punto2, punto3);
-            this._posicion = Vector3.Lerp(this._posicion, posAux, 0.3f); // Suavizado de altura
+            this._posicion = Vector3.Lerp(this._posicion, posAux, 0.6f); // Suavizado de altura
 
 
 
