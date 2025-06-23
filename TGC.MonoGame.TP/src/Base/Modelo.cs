@@ -108,5 +108,15 @@ namespace TGC.MonoGame.TP.src.Modelos
             _effect2.Parameters["View"].SetValue(vista);
             _effect2.Parameters["Projection"].SetValue(proyeccion);
         }
+
+        public virtual void setCamara(Vector3 camaraPosition)
+        {
+            _effect2.Parameters["eyePosition"]?.SetValue(camaraPosition);
+        }
+
+        public virtual void SetPosSOL(Vector3 posSOL)
+        {
+            _effect2.Parameters["lightPosition"]?.SetValue(posSOL);
+        }
     }
 }

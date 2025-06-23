@@ -31,6 +31,7 @@ namespace TGC.MonoGame.TP.src.Managers
         private Camaras.Camera _camera;
         private Terrenos.Terreno _terreno;
         private List<Moldes.IMolde> _moldes;
+        private Vector3 _posSOL;
 
         //skybox , pasto
         //decidir terreno (separar el dibujado del alturamapa)
@@ -38,6 +39,7 @@ namespace TGC.MonoGame.TP.src.Managers
         {
             _entidades = new List<Entidades.Entidad>();
             _pastos = new List<Entidades.EPasto>();
+            _posSOL = new Vector3(900.0f, 400.0f, -1000.0f);
         }
         public void inicializarCamara(Camaras.Camera camera)
         {
@@ -122,8 +124,10 @@ namespace TGC.MonoGame.TP.src.Managers
                     {
                         entidad.GetMolde().Draw(entidad.GetMundo(), graphicsDevice);
                     }
-                    else
+                    else    //tanque
                     {
+                        entidad._modelo.SetPosSOL(_posSOL);
+                        entidad._modelo.setCamara(_camera.Position);
                         entidad.EfectCamera(_camera.Vista, _camera.Proyeccion);
                         entidad.Dibujar(graphicsDevice);
                     }
@@ -149,7 +153,7 @@ namespace TGC.MonoGame.TP.src.Managers
             molde.setProjection(projection);
             molde.setVista(vista);
             molde.setCamara(_camera.Position);
-            molde.SetPosSOL(new Vector3(900, 400, -1000)); //sol NO AFECTA AL TERRENO
+            molde.SetPosSOL(_posSOL); //sol NO AFECTA AL TERRENO
             //molde.SetPosSOL(_camera.Position);
             //molde.SetPosSOL(new Vector3(1000000, 0, 0));
         }

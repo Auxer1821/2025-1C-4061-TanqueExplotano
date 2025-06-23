@@ -78,6 +78,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             _modelo.EfectCamera(vista, proyeccion);
         }
 
+
         public virtual Matrix GetMundo()
         {
             throw new NotImplementedException();

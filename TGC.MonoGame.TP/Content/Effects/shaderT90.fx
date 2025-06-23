@@ -14,6 +14,7 @@
 // HLSL Semantics - https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics
 // Parámetros del efecto
 
+#include "utilities/PhongShader.fx"
 texture2D Texture;
 sampler TextureSampler = sampler_state
 {
@@ -87,57 +88,33 @@ struct VertexShaderInput
 {
 	float4 Position : POSITION0;
 	float2 TexCoord : TEXCOORD0;
-	float3 Normal : NORMAL0;
-	float3 Tangent : TANGENT0;
+	float4 Normal : NORMAL0;
+	//float3 Tangent : TANGENT0;
 };
 
 struct VertexShaderOutput
 {
 	float4 Position : SV_POSITION;
 	float2 TexCoord : TEXCOORD0;
-	float3 TangentLightDir : TEXCOORD1;
-    float3 TangentViewDir : TEXCOORD2;
+	//float3 TangentLightDir : TEXCOORD1;
+    //float3 TangentViewDir : TEXCOORD2;
+    float4 WorldPosition : TEXCOORD1;
+    float4 Normal : TEXCOORD3;
 };
 
 VertexShaderOutput MainVS(in VertexShaderInput input)
 {
     // Clear the output
 	VertexShaderOutput output = (VertexShaderOutput)0;
-    // Model space to World space
-    //float4 worldPosition = mul(input.Position, World);
-    // World space to View space
-    //float4 viewPosition = mul(worldPosition, View);	
-	// View space to Projection space
-	
-	 output.Position = mul(mul(mul(input.Position, World), View), Projection);
-    //output.Position = mul(viewPosition, Projection);
+
+	output.Position = mul(mul(mul(input.Position, World), View), Projection);
+
+	output.WorldPosition = mul(input.Position, World);
+
+    
+    output.Normal = mul(input.Normal , InverseTransposeWorld);
 	output.TexCoord = input.TexCoord;
 
-	// Cálculo de TBN (Tangent-Binormal-Normal) Matrix
-    float3 normal = normalize(mul(input.Normal, (float3x3)World));
-    float3 tangent = normalize(mul(input.Tangent, (float3x3)World));
-    float3 binormal = cross(normal, tangent);
-
-	float3x3 TBN = float3x3(tangent, binormal, normal);
-    
-    // Direcciones en espacio tangente
-    float3 lightDir = normalize(float3(1, -1, 1)); // Luz direccional
-	//float3 ViewTBN = mul((float3x3)View, TBN);
-    //float3 viewDir = normalize(ViewTBN);
-    
-	float4 worldPosition = mul(input.Position, World);
-
-// Asumimos que la cámara está en el origen del espacio de vista (0, 0, 0),
-// así que su posición en espacio mundo es la inversa de la matriz View (normalmente pasada como una variable separada).
-// Si tienes la posición de la cámara en una variable, úsala directamente.
-
-	float3 cameraWorldPos = CameraPosition; // Este valor deberías pasarlo desde el CPU
-
-	float3 viewDirWorld = normalize(cameraWorldPos - worldPosition.xyz);
-
-// Transformar dirección de vista al espacio tangente
-output.TangentViewDir = mul(TBN, viewDirWorld);
-    output.TangentLightDir = mul(TBN, lightDir);
     return output;
 }
 
@@ -145,96 +122,46 @@ output.TangentViewDir = mul(TBN, viewDirWorld);
 float4 MainPS(VertexShaderOutput input) : COLOR
 {
    // Leer color base (difuso)
-    float4 diffuseColor = tex2D(TextureSampler, input.TexCoord);
-	diffuseColor.xyz *= Opaco;
+    float4 color = tex2D(TextureSampler, input.TexCoord);
+	color.xyz *= Opaco;
 
     // Leer la normal del normal map (en espacio tangente)
-    float3 normalMap = tex2D(NormalSampler, input.TexCoord).xyz;
-    float3 N = normalize(normalMap); // Normal perturbada
+    float4 normalMap = float4(tex2D(NormalSampler, input.TexCoord).xyz , 0.0);
+    //normalMap = normalize(normalMap);
+    //normalMap= normalMap * World;
+    normalMap  = mul(normalMap , InverseTransposeWorld);
 
-    float3 L = normalize(input.TangentLightDir); // Dirección de luz en espacio tangente
-    float3 V = normalize(input.TangentViewDir);  // Dirección de vista en espacio tangente
-    float3 H = normalize(L + V);
-
-	// Componente difusa
-    float NdotL = saturate(dot(N, L));
-    float3 diffuse = diffuseColor.rgb * NdotL;
+    PhongShaderInput phongInput = CargarPhoneShaderInput(normalMap.xyz, input.WorldPosition);
+	color = PhongShader(color, phongInput);
     
-    // Componente especular
-    float NdotH = saturate(dot(N, H));
-    float specular = pow(NdotH, 32) * 0.9; // Reducir intensidad
-    
-    // Componente ambiental
-    float3 ambient = diffuseColor.rgb * 0.65; //iluminación ambiente
-    
-    // 4. Combinación final con gamma correction
-    float3 finalColor = saturate(ambient + diffuse + specular);
-    finalColor = pow(finalColor, 1/1.05); // Gamma correction
-    
-    return float4(finalColor, diffuseColor.a);
+    return float4(color);
 }
 
-VertexShaderOutput RuedasVS(in VertexShaderInput input)
+VertexShaderOutput CintaVS(in VertexShaderInput input)
 {
     // Clear the output
 	VertexShaderOutput output = (VertexShaderOutput)0;
-    // Model space to World space
-    float4 worldPosition = mul(input.Position, World);
-    // World space to View space
-    float4 viewPosition = mul(worldPosition, View);	
-	// View space to Projection space
-    output.Position = mul(viewPosition, Projection);
+
+    output.Position = mul(mul(mul(input.Position, World), View), Projection);
+	output.WorldPosition = mul(input.Position, World);
+
 	output.TexCoord = input.TexCoord + UVOffset;
-	// Cálculo de TBN (Tangent-Binormal-Normal) Matrix
-    float3 normal = normalize(mul(input.Normal, (float3x3)World));
-    float3 tangent = normalize(mul(input.Tangent, (float3x3)World));
-    float3 binormal = cross(normal, tangent);
+    output.Normal = mul(input.Normal, InverseTransposeWorld);
 
-	float3x3 TBN = float3x3(tangent, binormal, normal);
-    
-    // Direcciones en espacio tangente
-    float3 lightDir = normalize(float3(1, -1, 1)); // Luz direccional
-
-	float3 cameraWorldPos = CameraPosition; // Este valor deberías pasarlo desde el CPU
-
-	float3 viewDirWorld = normalize(cameraWorldPos - worldPosition.xyz);
-
-	// Transformar dirección de vista al espacio tangente
-	output.TangentViewDir = mul(TBN, viewDirWorld);
-    output.TangentLightDir = mul(TBN, lightDir);
     return output;
 }
 
-float4 RuedasPS(VertexShaderOutput input) : COLOR
+float4 CintaPS(VertexShaderOutput input) : COLOR
 {
-   // Leer color base (difuso)
     float4 diffuseColor = tex2D(TextureSampler2, input.TexCoord);
+
+    float4 normalMap = float4(tex2D(NormalSampler2, input.TexCoord).xyz , 0.0);
+    normalMap  = mul(normalMap , InverseTransposeWorld);
+    PhongShaderInput phongInput = CargarPhoneShaderInput(normalMap.xyz, input.WorldPosition);
+    diffuseColor = PhongShader(diffuseColor, phongInput);
+
 	diffuseColor.xyz *= Opaco;
-
-    // Leer la normal del normal map (en espacio tangente)
-    float3 normalMap = tex2D(NormalSampler2, input.TexCoord).xyz;
-    float3 N = normalize(normalMap); // Normal perturbada
-
-    float3 L = normalize(input.TangentLightDir); // Dirección de luz en espacio tangente
-    float3 V = normalize(input.TangentViewDir);  // Dirección de vista en espacio tangente
-    float3 H = normalize(L + V);
-
-	// Componente difusa
-    float NdotL = saturate(dot(N, L));
-    float3 diffuse = diffuseColor.rgb * NdotL;
-    
-    // Componente especular
-    float NdotH = saturate(dot(N, H));
-    float specular = pow(NdotH, 32) * 0.9; // Reducir intensidad
-    
-    // Componente ambiental
-    float3 ambient = diffuseColor.rgb * 0.55; //iluminación ambiente
-    
-    // 4. Combinación final con gamma correction
-    float3 finalColor = saturate(ambient + diffuse + specular);
-    finalColor = pow(finalColor, 1/1.09); // Gamma correction
-    
-    return float4(finalColor, diffuseColor.a);
+    return float4(diffuseColor);
 }
 
 technique Main
@@ -250,7 +177,7 @@ technique RuedasDrawing
 {
 	pass P0
 	{
-		VertexShader = compile VS_SHADERMODEL RuedasVS();
-		PixelShader = compile PS_SHADERMODEL RuedasPS();
+		VertexShader = compile VS_SHADERMODEL CintaVS();
+		PixelShader = compile PS_SHADERMODEL CintaPS();
 	}
 };
