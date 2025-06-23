@@ -35,6 +35,22 @@ struct PhongShaderInput
     float KSpecular;
     float shininess;
 };
+float3 getNormalFromMap(float2 textureCoordinates, float3 worldPosition, float3 worldNormal, float3 tangentNormal)
+{
+    //float3 tangentNormal = tex2D(normalSampler, textureCoordinates).xyz * 2.0 - 1.0;
+
+    float3 Q1 = ddx(worldPosition);
+    float3 Q2 = ddy(worldPosition);
+    float2 st1 = ddx(textureCoordinates);
+    float2 st2 = ddy(textureCoordinates);
+
+    worldNormal = normalize(worldNormal.xyz);
+    float3 T = normalize(Q1 * st2.y - Q2 * st1.y);
+    float3 B = -normalize(cross(worldNormal, T));
+    float3x3 TBN = float3x3(T, B, worldNormal);
+
+    return normalize(mul(tangentNormal, TBN));
+}
 
 float4 PhongShader(float4 color, PhongShaderInput phongInput)
 {
@@ -62,6 +78,29 @@ float4 PhongShader(float4 color, PhongShaderInput phongInput)
     return finalColor;
 }
 
+float4 PhongShaderNormalMap(float2 texCoord,float4 texelColor, float3 texelNormal,PhongShaderInput phongInput){
+    // Base vectors
+    float3 lightDirection = normalize(lightPosition - phongInput.WorldPosition.xyz);
+    float3 viewDirection = normalize(eyePosition - phongInput.WorldPosition.xyz);
+    float3 halfVector = normalize(lightDirection + viewDirection);
+    float3 normal =  getNormalFromMap(texCoord, phongInput.WorldPosition.xyz, normalize(phongInput.Normal.xyz), texelNormal);
+
+	// Get the texture texel
+    //float4 texelColor = tex2D(textureSampler, input.TextureCoordinates);
+    
+	// Calculate the diffuse light
+    float NdotL = saturate(dot(normal, lightDirection));
+    float3 diffuseLight = KDiffuse * diffuseColor * NdotL;
+
+	// Calculate the specular light
+    float NdotH = dot(normal, halfVector);
+    float3 specularLight = KSpecular * specularColor * pow(NdotH, shininess);
+    
+    // Final calculation
+    float4 finalColor = float4(saturate(ambientColor * KAmbient + diffuseLight) * texelColor.rgb + specularLight, texelColor.a);
+    return finalColor;
+}
+
 PhongShaderInput CargarPhoneShaderInput(float3 normal, float4 worldPosition){
     PhongShaderInput phongInput = (PhongShaderInput)0;
 	phongInput.ambientColor = ambientColor;
@@ -78,3 +117,4 @@ PhongShaderInput CargarPhoneShaderInput(float3 normal, float4 worldPosition){
 
     return phongInput;
 }
+

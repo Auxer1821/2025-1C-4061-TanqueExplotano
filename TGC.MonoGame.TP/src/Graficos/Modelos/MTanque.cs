@@ -61,6 +61,17 @@ namespace TGC.MonoGame.TP.src.Tanques
             texturaNormalCinta = this.Content.Load<Texture2D>(@"Models/tgc-tanks" + this._tipoTanque.directorioTexturaCintaNormal());
             offsetCintas = getAnimacionTanque(Animacion.Detenido, 0.01f, offsetCintas); // esta es la animacion por defecto, 0 = detenido
             rotacionRuedas = getAnimacionTanque(Animacion.Detenido, 0.1f, rotacionRuedas); // esta es la animacion por defecto, 0 = detenido
+
+            //seteo del efecto
+            //luz
+            this._effect2.Parameters["ambientColor"]?.SetValue(Color.White.ToVector3());
+            this._effect2.Parameters["diffuseColor"]?.SetValue(Color.White.ToVector3());
+            this._effect2.Parameters["specularColor"]?.SetValue(Color.White.ToVector3());
+            this._effect2.Parameters["KAmbient"]?.SetValue(0.6f);
+            this._effect2.Parameters["KDiffuse"]?.SetValue(2.5f);
+            this._effect2.Parameters["KSpecular"]?.SetValue(0.5f);
+            this._effect2.Parameters["shininess"]?.SetValue(16.0f);
+
         }
         
         protected override void AjustarModelo(){
@@ -79,19 +90,14 @@ namespace TGC.MonoGame.TP.src.Tanques
         {
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
             _effect2.Parameters["Opaco"]?.SetValue(modificadorDanio);
+
+            // Setear las texturas (necesarias ya que al tener varios tanques estas deben cambiar)
             _effect2.Parameters["Texture"]?.SetValue(tanqueTexture);
             _effect2.Parameters["TextureCinta"]?.SetValue(texturaCinta);
             _effect2.Parameters["TextureNormalTanque"]?.SetValue(texturaNormalTanque);
             _effect2.Parameters["TextureNormalCinta"]?.SetValue(texturaNormalCinta);
 
-            //luz
-            this._effect2.Parameters["ambientColor"]?.SetValue(Color.White.ToVector3());
-            this._effect2.Parameters["diffuseColor"]?.SetValue(Color.White.ToVector3());
-            this._effect2.Parameters["specularColor"]?.SetValue(Color.White.ToVector3());
-            this._effect2.Parameters["KAmbient"]?.SetValue(0.2f);
-            this._effect2.Parameters["KDiffuse"]?.SetValue(0.8f);
-            this._effect2.Parameters["KSpecular"]?.SetValue(0.6f);
-            this._effect2.Parameters["shininess"]?.SetValue(16.0f);
+
             //------------------------------dibujado de los meshes---------------------------------------------------
             //TODO mejorar la lectura del codigo
             if (this._tipoTanque.directorioModelo().Contains("T90"))
@@ -115,7 +121,7 @@ namespace TGC.MonoGame.TP.src.Tanques
                         }
                         Matrix MundoShader = mesh.ParentBone.Transform * _matrixMundo;
                         _effect2.Parameters["World"].SetValue(MundoShader);
-                        _effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
+                        _effect2.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                         //_effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
 
                     }
@@ -123,14 +129,14 @@ namespace TGC.MonoGame.TP.src.Tanques
                     {
                         Matrix MundoShader =mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta) * _matrixMundo;
                         _effect2.Parameters["World"].SetValue(MundoShader);
-                        _effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
+                        _effect2.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                         //_effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta) * _matrixMundo);
                         Matrix transform = mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta) * _matrixMundo;
                         if (mesh.Name == "Cannon")
                         {
                             MundoShader = Matrix.CreateRotationX(-alturaTorreta - 0.3f) * transform;
                             _effect2.Parameters["World"].SetValue(MundoShader);
-                            _effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
+                            _effect2.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                             //_effect2.Parameters["World"].SetValue(Matrix.CreateRotationX(-alturaTorreta - 0.3f) * transform);
                         }
 
@@ -158,14 +164,14 @@ namespace TGC.MonoGame.TP.src.Tanques
                         }
                         Matrix MundoShader = transform * Matrix.CreateTranslation(0.15f,0,0) * _matrixMundo;
                         _effect2.Parameters["World"].SetValue(MundoShader);
-                        _effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
+                        _effect2.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                         //_effect2.Parameters["World"].SetValue(transform * Matrix.CreateTranslation(0.15f,0,0) * _matrixMundo);// Ajuste de la posición de las ruedas
                     }
                     else
                     {
                         Matrix MundoShader = mesh.ParentBone.Transform * _matrixMundo;
                         _effect2.Parameters["World"].SetValue(MundoShader);
-                        _effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
+                        _effect2.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                         //_effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
                     }
                     mesh.Draw();
@@ -193,7 +199,7 @@ namespace TGC.MonoGame.TP.src.Tanques
                         }
                         Matrix MundoShader = mesh.ParentBone.Transform * _matrixMundo;
                         _effect2.Parameters["World"].SetValue(MundoShader);
-                        _effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
+                        _effect2.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                         //_effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
 
                     }
@@ -201,14 +207,14 @@ namespace TGC.MonoGame.TP.src.Tanques
                     {
                         Matrix MundoShader = mesh.ParentBone.Transform * Matrix.CreateRotationY(giroTorreta) * _matrixMundo;
                         _effect2.Parameters["World"].SetValue(MundoShader);
-                        _effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
+                        _effect2.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                         //_effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationY(giroTorreta) * _matrixMundo);
                     }else if (mesh.Name == "Cannon")
                     {
                         //por alguna razon el cannon eran muy pequeño
                         Matrix MundoShader = mesh.ParentBone.Transform * Matrix.CreateRotationY(giroTorreta) * Matrix.CreateScale(100f) * _matrixMundo;
                         _effect2.Parameters["World"].SetValue(MundoShader);
-                        _effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
+                        _effect2.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                         //_effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationY(giroTorreta) * Matrix.CreateScale(100f) * _matrixMundo);
                     }else if (mesh.Name.Contains("Wheel"))
                     {
@@ -235,14 +241,14 @@ namespace TGC.MonoGame.TP.src.Tanques
                         }
                         Matrix MundoShader = transform * _matrixMundo;
                         _effect2.Parameters["World"].SetValue(MundoShader);
-                        _effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
+                        _effect2.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                         //_effect2.Parameters["World"].SetValue(transform * _matrixMundo);
                     }
                     else
                     {
                         Matrix MundoShader = mesh.ParentBone.Transform * _matrixMundo;
                         _effect2.Parameters["World"].SetValue(MundoShader);
-                        _effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
+                        _effect2.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                         //_effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * _matrixMundo);
                     }
 

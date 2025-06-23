@@ -77,44 +77,36 @@ float4x4 View;
 float4x4 Projection;
 
 float2 UVOffset = {0, 0};
-float3 DiffuseColor;
 float Opaco = 1.0;
 
-float NormalIntensity = 1.0f;
-float3 CameraPosition = {900, 400, -1000}; // Posición de la cámara en espacio mundo
 float Time = 0;
+
 
 struct VertexShaderInput
 {
 	float4 Position : POSITION0;
 	float2 TexCoord : TEXCOORD0;
 	float4 Normal : NORMAL0;
-	//float3 Tangent : TANGENT0;
 };
 
 struct VertexShaderOutput
 {
 	float4 Position : SV_POSITION;
 	float2 TexCoord : TEXCOORD0;
-	//float3 TangentLightDir : TEXCOORD1;
-    //float3 TangentViewDir : TEXCOORD2;
     float4 WorldPosition : TEXCOORD1;
-    float4 Normal : TEXCOORD3;
+    float4 Normal : TEXCOORD2; 
 };
 
 VertexShaderOutput MainVS(in VertexShaderInput input)
 {
     // Clear the output
 	VertexShaderOutput output = (VertexShaderOutput)0;
-
-	output.Position = mul(mul(mul(input.Position, World), View), Projection);
-
-	output.WorldPosition = mul(input.Position, World);
-
-    
-    output.Normal = mul(input.Normal , InverseTransposeWorld);
+	
+	 output.Position = mul(mul(mul(input.Position, World), View), Projection);
+    //output.Position = mul(viewPosition, Projection);
 	output.TexCoord = input.TexCoord;
-
+    output.WorldPosition = mul(input.Position, World);
+    output.Normal = mul(input.Normal, InverseTransposeWorld);
     return output;
 }
 
@@ -124,44 +116,39 @@ float4 MainPS(VertexShaderOutput input) : COLOR
    // Leer color base (difuso)
     float4 color = tex2D(TextureSampler, input.TexCoord);
 	color.xyz *= Opaco;
-
-    // Leer la normal del normal map (en espacio tangente)
-    float4 normalMap = float4(tex2D(NormalSampler, input.TexCoord).xyz , 0.0);
-    //normalMap = normalize(normalMap);
-    //normalMap= normalMap * World;
-    normalMap  = mul(normalMap , InverseTransposeWorld);
-
-    PhongShaderInput phongInput = CargarPhoneShaderInput(normalMap.xyz, input.WorldPosition);
-	color = PhongShader(color, phongInput);
-    
-    return float4(color);
+   
+    float3 tangentNormal = tex2D(NormalSampler, input.TexCoord).xyz * 2.0 - 1.0;
+   	PhongShaderInput phongInput = CargarPhoneShaderInput(input.Normal.xyz, input.WorldPosition);
+	color = PhongShaderNormalMap(input.TexCoord, color, tangentNormal, phongInput);
+    return color;
 }
 
-VertexShaderOutput CintaVS(in VertexShaderInput input)
+VertexShaderOutput RuedasVS(in VertexShaderInput input)
 {
     // Clear the output
 	VertexShaderOutput output = (VertexShaderOutput)0;
-
-    output.Position = mul(mul(mul(input.Position, World), View), Projection);
-	output.WorldPosition = mul(input.Position, World);
-
+    // Model space to World space
+    float4 worldPosition = mul(input.Position, World);
+    // World space to View space
+    float4 viewPosition = mul(worldPosition, View);	
+	// View space to Projection space
+    output.Position = mul(viewPosition, Projection);
 	output.TexCoord = input.TexCoord + UVOffset;
+    output.WorldPosition = mul(input.Position, World);
     output.Normal = mul(input.Normal, InverseTransposeWorld);
-
     return output;
 }
 
-float4 CintaPS(VertexShaderOutput input) : COLOR
+float4 RuedasPS(VertexShaderOutput input) : COLOR
 {
-    float4 diffuseColor = tex2D(TextureSampler2, input.TexCoord);
+   // Leer color base (difuso)
+    float4 color = tex2D(TextureSampler2, input.TexCoord);
+	color.xyz *= Opaco;
 
-    float4 normalMap = float4(tex2D(NormalSampler2, input.TexCoord).xyz , 0.0);
-    normalMap  = mul(normalMap , InverseTransposeWorld);
-    PhongShaderInput phongInput = CargarPhoneShaderInput(normalMap.xyz, input.WorldPosition);
-    diffuseColor = PhongShader(diffuseColor, phongInput);
-
-	diffuseColor.xyz *= Opaco;
-    return float4(diffuseColor);
+    float3 tangentNormal = tex2D(NormalSampler2, input.TexCoord).xyz * 2.0 - 1.0;
+   	PhongShaderInput phongInput = CargarPhoneShaderInput(input.Normal.xyz, input.WorldPosition);
+	color = PhongShaderNormalMap(input.TexCoord, color, tangentNormal, phongInput);
+    return color;
 }
 
 technique Main
@@ -177,7 +164,7 @@ technique RuedasDrawing
 {
 	pass P0
 	{
-		VertexShader = compile VS_SHADERMODEL CintaVS();
-		PixelShader = compile PS_SHADERMODEL CintaPS();
+		VertexShader = compile VS_SHADERMODEL RuedasVS();
+		PixelShader = compile PS_SHADERMODEL RuedasPS();
 	}
 };

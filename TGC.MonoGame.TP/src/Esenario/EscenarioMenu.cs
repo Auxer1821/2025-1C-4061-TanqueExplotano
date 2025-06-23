@@ -101,9 +101,12 @@ namespace TGC.MonoGame.TP.src.Escenarios
             Matrix Projection =
             Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, device.Viewport.AspectRatio, 1, 250);
             _tanque.EfectCamera(View, Projection);
+            //setear la iluminacion
+            _tanque.setCamara(new Vector3(0, 0, 0));
+            _tanque.SetPosSOL(new Vector3(-30, 30, 10));
 
 
-            this._velocidadDeGiro = 3;
+            this._velocidadDeGiro = 1;
 
             this._managerSonido = new Managers.ManagerSonido(Content);
             this._managerSonido.InstanciarSonidosMenu();
