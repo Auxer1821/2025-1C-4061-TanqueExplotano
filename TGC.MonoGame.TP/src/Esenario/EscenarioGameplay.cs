@@ -61,6 +61,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             Matrix view = _camara.Vista;
             Matrix projection = _camara.Proyeccion;
             _managerGrafico.inicializarCamara(_camara);
+            _managerGrafico.InicializarShadowMapping(graphicsDevice);
 
             //-----------------Inicializar el skybox-------------------//
             Entidades.ESkyBox skyBox = new ESkyBox();

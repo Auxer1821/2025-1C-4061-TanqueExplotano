@@ -15,6 +15,9 @@
 // Parámetros del efecto
 
 #include "utilities/PhongShader.fx"
+#include "utilities/ShadowShader.fx"
+#include "utilities/DepthShader.fx"
+
 texture2D Texture;
 sampler TextureSampler = sampler_state
 {
@@ -43,7 +46,8 @@ struct VertexShaderOutput
 	float4 Position : SV_POSITION;
  	float2 TexCoord : TEXCOORD0;
     float4 WorldPosition : TEXCOORD1;
-	float4 Normal : TEXCOORD2;
+	float4 LightPosition : TEXCOORD2;
+	float4 Normal : TEXCOORD3;
 };
 
 VertexShaderOutput MainVS(in VertexShaderInput input)
@@ -57,6 +61,7 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
     float4 viewPosition = mul(worldPosition, View);	
 	// View space to Projection space
     output.Position = mul(viewPosition, Projection);
+	output.LightPosition = mul(output.WorldPosition, LightViewProjection);
 
     //output.Normal = mul(input.Normal, InverseTransposeWorld);
 	output.Normal = input.Normal; // Normalización de la normal
@@ -73,10 +78,11 @@ float4 MainPS(VertexShaderOutput input) : COLOR
 	//Cargamos y corremos el phongshader 
 	PhongShaderInput phongInput = CargarPhoneShaderInput(input.Normal.xyz, input.WorldPosition);
 	color = PhongShader(color, phongInput);
+	color = ShadowShader(color, input.LightPosition, input.WorldPosition, input.Normal, lightPosition);
 	return color;
 }
 
-technique BasicColorDrawing
+technique TextureDrawing
 {
 	pass P0
 	{

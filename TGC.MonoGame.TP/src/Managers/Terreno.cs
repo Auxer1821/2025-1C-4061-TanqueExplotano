@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TGC.MonoGame.TP.src.Graficos.Utils;
 using TGC.MonoGame.TP.src.Objetos;
 
 
@@ -69,8 +70,9 @@ namespace TGC.MonoGame.TP.src.Terrenos
 
         //----------------------------------------------Dibujado--------------------------------------------------//
 
-        public override void Dibujar(GraphicsDevice Graphics)
+        public override void Dibujar(GraphicsDevice Graphics, ShadowMapping shadowMap)
         {
+            _effect2.CurrentTechnique = _effect2.Techniques["TextureDrawing"];
             Graphics.SetVertexBuffer(terrainVertexBuffer);
             if (terrainIndexBuffer == null || terrainIndexBuffer.IsDisposed)
             {
@@ -78,10 +80,33 @@ namespace TGC.MonoGame.TP.src.Terrenos
                 terrainIndexBuffer.SetData(indices);
             }
             Graphics.Indices = terrainIndexBuffer;
-
+            this.CargarShadowMapper(shadowMap);
+            
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
             _effect2.Parameters["Texture"].SetValue(terrenoTexture);
             _effect2.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(this._matrixMundo)));
+
+            foreach (EffectPass pass in _effect2.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                Graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, (width - 1) * (height - 1) * 6 / 3);
+            }
+        }
+
+
+        public override void DibujarShadowMap(GraphicsDevice Graphics , Matrix vista, Matrix proyeccion)
+        {
+            _effect2.CurrentTechnique = _effect2.Techniques["DepthPass"];
+            Graphics.SetVertexBuffer(terrainVertexBuffer);
+            if (terrainIndexBuffer == null || terrainIndexBuffer.IsDisposed)
+            {
+                terrainIndexBuffer = new IndexBuffer(Graphics, IndexElementSize.ThirtyTwoBits, indices.Length, BufferUsage.WriteOnly);
+                terrainIndexBuffer.SetData(indices);
+            }
+            Graphics.Indices = terrainIndexBuffer;
+            Matrix worldViewProjection = this._matrixMundo * vista * proyeccion;
+
+            _effect2.Parameters["WorldViewProjection"].SetValue(worldViewProjection);
 
             foreach (EffectPass pass in _effect2.CurrentTechnique.Passes)
             {
@@ -267,7 +292,7 @@ namespace TGC.MonoGame.TP.src.Terrenos
                         */
                         vertices[index].Normal = new Vector3(
                             heightD - heightU,   // Pendiente en Z
-                            0.3f,              // Factor de escala (ajustar según necesidad)
+                            0.5f,              // Factor de escala (ajustar según necesidad)
                             heightL - heightR  // Pendiente en X
                         );
                     }

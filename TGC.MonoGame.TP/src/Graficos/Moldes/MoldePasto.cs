@@ -49,6 +49,11 @@ namespace TGC.MonoGame.TP.src.Moldes
             Graphics.DepthStencilState = DepthStencilState.Default;
         }
 
+        public override void DibujarShadowMap(Matrix matrix, GraphicsDevice graphics){
+            throw new NotImplementedException();
+        }
+        
+
         public override void setTime(GameTime time)
         {
             // Aquí podrías actualizar parámetros relacionados con el tiempo si es necesario
@@ -96,9 +101,7 @@ namespace TGC.MonoGame.TP.src.Moldes
         public override void setCamara(Vector3 position)
         {
         }
-        public override void SetPosSOL(Vector3 position){
-
-        }
+  
 
 
 

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using TGC.MonoGame.TP.src.Graficos.Utils;
 
 namespace TGC.MonoGame.TP.src.Objetos
 {
@@ -69,6 +70,24 @@ namespace TGC.MonoGame.TP.src.Objetos
 
         //----------------------------------------------Dibujado--------------------------------------------------//
 
+        public virtual void Dibujar(GraphicsDevice Graphics, ShadowMapping shadowMap){
+            Graphics.SetVertexBuffer(_vertices);
+            Graphics.Indices = _indices;
+
+            this.CargarShadowMapper(shadowMap);
+            _effect2.Parameters["World"].SetValue(this._matrixMundo);
+            _effect2.Parameters["DiffuseColor"].SetValue(this._Color);
+
+            Graphics.SetVertexBuffer(_vertices);
+            Graphics.Indices = _indices;
+
+            foreach (var pass in _effect2.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                Graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList,0,0,this._indices.IndexCount);
+            }
+        }
+
         public virtual void Dibujar(GraphicsDevice Graphics){
             Graphics.SetVertexBuffer(_vertices);
             Graphics.Indices = _indices;
@@ -114,6 +133,18 @@ namespace TGC.MonoGame.TP.src.Objetos
         {
             _effect2.Parameters["View"].SetValue(vista);
             _effect2.Parameters["Projection"].SetValue(proyeccion);
+        }
+
+        public virtual void DibujarShadowMap(GraphicsDevice Graphics, Matrix vista, Matrix proyeccion)
+        {
+            throw new NotImplementedException(); //TODO - Actualizarlo para todos;
+        }
+
+        protected void CargarShadowMapper(ShadowMapping shadowMap)
+        {
+            _effect2.Parameters["shadowMapSize"].SetValue(shadowMap.GetShadowMapSize());
+            _effect2.Parameters["LightViewProjection"].SetValue(shadowMap.GetLightViewProjection());
+            _effect2.Parameters["shadowMap"].SetValue(shadowMap.GetShadowMap());
         }
     }
 }

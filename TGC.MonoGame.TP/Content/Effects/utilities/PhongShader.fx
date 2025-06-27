@@ -75,6 +75,7 @@ float4 PhongShader(float4 color, PhongShaderInput phongInput)
     //float4 finalColor = float4(specularLight,color.a);
     //float4 finalColor = float4 (phongInput.Normal.xyz, color.a); //Pruebas de colores (normal)
     //float4 finalColor = float4 (phongInput.WorldPosition.xyz, color.a); //Pruebas de colores (POS)
+    //float4 finalColor = color;
     return finalColor;
 }
 

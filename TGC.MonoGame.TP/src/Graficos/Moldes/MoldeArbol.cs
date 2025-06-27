@@ -68,6 +68,16 @@ namespace TGC.MonoGame.TP.src.Moldes
                 mesh.Draw();
             }
         }
+
+        public override void DibujarShadowMap(Matrix worldViewProjection, GraphicsDevice graphics){
+            _efecto.CurrentTechnique = _efecto.Techniques["DepthPass"];
+            foreach (var mesh in _modelo.Meshes)
+            {
+                _efecto.Parameters["WorldViewProjection"].SetValue(mesh.ParentBone.Transform * worldViewProjection);/// mesh * (mundo * view * proy) =  (mesh * mundo * view )* proy
+                mesh.Draw();
+            }
+        }
+
         public override void setTime(GameTime time)
         {
             // Aquí podrías actualizar parámetros relacionados con el tiempo si es necesario

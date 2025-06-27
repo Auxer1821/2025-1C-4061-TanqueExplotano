@@ -92,5 +92,12 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             return false; // Por defecto no se excluye del frustum culling
         }
+
+        internal virtual void DibujarShadowMap(GraphicsDevice graphics, Matrix vista, Matrix proyeccion)
+        {
+            throw new NotImplementedException(); //TODO - Actualizarlo para todos;
+        }
+
+   
     }
 }

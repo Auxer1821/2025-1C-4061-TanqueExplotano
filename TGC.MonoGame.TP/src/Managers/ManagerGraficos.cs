@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Objetos;
 using System.Linq;
 using TGC.MonoGame.TP.src.Moldes;
+using TGC.MonoGame.TP.src.Graficos.Utils;
+using System.IO;
+
 
 
 
@@ -19,11 +22,7 @@ namespace TGC.MonoGame.TP.src.Managers
     {
         //deberia estar el frostum aca o en coliciones?
         private BoundingsVolumes.BVTrufas _boundingFrustum;
-        //ejemplo de uso
-        //_boundingFrustum = new BoundingFrustum(_testCamera.View * _testCamera.Projection);
-        //_boudingFrustum.intersects(_entidad.BoundingBox);
-        // Update the view projection matrix of the bounding frustum
-        //_boundingFrustum.Matrix = _testCamera.View * _testCamera.Projection;
+
         private List<Entidades.Entidad> _entidades; // dif listas [arboles,casa,caja,roca,pasto,montaña]
                                                     //effecto particular [arbol,casa,caja,roca,pasto,montaña]
         private List<Entidades.EPasto> _pastos;
@@ -32,6 +31,7 @@ namespace TGC.MonoGame.TP.src.Managers
         private Terrenos.Terreno _terreno;
         private List<Moldes.IMolde> _moldes;
         private Vector3 _posSOL;
+        public ShadowMapping _shadowMapper;
 
         //skybox , pasto
         //decidir terreno (separar el dibujado del alturamapa)
@@ -40,6 +40,7 @@ namespace TGC.MonoGame.TP.src.Managers
             _entidades = new List<Entidades.Entidad>();
             _pastos = new List<Entidades.EPasto>();
             _posSOL = new Vector3(900.0f, 400.0f, -1000.0f);
+            _shadowMapper = new ShadowMapping();
         }
         public void inicializarCamara(Camaras.Camera camera)
         {
@@ -60,6 +61,11 @@ namespace TGC.MonoGame.TP.src.Managers
             _moldes = moldes;
         }
 
+        public void InicializarShadowMapping(GraphicsDevice graphicsDevice){
+            _shadowMapper.Initialize(_posSOL, graphicsDevice);
+        }
+        
+
         public void AgregarEntidad(Entidades.Entidad entidad)
         {
             if (entidad.PuedeDibujar())
@@ -78,13 +84,18 @@ namespace TGC.MonoGame.TP.src.Managers
 
         public void DibujarObjetos(GraphicsDevice graphicsDevice)
         {
+            //--------------1er Recorrida: ShadowMapping--------------//
+            _shadowMapper.ActualizarShadowMap(graphicsDevice, _entidades, _terreno);
+
+            //--------------2da Recorrida: Dibujado comun--------------//
+
             //recorrer por listas separadas
             _skyBox.EfectCamera(_camera.Vista, _camera.Proyeccion);
             _skyBox.Dibujar(graphicsDevice);//se dibuja primero
 
             _terreno.EfectCamera(_camera.Vista, _camera.Proyeccion);
             _terreno.setCamara(_camera.Position);
-            _terreno.Dibujar(graphicsDevice);
+            _terreno.Dibujar(graphicsDevice, _shadowMapper);
 
             //solamente los tanques pasan aqui
             /*
@@ -122,7 +133,8 @@ namespace TGC.MonoGame.TP.src.Managers
                 {
                     if (entidad._tipo == Entidades.TipoEntidad.Obstaculo)
                     {
-                        entidad.GetMolde().Draw(entidad.GetMundo(), graphicsDevice);
+                        entidad.GetMolde().Draw(entidad.GetMundo(), graphicsDevice, _shadowMapper);
+                        //entidad.GetMolde().Draw(entidad.GetMundo(), graphicsDevice);
                     }
                     else    //tanque
                     {
@@ -130,6 +142,7 @@ namespace TGC.MonoGame.TP.src.Managers
                         entidad._modelo.setCamara(_camera.Position);
                         entidad.EfectCamera(_camera.Vista, _camera.Proyeccion);
                         entidad.Dibujar(graphicsDevice);
+                        //entidad.Dibujar(graphicsDevice, _shadowMapper);
                     }
                 }
             }
@@ -142,7 +155,9 @@ namespace TGC.MonoGame.TP.src.Managers
                 {
                     //pasto.EfectCamera(_camera.Vista, _camera.Proyeccion);
                     //pasto.Dibujar(graphicsDevice);
-                    pasto.GetMolde().Draw(pasto.GetMundo(), graphicsDevice);
+                    //pasto.GetMolde().Draw(pasto.GetMundo(), graphicsDevice);
+
+                    pasto.GetMolde().Draw(pasto.GetMundo(), graphicsDevice, _shadowMapper);
                 }
             }
 
@@ -176,9 +191,6 @@ namespace TGC.MonoGame.TP.src.Managers
         {
             _boundingFrustum.UpdateFrustum(_camera);
         }
-
-      
-
 
     }
 }

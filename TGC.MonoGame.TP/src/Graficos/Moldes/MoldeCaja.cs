@@ -34,7 +34,7 @@ namespace TGC.MonoGame.TP.src.Moldes
             this.ConfigPuntos(Graphics);
         }
         public override void Draw(Matrix Mundo, GraphicsDevice Graphics){
-
+            _efecto.CurrentTechnique = _efecto.Techniques["TextureDrawing"];
             Graphics.SetVertexBuffer(_vertices);
             Graphics.Indices = _indices;
 
@@ -45,6 +45,21 @@ namespace TGC.MonoGame.TP.src.Moldes
             {
                 pass.Apply();
                 Graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, this._indices.IndexCount);
+            }
+        }
+
+        public override void DibujarShadowMap(Matrix MVP, GraphicsDevice graphics)
+        {
+
+            _efecto.CurrentTechnique = _efecto.Techniques["DepthPass"];
+            graphics.SetVertexBuffer(_vertices);
+            graphics.Indices = _indices;
+
+            _efecto.Parameters["WorldViewProjection"].SetValue(MVP);
+            foreach (var pass in _efecto.CurrentTechnique.Passes)
+            {
+                pass.Apply();
+                graphics.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, this._indices.IndexCount);
             }
         }
 

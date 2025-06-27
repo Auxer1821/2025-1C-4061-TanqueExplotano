@@ -47,6 +47,7 @@ namespace TGC.MonoGame.TP.src.Moldes
 
         public override void Draw(Matrix mundo, GraphicsDevice Graphics)
         {
+            _efecto.CurrentTechnique = _efecto.Techniques["TextureDrawing"];
             _efecto.Parameters["World"].SetValue(mundo);
             
 
@@ -58,9 +59,15 @@ namespace TGC.MonoGame.TP.src.Moldes
                 mesh.Draw();
             }
         }
-    
 
-
+        public override void DibujarShadowMap(Matrix worldViewProjection, GraphicsDevice graphics){
+            _efecto.CurrentTechnique = _efecto.Techniques["DepthPass"];
+            foreach (var mesh in _modelo.Meshes)
+            {
+                _efecto.Parameters["WorldViewProjection"].SetValue(mesh.ParentBone.Transform * worldViewProjection);
+                mesh.Draw();
+            }
+        }
 
     }
 }
