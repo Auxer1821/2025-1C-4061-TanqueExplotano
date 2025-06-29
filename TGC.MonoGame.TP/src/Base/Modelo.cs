@@ -127,11 +127,12 @@ namespace TGC.MonoGame.TP.src.Modelos
             _effect2.Parameters["lightPosition"]?.SetValue(posSOL);
         }
 
-        protected void CargarShadowMapper(ShadowMapping shadowMap)
+        public void CargarShadowMapper(ShadowMapping shadowMap)
         {
             _effect2.Parameters["shadowMapSize"].SetValue(shadowMap.GetShadowMapSize());
             _effect2.Parameters["LightViewProjection"].SetValue(shadowMap.GetLightViewProjection());
             _effect2.Parameters["shadowMap"].SetValue(shadowMap.GetShadowMap());
         }
+
     }
 }

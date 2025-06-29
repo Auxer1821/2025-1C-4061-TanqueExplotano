@@ -144,11 +144,24 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         }
 
+        //----------------Dibujar----------------//
+        public override void Dibujar(GraphicsDevice graphicsDevice, Graficos.Utils.ShadowMapping shadowMapper)
+        {
+            this._modelo.CargarShadowMapper(shadowMapper);
+            this.Dibujar(graphicsDevice);
+        }
+
+
         public override void Dibujar(GraphicsDevice Graphics)
         {
             base.Dibujar(Graphics);
             this._particulasDisparo.Dibujar();
             this._particulasExplosion.Dibujar();
+        }
+
+        public override void DibujarShadowMap(GraphicsDevice graphics, Matrix vista, Matrix proyeccion)
+        {
+            ((MTanque)this._modelo).DibujarShadowMap(graphics, vista, proyeccion);
         }
 
         public override void EfectCamera(Matrix vista, Matrix proyeccion)
@@ -261,7 +274,6 @@ namespace TGC.MonoGame.TP.src.Entidades
         // Para luego usarlos y crear la matriz mundo
         public void Mover()
         {
-
 
             this._posicion += new Vector3(_dirMovimiento.X, 0, _dirMovimiento.Y) * _velocidadActual;//p
 

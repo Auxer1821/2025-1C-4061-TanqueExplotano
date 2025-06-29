@@ -8,8 +8,13 @@
 #endif
 
 
-static const float modulatedEpsilon = 0.000041200182749889791011810302734375;
-static const float maxEpsilon = 0.000023200045689009130001068115234375;
+//static const float modulatedEpsilon = 0.000041200182749889791011810302734375;
+//static const float modulatedEpsilon = 0.000041200182749889791011810302734375;
+//static const float maxEpsilon = 0.000023200045689009130001068115234375;
+//static const float maxEpsilon = 0.000023200045689009130001068115234375;
+static const float modulatedEpsilon = 0.000002;
+static const float maxEpsilon = 0.000005;
+
 
 //----------Valores a recibir en codigo----------//
 
@@ -38,7 +43,8 @@ float4 ShadowShader(float4 color, float4 LightSpacePosition , float4 WorldSpaceP
 	
     float3 normal = normalize(Normal.rgb);
     float3 lightDirection = normalize(lightPosition - WorldSpacePosition.xyz);
-    float inclinationBias = max(modulatedEpsilon * (1.0 - dot(normal, lightDirection)), maxEpsilon);
+    //float inclinationBias = max(modulatedEpsilon  * (1.0 - dot(normal, lightDirection)), maxEpsilon );
+    float inclinationBias = max(modulatedEpsilon  * (1.0 - dot(normal, lightDirection)), maxEpsilon );
 	
 	// Sample and smooth the shadowmap
 	// Also perform the comparison inside the loop and average the result

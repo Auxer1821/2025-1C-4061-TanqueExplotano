@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.BoundingsVolumes;
+using TGC.MonoGame.TP.src.Graficos.Utils;
 using TGC.MonoGame.TP.src.Moldes;
 
 
@@ -93,11 +94,14 @@ namespace TGC.MonoGame.TP.src.Entidades
             return false; // Por defecto no se excluye del frustum culling
         }
 
-        internal virtual void DibujarShadowMap(GraphicsDevice graphics, Matrix vista, Matrix proyeccion)
+        public virtual void DibujarShadowMap(GraphicsDevice graphics, Matrix vista, Matrix proyeccion)
         {
             throw new NotImplementedException(); //TODO - Actualizarlo para todos;
         }
 
-   
+        public virtual void Dibujar(GraphicsDevice graphicsDevice, ShadowMapping shadowMapper)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

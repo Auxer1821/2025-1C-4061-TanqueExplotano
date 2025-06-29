@@ -141,8 +141,8 @@ namespace TGC.MonoGame.TP.src.Managers
                         entidad._modelo.SetPosSOL(_posSOL);
                         entidad._modelo.setCamara(_camera.Position);
                         entidad.EfectCamera(_camera.Vista, _camera.Proyeccion);
-                        entidad.Dibujar(graphicsDevice);
-                        //entidad.Dibujar(graphicsDevice, _shadowMapper);
+                        //entidad.Dibujar(graphicsDevice);
+                        entidad.Dibujar(graphicsDevice, _shadowMapper);
                     }
                 }
             }

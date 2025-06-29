@@ -176,12 +176,12 @@ namespace TGC.MonoGame.TP.src.Escenarios
             {
                 //IZQUIERDA
                 var montana = new EMontana();
-                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(-400, 0, -400 + 200 * i), content, this);
+                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(-400, -5, -400 + 200 * i), content, this);
                 montana.SetMolde(moldeMontana);
                 this.AgregarACrear(montana);
                 //DERECHA
                 montana = new EMontana();
-                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(400, 0, -400 + 200 * i), content, this);
+                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(400, -5, -400 + 200 * i), content, this);
                 montana.SetMolde(moldeMontana);
                 this.AgregarACrear(montana);
             }

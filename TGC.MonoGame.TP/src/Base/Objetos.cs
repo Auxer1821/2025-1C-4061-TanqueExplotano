@@ -142,9 +142,9 @@ namespace TGC.MonoGame.TP.src.Objetos
 
         protected void CargarShadowMapper(ShadowMapping shadowMap)
         {
-            _effect2.Parameters["shadowMapSize"].SetValue(shadowMap.GetShadowMapSize());
-            _effect2.Parameters["LightViewProjection"].SetValue(shadowMap.GetLightViewProjection());
-            _effect2.Parameters["shadowMap"].SetValue(shadowMap.GetShadowMap());
+            _effect2.Parameters["shadowMapSize"]?.SetValue(shadowMap.GetShadowMapSize());
+            _effect2.Parameters["LightViewProjection"]?.SetValue(shadowMap.GetLightViewProjection());
+            _effect2.Parameters["shadowMap"]?.SetValue(shadowMap.GetShadowMap());
         }
     }
 }

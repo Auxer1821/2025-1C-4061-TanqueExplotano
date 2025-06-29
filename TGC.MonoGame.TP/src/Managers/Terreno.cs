@@ -292,7 +292,7 @@ namespace TGC.MonoGame.TP.src.Terrenos
                         */
                         vertices[index].Normal = new Vector3(
                             heightD - heightU,   // Pendiente en Z
-                            0.5f,              // Factor de escala (ajustar según necesidad)
+                            1.0f,              // Factor de escala (ajustar según necesidad)
                             heightL - heightR  // Pendiente en X
                         );
                     }

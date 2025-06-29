@@ -72,6 +72,8 @@ namespace TGC.MonoGame.TP.src.Tanques
             this._effect2.Parameters["KSpecular"]?.SetValue(0.5f);
             this._effect2.Parameters["shininess"]?.SetValue(16.0f);
 
+            
+
         }
         
         protected override void AjustarModelo(){
@@ -84,6 +86,7 @@ namespace TGC.MonoGame.TP.src.Tanques
             this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo().X) * Matrix.CreateRotationY(this._tipoTanque.angulo().Y) * Matrix.CreateRotationZ(this._tipoTanque.angulo().Z) * Matrix.CreateTranslation(new Vector3(0,0.5f,0)); 
             }
         }
+
 
         //----------------------------------------------Dibujado--------------------------------------------------//
         public override void Dibujar(GraphicsDevice Graphics)
@@ -257,7 +260,30 @@ namespace TGC.MonoGame.TP.src.Tanques
             }
         }
 
-            //dibujado de proyextiles
+        public void DibujarShadowMap(GraphicsDevice Graphics, Matrix vista, Matrix proyeccion)
+        {
+            _effect2.CurrentTechnique = _effect2.Techniques["DepthPass"];
+
+            foreach (var mesh in _modelo.Meshes)
+            {
+                _effect2.Parameters["WorldViewProjection"].SetValue(mesh.ParentBone.Transform * _matrixMundo * vista * proyeccion);/// mesh * (mundo * view * proy) =  (mesh * mundo * view )* proy
+                if (mesh.Name == "Turret" || mesh.Name == "Cannon")
+                {
+                    Matrix MundoShader = mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta) * _matrixMundo;
+                    _effect2.Parameters["WorldViewProjection"].SetValue(MundoShader * vista * proyeccion);/// mesh * (mundo * view * proy) =  (mesh * mundo * view )* proy
+                    Matrix transform = mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta) * _matrixMundo;
+                    if (mesh.Name == "Cannon")
+                    {
+                        MundoShader = Matrix.CreateRotationX(-alturaTorreta - 0.3f) * transform;
+                        _effect2.Parameters["WorldViewProjection"].SetValue(MundoShader * vista * proyeccion);/// mesh * (mundo * view * proy) =  (mesh * mundo * view )* proy
+                        //_effect2.Parameters["World"].SetValue(Matrix.CreateRotationX(-alturaTorreta - 0.3f) * transform);
+
+                    }
+                }
+                mesh.Draw();
+            }
+        }
+
 
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------//
         public override Effect ConfigEfectos2(GraphicsDevice Graphics, ContentManager Content)

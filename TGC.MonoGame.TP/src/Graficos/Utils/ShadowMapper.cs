@@ -19,7 +19,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Utils
     public class ShadowMapping
     {
         // para el postprocesado
-        public const int _shadowmapSize = 2048 * 3;
+        public const int _shadowmapSize = 2048 * 4;
         private const float _lightCameraFarPlaneDistance = 3000f;
         private const float _lightCameraNearPlaneDistance = 5f;
         private RenderTarget2D _shadowMapRenderTarget;
@@ -84,7 +84,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Utils
                 }
                 else // tanque
                 {
-                    //entidad.DibujarShadowMap(graphics, _targetLightCamera.Vista, _targetLightCamera.Proyeccion);
+                    entidad.DibujarShadowMap(graphics, _targetLightCamera.Vista, _targetLightCamera.Proyeccion);
                 }
             }
         }

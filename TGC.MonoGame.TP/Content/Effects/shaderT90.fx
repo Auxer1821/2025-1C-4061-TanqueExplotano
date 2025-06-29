@@ -15,6 +15,8 @@
 // Parámetros del efecto
 
 #include "utilities/PhongShader.fx"
+#include "utilities/ShadowShader.fx"
+#include "utilities/DepthShader.fx"
 texture2D Texture;
 sampler TextureSampler = sampler_state
 {
@@ -94,7 +96,8 @@ struct VertexShaderOutput
 	float4 Position : SV_POSITION;
 	float2 TexCoord : TEXCOORD0;
     float4 WorldPosition : TEXCOORD1;
-    float4 Normal : TEXCOORD2; 
+	float4 LightPosition : TEXCOORD2;
+    float4 Normal : TEXCOORD3; 
 };
 
 VertexShaderOutput MainVS(in VertexShaderInput input)
@@ -102,10 +105,10 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
     // Clear the output
 	VertexShaderOutput output = (VertexShaderOutput)0;
 	
-	 output.Position = mul(mul(mul(input.Position, World), View), Projection);
-    //output.Position = mul(viewPosition, Projection);
+    output.Position = mul(mul(mul(input.Position, World), View), Projection);
 	output.TexCoord = input.TexCoord;
     output.WorldPosition = mul(input.Position, World);
+    output.LightPosition = mul(output.WorldPosition, LightViewProjection);
     output.Normal = mul(input.Normal, InverseTransposeWorld);
     return output;
 }
@@ -120,6 +123,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     float3 tangentNormal = tex2D(NormalSampler, input.TexCoord).xyz * 2.0 - 1.0;
    	PhongShaderInput phongInput = CargarPhoneShaderInput(input.Normal.xyz, input.WorldPosition);
 	color = PhongShaderNormalMap(input.TexCoord, color, tangentNormal, phongInput);
+    color = ShadowShader(color, input.LightPosition, input.WorldPosition, input.Normal, lightPosition);
     return color;
 }
 
@@ -127,14 +131,13 @@ VertexShaderOutput RuedasVS(in VertexShaderInput input)
 {
     // Clear the output
 	VertexShaderOutput output = (VertexShaderOutput)0;
-    // Model space to World space
     float4 worldPosition = mul(input.Position, World);
-    // World space to View space
     float4 viewPosition = mul(worldPosition, View);	
-	// View space to Projection space
+	
     output.Position = mul(viewPosition, Projection);
 	output.TexCoord = input.TexCoord + UVOffset;
     output.WorldPosition = mul(input.Position, World);
+    output.LightPosition = mul(output.WorldPosition, LightViewProjection);
     output.Normal = mul(input.Normal, InverseTransposeWorld);
     return output;
 }
@@ -148,6 +151,7 @@ float4 RuedasPS(VertexShaderOutput input) : COLOR
     float3 tangentNormal = tex2D(NormalSampler2, input.TexCoord).xyz * 2.0 - 1.0;
    	PhongShaderInput phongInput = CargarPhoneShaderInput(input.Normal.xyz, input.WorldPosition);
 	color = PhongShaderNormalMap(input.TexCoord, color, tangentNormal, phongInput);
+    color = ShadowShader(color, input.LightPosition, input.WorldPosition, input.Normal, lightPosition);
     return color;
 }
 
