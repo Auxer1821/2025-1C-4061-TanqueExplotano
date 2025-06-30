@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using BepuPhysics.Collidables;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using TGC.MonoGame.TP.src.Modelos;
 using TGC.MonoGame.TP.src.Objetos;
 
 
@@ -48,9 +50,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
             base.Initialize(Graphics, Mundo, Content);
-            this.ResetDeformation();
             this.GuardarVerticesOriginales();
-            //this.ResetDeformation();
             /*
                 //deformacion de prueba
                 this.DeformModel(Vector3.UnitX , 2f , 1f);
@@ -88,6 +88,7 @@ namespace TGC.MonoGame.TP.src.Tanques
 
         }
 
+
         protected override void AjustarModelo()
         {
             if (this._tipoTanque.directorioModelo().Contains("T90"))
@@ -102,8 +103,11 @@ namespace TGC.MonoGame.TP.src.Tanques
 
 
         //----------------------------------------------Dibujado--------------------------------------------------//
+        #region Dibujar
+        #endregion
         public override void Dibujar(GraphicsDevice Graphics)
         {
+            this.DeformarModelo();
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
             _effect2.Parameters["Opaco"]?.SetValue(modificadorDanio);
 
@@ -273,6 +277,7 @@ namespace TGC.MonoGame.TP.src.Tanques
                     mesh.Draw();
                 }
             }
+            this.ResetDeformation();
         }
 
         public void DibujarShadowMap(GraphicsDevice Graphics, Matrix vista, Matrix proyeccion)
@@ -482,6 +487,23 @@ namespace TGC.MonoGame.TP.src.Tanques
         }
 
 
+
+        // En tu clase de tanque
+        List<(Vector3 impactPoint, float radius, float intensity)> deformaciones = new List<(Vector3, float, float)>();
+
+        public void AddImpact(Vector3 point, float radius, float intensity)
+        {
+            deformaciones.Add((point, radius, intensity));
+        }
+
+        private void DeformarModelo(){
+            foreach (var deformacion in deformaciones)
+            {
+                this.DeformModel(deformacion.impactPoint, deformacion.radius, deformacion.intensity);
+            }
+        }
+
+
         private Dictionary<string, VertexPositionNormalTexture[]> _originalVertices = new();
 
         public void GuardarVerticesOriginales()
@@ -531,7 +553,5 @@ namespace TGC.MonoGame.TP.src.Tanques
                 }
             }
         }
-
-
-    }
+        }
 }

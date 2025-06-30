@@ -226,7 +226,8 @@ namespace TGC.MonoGame.TP.src.Entidades
             Matrix inverseWorld = Matrix.Invert(this.GetMundo());
             Vector3 localPosition = Vector3.Transform(puntoImpacto, inverseWorld);
 
-            ((MTanque)this._modelo).DeformModel(-localPosition, 4f  , fuerzaImpacto);
+            //((MTanque)this._modelo).DeformModel(-localPosition, 4f  , fuerzaImpacto);
+            ((MTanque)this._modelo).AddImpact(-localPosition, 4f  , fuerzaImpacto);
             
         }
 

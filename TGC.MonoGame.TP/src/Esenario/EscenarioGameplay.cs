@@ -212,7 +212,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             for (int i = 0; i < _cantidadEnemigosIA; i++)
             {
                 var tank = new ETanqueIA();
-                tank.SetTipoTanque("Panzer");
+                //tank.SetTipoTanque("Panzer");
                 float Ax = random.Next(-150, 150);
                 //float Az = random.Next(-150, 150);
                 float Az;
