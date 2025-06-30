@@ -200,6 +200,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             if (this.tiempoUltimoImpacto < 0.5 || bala == this._bala || !this._tipoTanque.EstaVivo())
                 return;
 
+            this.AplicarDeformacion(choque._puntoContacto, 1.0f);
             // Restar vida (suponiendo que existe una propiedad 'Vida')
             this._tipoTanque.RecibirDanio(bala._danio);
             this._modelo.EfectoDaño(Math.Clamp(this._tipoTanque.Vida() / this._tipoTanque.VidaMaxima(), 0.2f, 1.0f));
@@ -219,6 +220,14 @@ namespace TGC.MonoGame.TP.src.Entidades
                 this.Destruir();
                 bala.Kill();
             }
+        }
+
+        protected virtual void AplicarDeformacion(Vector3 puntoImpacto , float fuerzaImpacto){
+            Matrix inverseWorld = Matrix.Invert(this.GetMundo());
+            Vector3 localPosition = Vector3.Transform(puntoImpacto, inverseWorld);
+
+            ((MTanque)this._modelo).DeformModel(-localPosition, 4f  , fuerzaImpacto);
+            
         }
 
 

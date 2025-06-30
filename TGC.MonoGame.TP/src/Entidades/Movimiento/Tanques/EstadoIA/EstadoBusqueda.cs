@@ -13,6 +13,7 @@ namespace TGC.MonoGame.TP.src.EstadoIA
         private Vector2 _posicionDestino;
         private Random _random;
         private float _cooldownPosicion;
+        private float _radioDeteccion;
         //----------------------------metodos------------------------//
 
         //---Inicializador--//
@@ -22,6 +23,7 @@ namespace TGC.MonoGame.TP.src.EstadoIA
             this._random = new Random();
             this._posicionDestino = new Vector2(_random.Next(-300, 300), _random.Next(-300, 300));
             this._cooldownPosicion = 3.0f;
+            this._radioDeteccion = 40.0f;
 
         }
         //---MetodoPrincipal---//
@@ -36,7 +38,7 @@ namespace TGC.MonoGame.TP.src.EstadoIA
                 _cooldownPosicion = 3.0f;
             }
 
-            if (this.DetectarJugador(20.0f))
+            if (this.DetectarJugador(_radioDeteccion))
             {
                 EstadoChase estadoChase = new EstadoChase();
                 estadoChase.Initialize(this._tanqueIA, this._tanqueJugador);

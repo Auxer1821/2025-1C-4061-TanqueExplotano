@@ -12,6 +12,7 @@ namespace TGC.MonoGame.TP.src.EstadoIA
         //--------------------------Atributos------------------------//
         private float _tiempoSeguimiento;
         private float _tiempoEspera;
+        private float _radioDeteccion;
         //----------------------------metodos------------------------//
 
         //---Inicializador--//
@@ -20,13 +21,14 @@ namespace TGC.MonoGame.TP.src.EstadoIA
             base.Initialize(tanqueIA, tanqueJugador);
             this._tiempoSeguimiento = 10.0f;
             this._tiempoEspera = 3.0f;
+            this._radioDeteccion = 20.0f;
 
         }
         //---MetodoPrincipal---//
         public override void Update(GameTime gameTime)
         {
             _tiempoSeguimiento -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (this.DetectarJugador(10.0f))
+            if (this.DetectarJugador(_radioDeteccion))
             {
                 EstadoDisparo estado = new EstadoDisparo();
                 estado.Initialize(this._tanqueIA, this._tanqueJugador);

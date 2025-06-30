@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using BepuPhysics.Collidables;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -46,6 +48,16 @@ namespace TGC.MonoGame.TP.src.Tanques
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
             base.Initialize(Graphics, Mundo, Content);
+            this.ResetDeformation();
+            this.GuardarVerticesOriginales();
+            //this.ResetDeformation();
+            /*
+                //deformacion de prueba
+                this.DeformModel(Vector3.UnitX , 2f , 1f);
+                this.DeformModel(Vector3.UnitZ * 1 , 2f , 1f);
+                this.DeformModel(Vector3.UnitY * 3 , 2f , 1f);
+            */
+
         }
 
         //----------------------------------------------Funciones-Principales--------------------------------------------------//
@@ -72,18 +84,19 @@ namespace TGC.MonoGame.TP.src.Tanques
             this._effect2.Parameters["KSpecular"]?.SetValue(0.5f);
             this._effect2.Parameters["shininess"]?.SetValue(16.0f);
 
-            
+
 
         }
-        
-        protected override void AjustarModelo(){
-            if(this._tipoTanque.directorioModelo().Contains("T90"))
+
+        protected override void AjustarModelo()
+        {
+            if (this._tipoTanque.directorioModelo().Contains("T90"))
             {
-                this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo().X) * Matrix.CreateRotationY(this._tipoTanque.angulo().Y) * Matrix.CreateRotationZ(this._tipoTanque.angulo().Z) * Matrix.CreateTranslation(new Vector3(0,1 * 3,0)); 
+                this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo().X) * Matrix.CreateRotationY(this._tipoTanque.angulo().Y) * Matrix.CreateRotationZ(this._tipoTanque.angulo().Z) * Matrix.CreateTranslation(new Vector3(0, 1 * 3, 0));
             }
             else
             {
-            this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo().X) * Matrix.CreateRotationY(this._tipoTanque.angulo().Y) * Matrix.CreateRotationZ(this._tipoTanque.angulo().Z) * Matrix.CreateTranslation(new Vector3(0,0.5f,0)); 
+                this._matixBase = Matrix.CreateScale(this._tipoTanque.escala()) * Matrix.CreateRotationX(this._tipoTanque.angulo().X) * Matrix.CreateRotationY(this._tipoTanque.angulo().Y) * Matrix.CreateRotationZ(this._tipoTanque.angulo().Z) * Matrix.CreateTranslation(new Vector3(0, 0.5f, 0));
             }
         }
 
@@ -130,7 +143,7 @@ namespace TGC.MonoGame.TP.src.Tanques
                     }
                     else if (mesh.Name == "Turret" || mesh.Name == "Cannon")
                     {
-                        Matrix MundoShader =mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta) * _matrixMundo;
+                        Matrix MundoShader = mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta) * _matrixMundo;
                         _effect2.Parameters["World"].SetValue(MundoShader);
                         _effect2.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                         //_effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationZ(giroTorreta) * _matrixMundo);
@@ -165,7 +178,7 @@ namespace TGC.MonoGame.TP.src.Tanques
                               Matrix.CreateTranslation(wheelCenter) *
                               transform;
                         }
-                        Matrix MundoShader = transform * Matrix.CreateTranslation(0.15f,0,0) * _matrixMundo;
+                        Matrix MundoShader = transform * Matrix.CreateTranslation(0.15f, 0, 0) * _matrixMundo;
                         _effect2.Parameters["World"].SetValue(MundoShader);
                         _effect2.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                         //_effect2.Parameters["World"].SetValue(transform * Matrix.CreateTranslation(0.15f,0,0) * _matrixMundo);// Ajuste de la posición de las ruedas
@@ -212,14 +225,16 @@ namespace TGC.MonoGame.TP.src.Tanques
                         _effect2.Parameters["World"].SetValue(MundoShader);
                         _effect2.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                         //_effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationY(giroTorreta) * _matrixMundo);
-                    }else if (mesh.Name == "Cannon")
+                    }
+                    else if (mesh.Name == "Cannon")
                     {
                         //por alguna razon el cannon eran muy pequeño
                         Matrix MundoShader = mesh.ParentBone.Transform * Matrix.CreateRotationY(giroTorreta) * Matrix.CreateScale(100f) * _matrixMundo;
                         _effect2.Parameters["World"].SetValue(MundoShader);
                         _effect2.Parameters["InverseTransposeWorld"]?.SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
                         //_effect2.Parameters["World"].SetValue(mesh.ParentBone.Transform * Matrix.CreateRotationY(giroTorreta) * Matrix.CreateScale(100f) * _matrixMundo);
-                    }else if (mesh.Name.Contains("Wheel"))
+                    }
+                    else if (mesh.Name.Contains("Wheel"))
                     {
                         Vector3 wheelCenter = mesh.BoundingSphere.Center;
 
@@ -335,13 +350,13 @@ namespace TGC.MonoGame.TP.src.Tanques
             return resultado;
         }
 
-            //T90
+        //T90
         public bool esRuedaDerechaT90(string nombre)
         {
             return nombre.Contains("9") || nombre.Contains("10") || nombre.Contains("11")
             || nombre.Contains("12") || nombre.Contains("13") || nombre.Contains("14")
             || nombre.Contains("15") || nombre.Contains("16");
-            
+
         }
 
         //Panzer
@@ -351,7 +366,7 @@ namespace TGC.MonoGame.TP.src.Tanques
             || nombre.Contains("13") || nombre.Contains("14") || nombre.Contains("15")
             || nombre.Contains("16") || nombre.Contains("17") || nombre.Contains("18")
             || nombre.Contains("19") || nombre.Contains("20");
-            
+
         }
 
         internal override void EfectoDaño(float porcentajeVida)
@@ -365,10 +380,10 @@ namespace TGC.MonoGame.TP.src.Tanques
             if (angulo > 0 && velocidad != 0) animacion = Animacion.giroDer;
             else if (angulo < 0 && velocidad != 0) animacion = Animacion.giroIzq;
             else if (velocidad > 0) animacion = Animacion.MarchaAdelante;
-            else if(velocidad<0) animacion=Animacion.MarchaAtras;
-            else if(velocidad == 0 && angulo > 0) animacion = Animacion.giroSobreEjeDer;
-            else if(velocidad == 0 && angulo < 0) animacion = Animacion.giroSobreEjeIzq;
-            offsetCintas = getAnimacionTanque(animacion, velocidad/10, offsetCintas); // esta es la animacion por defecto, 0 = detenido
+            else if (velocidad < 0) animacion = Animacion.MarchaAtras;
+            else if (velocidad == 0 && angulo > 0) animacion = Animacion.giroSobreEjeDer;
+            else if (velocidad == 0 && angulo < 0) animacion = Animacion.giroSobreEjeIzq;
+            offsetCintas = getAnimacionTanque(animacion, velocidad / 10, offsetCintas); // esta es la animacion por defecto, 0 = detenido
             rotacionRuedas = getAnimacionTanque(animacion, velocidad, rotacionRuedas); // esta es la animacion por defecto, 0 = detenido
         }
 
@@ -403,7 +418,7 @@ namespace TGC.MonoGame.TP.src.Tanques
 
         public void CambiarTexturaT90(string textura)
         {
-            if(this._tipoTanque.directorioModelo().Contains("Panzer"))
+            if (this._tipoTanque.directorioModelo().Contains("Panzer"))
             {
                 // no se puede cambiar la textura del Panzer
                 return;
@@ -417,12 +432,106 @@ namespace TGC.MonoGame.TP.src.Tanques
             {
                 tanqueTexture = Content.Load<Texture2D>(@"Models/tgc-tanks/T90/textures_mod/hullB2");
                 this._effect2.Parameters["Texture"].SetValue(tanqueTexture);
-            }else if (textura == "3")
+            }
+            else if (textura == "3")
             {
                 tanqueTexture = Content.Load<Texture2D>(@"Models/tgc-tanks/T90/textures_mod/hullC");
                 this._effect2.Parameters["Texture"].SetValue(tanqueTexture);
             }
 
         }
+        //
+        private void deformarTanque(Vector3[] Deformacion)
+        {
+            //this._modelo.Meshes[0].MeshParts.VertexBuffer.SetData(Deformacion);
+        }
+
+        public void RecargarModelo()
+        {
+            this._modelo = this.Content.Load<Model>(@"Models/tgc-tanks" + this._tipoTanque.directorioModelo());
+        }
+
+        public void DeformModel(Vector3 impactPoint, float radius, float intensity)
+        {
+            foreach (ModelMesh mesh in this._modelo.Meshes)
+            {
+                if (mesh.Name == "Turret" || mesh.Name == "Hull")
+                {
+                    foreach (ModelMeshPart part in mesh.MeshParts)
+                    {
+                        // Copiamos el vertex buffer original
+                        VertexPositionNormalTexture[] vertices = new VertexPositionNormalTexture[part.NumVertices];
+                        part.VertexBuffer.GetData(vertices);
+
+                        for (int i = 0; i < vertices.Length; i++)
+                        {
+                            float dist = Vector3.Distance(vertices[i].Position, impactPoint);
+                            if (dist < radius)
+                            {
+                                // Deformación: mover vértice lejos del punto de impacto
+                                Vector3 direction = Vector3.Normalize(vertices[i].Position - impactPoint);
+                                vertices[i].Position += direction * (1.0f - dist / radius) * intensity;
+                            }
+                        }
+
+                        // Subimos los nuevos vértices
+                        part.VertexBuffer.SetData(vertices);
+                    }
+                }
+            }
+        }
+
+
+        private Dictionary<string, VertexPositionNormalTexture[]> _originalVertices = new();
+
+        public void GuardarVerticesOriginales()
+        {
+            foreach (ModelMesh mesh in this._modelo.Meshes)
+            {
+                if (mesh.Name == "Turret" || mesh.Name == "Hull")
+                {
+                    foreach (ModelMeshPart part in mesh.MeshParts)
+                    {
+                        VertexPositionNormalTexture[] vertices = new VertexPositionNormalTexture[part.NumVertices];
+                        part.VertexBuffer.GetData(vertices);
+
+                        // Crear una clave única por mesh y part
+                        string key = mesh.Name + "_" + part.GetHashCode();
+
+
+                        // Guardar una copia de los vértices originales
+                        _originalVertices[key] = (VertexPositionNormalTexture[])vertices.Clone();
+                    }
+                }
+            }
+        }
+
+        public void ResetDeformation()
+        {
+            if (_originalVertices.Count == 0)
+                return;
+            foreach (ModelMesh mesh in this._modelo.Meshes)
+            {
+                if (mesh.Name == "Turret" || mesh.Name == "Hull")
+                {
+                    foreach (ModelMeshPart part in mesh.MeshParts)
+                    {
+                        string key = mesh.Name + "_" + part.GetHashCode();
+
+                        if (_originalVertices.TryGetValue(key, out var originalVerts))
+                        {
+                            part.VertexBuffer.SetData((VertexPositionNormalTexture[])originalVerts.Clone());
+                        }
+                        else
+                        {
+                            // Opcional: loguear si no se encuentra la clave
+                            Console.WriteLine($"[ResetDeformation] No se encontró copia original para {key}");
+                        }
+                    }
+                }
+            }
+        }
+
+
     }
 }

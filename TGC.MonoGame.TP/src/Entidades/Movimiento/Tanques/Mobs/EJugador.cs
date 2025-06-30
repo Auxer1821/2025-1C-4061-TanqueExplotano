@@ -135,6 +135,7 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         private void Perder()
         {
+            ((MTanque)this._modelo).ResetDeformation();
             this._escenario.FinJuegoPerder();
         }
         private void Ganar()

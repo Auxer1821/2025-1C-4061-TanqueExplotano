@@ -54,26 +54,6 @@ sampler2D NormalSampler2 = sampler_state
     AddressV = Wrap;
 };
 
-texture2D TextureMaskTanque;
-sampler2D MaskSampler = sampler_state
-{
-    Texture = <TextureMaskTanque>;
-	    MinFilter = Linear;
-    MagFilter = Linear;
-    MipFilter = Linear;
-    AddressU = Wrap;
-    AddressV = Wrap;
-};
-texture2D TextureMaskCinta;
-sampler2D MaskSampler2 = sampler_state
-{
-    Texture = <TextureMaskCinta>;
-	MinFilter = Linear;
-    MagFilter = Linear;
-    MipFilter = Linear;
-    AddressU = Clamp;
-    AddressV = Clamp;
-};
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
@@ -104,12 +84,14 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
 {
     // Clear the output
 	VertexShaderOutput output = (VertexShaderOutput)0;
-	
+
     output.Position = mul(mul(mul(input.Position, World), View), Projection);
 	output.TexCoord = input.TexCoord;
+
     output.WorldPosition = mul(input.Position, World);
     output.LightPosition = mul(output.WorldPosition, LightViewProjection);
     output.Normal = mul(input.Normal, InverseTransposeWorld);
+
     return output;
 }
 
