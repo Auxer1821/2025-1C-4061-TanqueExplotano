@@ -46,6 +46,9 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             this._radio = _Oradio * escala;
             //SE REUBICA
             this._centro = nuevaPosicion;
+
+            _esferaTemplate.Radius = _radio;
+            _esferaTemplate.Center = _centro;
         }
 
         public override Vector3 GetCentro(){

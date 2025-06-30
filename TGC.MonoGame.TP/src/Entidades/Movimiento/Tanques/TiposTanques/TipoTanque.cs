@@ -34,6 +34,7 @@ namespace TGC.MonoGame.TP.src.Tanques
 
         bool EstaVivo();
         float RepararDeformaciones();
+        float CantidadMaxDeformaciones();
 
     }
 }

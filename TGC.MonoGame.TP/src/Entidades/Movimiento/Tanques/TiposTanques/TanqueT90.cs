@@ -31,6 +31,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         public void RecibirDanio(float danio){this.vida -= danio;}
         public bool EstaVivo(){ return vida > 0; }
         public float RepararDeformaciones(){ return -1.0f; }
+        public float CantidadMaxDeformaciones(){ return 4; }
 
         //---------------------------Constructor----------------------//
         public TanqueT90(){}

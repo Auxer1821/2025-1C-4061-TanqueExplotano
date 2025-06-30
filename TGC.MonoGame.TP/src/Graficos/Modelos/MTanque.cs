@@ -490,7 +490,7 @@ namespace TGC.MonoGame.TP.src.Tanques
 
 
         // En tu clase de tanque
-        List<(Vector3 impactPoint, float radius, float intensity)> deformaciones = new List<(Vector3, float, float)>();
+        public List<(Vector3 impactPoint, float radius, float intensity)> deformaciones = new List<(Vector3, float, float)>();
 
         public void AddImpact(Vector3 point, float radius, float intensity)
         {
