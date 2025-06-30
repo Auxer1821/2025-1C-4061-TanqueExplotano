@@ -15,14 +15,14 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
     {
         
         // Variables
-        private BoundingFrustum Frustum;
+        public BoundingFrustum Frustum;
 
         private Plane[] _planes = new Plane[6];
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------// 
         public BVTrufas(Camaras.Camera camera)
         {
             Matrix nuevaProyeccion = Matrix.CreatePerspectiveFieldOfView(
-               camera.FieldOfView + 0.1f, camera.AspectRatio, camera.NearPlane, camera.FarPlane - 1000f);
+               camera.FieldOfView, camera.AspectRatio, camera.NearPlane, camera.FarPlane - 1000f);
             Frustum  = new BoundingFrustum(camera.Vista * nuevaProyeccion);
             this.getPlanes();
         }
@@ -30,16 +30,21 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         public void UpdateFrustum(Camaras.Camera  camera)
         {
             Matrix nuevaProyeccion = Matrix.CreatePerspectiveFieldOfView(
-               camera.FieldOfView + 0.1f , camera.AspectRatio, camera.NearPlane, camera.FarPlane - 1000f);
+               camera.FieldOfView, camera.AspectRatio, camera.NearPlane, camera.FarPlane - 1000f);
             Frustum.Matrix = camera.Vista * nuevaProyeccion;
             this.getPlanes();
         }
 
 
         //----------------------------------------------Funciones-de-Detección--------------------------------------------------// 
+
+   
+/*
         public bool colisiona(BoundingVolume volumen){
             return this.colisiona(volumen.GetCentro());
         }
+*/
+
         public bool colisiona(Vector3 centro){
             //Vector3 centro = volumen.GetCentro();
             

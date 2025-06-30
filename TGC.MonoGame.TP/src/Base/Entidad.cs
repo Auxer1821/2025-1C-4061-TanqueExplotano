@@ -103,5 +103,10 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             throw new NotImplementedException();
         }
+
+        public bool FrustumCulling(BVTrufas boundingFrustum)
+        {
+            return this._boundingVolume.FrustumCulling(boundingFrustum);
+        }
     }
 }

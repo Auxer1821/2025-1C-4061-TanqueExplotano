@@ -17,10 +17,14 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         public Vector3 _minimo {get; set;}
         public Vector3 _maximo {get; set;}
 
+        private BoundingBox _cuboTemplate;
         
         public BVCuboAABB(Vector3 minimo, Vector3 maximo){
             _minimo=minimo;
             _maximo=maximo;
+            _cuboTemplate = new BoundingBox();
+            _cuboTemplate.Min = _minimo;
+            _cuboTemplate.Max = _maximo;
         }
 
         //----------------------------------------------Funciones-Auxiliares--------------------------------------------------// 
@@ -44,7 +48,10 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         public override Vector3 GetCentro(){
             return this.Centro();
         }
-
+        internal override bool FrustumCulling(BVTrufas boundingFrustum)
+        {
+            return boundingFrustum.Frustum.Intersects(_cuboTemplate);
+        }
 
     }
 }

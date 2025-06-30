@@ -18,6 +18,7 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
         public Vector3 _centro { get; set;}
         public float _Oradio { get; set;}
         public Vector3 _Ocentro { get; set;}
+        private BoundingSphere _esferaTemplate;
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------// 
         public BVEsfera(float radio, Vector3 centro)
@@ -26,6 +27,8 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             _centro = centro;
             _Oradio = radio;
             _Ocentro = centro;
+            _esferaTemplate.Radius = _radio;
+            _esferaTemplate.Center = _centro;
         }
 
         public BVEsfera(float radio)
@@ -47,6 +50,11 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
 
         public override Vector3 GetCentro(){
             return _centro;
+        }
+
+        internal override bool FrustumCulling(BVTrufas boundingFrustum)
+        {
+            return boundingFrustum.Frustum.Intersects(_esferaTemplate);
         }
         
     }

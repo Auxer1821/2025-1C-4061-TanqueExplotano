@@ -129,19 +129,18 @@ namespace TGC.MonoGame.TP.src.Managers
 
             foreach (var entidad in _entidades)
             {
-                if (_boundingFrustum.colisiona(entidad._boundingVolume) || entidad.ExcluidoDelFrustumCulling())
+//                if (_boundingFrustum.colisiona(entidad._boundingVolume) || entidad.ExcluidoDelFrustumCulling())
+                if (entidad.FrustumCulling(_boundingFrustum) || entidad.ExcluidoDelFrustumCulling())
                 {
                     if (entidad._tipo == Entidades.TipoEntidad.Obstaculo)
                     {
                         entidad.GetMolde().Draw(entidad.GetMundo(), graphicsDevice, _shadowMapper);
-                        //entidad.GetMolde().Draw(entidad.GetMundo(), graphicsDevice);
                     }
                     else    //tanque
                     {
                         entidad._modelo.SetPosSOL(_posSOL);
                         entidad._modelo.setCamara(_camera.Position);
                         entidad.EfectCamera(_camera.Vista, _camera.Proyeccion);
-                        //entidad.Dibujar(graphicsDevice);
                         entidad.Dibujar(graphicsDevice, _shadowMapper);
                     }
                 }
@@ -149,7 +148,7 @@ namespace TGC.MonoGame.TP.src.Managers
 
 
 
-            foreach (var pasto in _pastos) //TODO hacer update del efecto pasto
+            foreach (var pasto in _pastos) 
             {
                 if (_boundingFrustum.colisiona(pasto._posicion))
                 {
@@ -169,18 +168,10 @@ namespace TGC.MonoGame.TP.src.Managers
             molde.setVista(vista);
             molde.setCamara(_camera.Position);
             molde.SetPosSOL(_posSOL); //sol NO AFECTA AL TERRENO
-            //molde.SetPosSOL(_camera.Position);
-            //molde.SetPosSOL(new Vector3(1000000, 0, 0));
         }
 
         public void ActualizarAnimacion(GameTime gameTime)
         {
-            /*
-            foreach (var pasto in _pastos)
-            {
-                pasto.ActualizarTime((float)gameTime.TotalGameTime.TotalSeconds);
-            }
-            */
             foreach (var molde in _moldes)
             {
                 molde.setTime(gameTime);
