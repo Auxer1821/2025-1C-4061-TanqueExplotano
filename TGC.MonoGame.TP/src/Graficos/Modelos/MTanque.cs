@@ -471,6 +471,7 @@ namespace TGC.MonoGame.TP.src.Tanques
                         for (int i = 0; i < vertices.Length; i++)
                         {
                             float dist = Vector3.Distance(vertices[i].Position, impactPoint);
+                            Vector3 posv = vertices[i].Position;
                             if (dist < radius)
                             {
                                 // Deformación: mover vértice lejos del punto de impacto

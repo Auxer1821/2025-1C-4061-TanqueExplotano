@@ -15,7 +15,7 @@ namespace TGC.MonoGame.TP.src.Tanques
     {
         //----------------------------variables------------------------//
 
-        public float vida = 60f;
+        public float vida = 600f;
         public float velocidad(){return 20f;}
         public float anguloRotacionMovimiento(){return 3f;}
         public float danio(){return 20f;} //100
@@ -31,6 +31,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         public float VidaMaxima(){return 60f;}
         public void RecibirDanio(float danio){this.vida -= danio;}
         public bool EstaVivo(){ return vida > 0; }
+        public float RepararDeformaciones(){ return 1.0f; }
 
 
         //---------------------------Constructor----------------------//

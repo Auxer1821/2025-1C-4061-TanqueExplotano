@@ -14,10 +14,10 @@ namespace TGC.MonoGame.TP.src.Tanques
     public class TanqueT90:TipoTanque
     {
         //----------------------------variables------------------------//
-        public float vida = 140f;
+        public float vida = 14000f;
         public float velocidad(){return 35f;}
         public float anguloRotacionMovimiento(){return 1.0f;}
-        public float danio(){return 90f;}
+        public float danio(){return 10f;}
         public string directorioModelo(){return "/T90/T90";}
         public Vector3 angulo(){return new Vector3(4.71f, 4.71f, 0.0f);}
         public float escala(){return 2.0f;} //Posible 0.1f
@@ -30,6 +30,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         public float VidaMaxima(){return 14000f;}
         public void RecibirDanio(float danio){this.vida -= danio;}
         public bool EstaVivo(){ return vida > 0; }
+        public float RepararDeformaciones(){ return -1.0f; }
 
         //---------------------------Constructor----------------------//
         public TanqueT90(){}

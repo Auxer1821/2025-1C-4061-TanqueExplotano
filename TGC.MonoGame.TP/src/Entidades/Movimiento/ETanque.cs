@@ -225,9 +225,10 @@ namespace TGC.MonoGame.TP.src.Entidades
         protected virtual void AplicarDeformacion(Vector3 puntoImpacto , float fuerzaImpacto){
             Matrix inverseWorld = Matrix.Invert(this.GetMundo());
             Vector3 localPosition = Vector3.Transform(puntoImpacto, inverseWorld);
+            localPosition *= this._tipoTanque.escala();
 
             //((MTanque)this._modelo).DeformModel(-localPosition, 4f  , fuerzaImpacto);
-            ((MTanque)this._modelo).AddImpact(-localPosition, 4f  , fuerzaImpacto);
+            ((MTanque)this._modelo).AddImpact(localPosition * this._tipoTanque.RepararDeformaciones(), 4f  , fuerzaImpacto);
             
         }
 
