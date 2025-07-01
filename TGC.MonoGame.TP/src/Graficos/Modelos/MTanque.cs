@@ -41,7 +41,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         Vector2 offsetCintas = new Vector2(0f, 0f);
         float modificadorDanio = 1.0f;
         ContentManager Content;
-        String _tecnica = "Main"; 
+        String _tecnica = "Main";
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public MTanque(TipoTanque tipoTanque)
@@ -51,7 +51,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content)
         {
             base.Initialize(Graphics, Mundo, Content);
-            this.GuardarVerticesOriginales();
+            this.GuardarVertices();
             /*
                 //deformacion de prueba
                 this.DeformModel(Vector3.UnitX , 2f , 1f);
@@ -108,7 +108,8 @@ namespace TGC.MonoGame.TP.src.Tanques
         #endregion
         public override void Dibujar(GraphicsDevice Graphics)
         {
-            this.DeformarModelo();
+            //this.DeformarModelo();
+            this.setDeformacion();
             _effect2.Parameters["World"].SetValue(this._matrixMundo);
             _effect2.Parameters["Opaco"]?.SetValue(modificadorDanio);
 
@@ -284,7 +285,8 @@ namespace TGC.MonoGame.TP.src.Tanques
         public void DibujarShadowMap(GraphicsDevice Graphics, Matrix vista, Matrix proyeccion)
         {
             _effect2.CurrentTechnique = _effect2.Techniques["DepthPass"];
-            this.DeformarModelo();
+           //this.DeformarModelo();
+            this.setDeformacion();
 
             foreach (var mesh in _modelo.Meshes)
             {
@@ -451,7 +453,7 @@ namespace TGC.MonoGame.TP.src.Tanques
 
         public void CambiarTecnica(string tecnica)
         {
-           _tecnica = tecnica;
+            _tecnica = tecnica;
         }
         //
         private void deformarTanque(Vector3[] Deformacion)
@@ -502,20 +504,29 @@ namespace TGC.MonoGame.TP.src.Tanques
 
         public void AddImpact(Vector3 point, float radius, float intensity)
         {
-            deformaciones.Add((point, radius, intensity));
+            /*if (this.deformaciones.Count >= this._tipoTanque.CantidadMaxDeformaciones())
+            {
+                deformaciones.RemoveAt(0);
+            }
+            deformaciones.Add((point, radius, intensity));*/
+            setDeformacion();
+            DeformModel(point, radius, intensity);
+            GuardarVerticesModificado();
+            ResetDeformation();
         }
 
-        private void DeformarModelo(){
-            foreach (var deformacion in deformaciones)
+        private void DeformarModelo()
+        {
+            /*foreach (var deformacion in deformaciones)
             {
                 this.DeformModel(deformacion.impactPoint, deformacion.radius, deformacion.intensity);
-            }
+            }*/
         }
 
 
         private Dictionary<string, VertexPositionNormalTexture[]> _originalVertices = new();
 
-        public void GuardarVerticesOriginales()
+        public void GuardarVertices()
         {
             foreach (ModelMesh mesh in this._modelo.Meshes)
             {
@@ -532,6 +543,29 @@ namespace TGC.MonoGame.TP.src.Tanques
 
                         // Guardar una copia de los vértices originales
                         _originalVertices[key] = (VertexPositionNormalTexture[])vertices.Clone();
+                    }
+                }
+            }
+        }
+
+
+        public void GuardarVerticesModificado()
+        {
+            foreach (ModelMesh mesh in this._modelo.Meshes)
+            {
+                if (mesh.Name == "Turret" || mesh.Name == "Hull")
+                {
+                    foreach (ModelMeshPart part in mesh.MeshParts)
+                    {
+                        VertexPositionNormalTexture[] vertices = new VertexPositionNormalTexture[part.NumVertices];
+                        part.VertexBuffer.GetData(vertices);
+
+                        // Crear una clave única por mesh y part
+                        string key = mesh.Name + "_" + part.GetHashCode();
+
+
+                        // Guardar una copia de los vértices originales
+                        _modificadoVertices[key] = (VertexPositionNormalTexture[])vertices.Clone();
                     }
                 }
             }
@@ -562,5 +596,35 @@ namespace TGC.MonoGame.TP.src.Tanques
                 }
             }
         }
+
+        public void setDeformacion()
+        {
+            if (_modificadoVertices.Count == 0)
+                return;
+            foreach (ModelMesh mesh in this._modelo.Meshes)
+            {
+                if (mesh.Name == "Turret" || mesh.Name == "Hull")
+                {
+                    foreach (ModelMeshPart part in mesh.MeshParts)
+                    {
+                        string key = mesh.Name + "_" + part.GetHashCode();
+
+                        if (_modificadoVertices.TryGetValue(key, out var modificadoVertices))
+                        {
+                            part.VertexBuffer.SetData((VertexPositionNormalTexture[])modificadoVertices.Clone());
+                        }
+                        else
+                        {
+                            // Opcional: loguear si no se encuentra la clave
+                            Console.WriteLine($"[ResetDeformation] No se encontró copia original para {key}");
+                        }
+                    }
+                }
+            }
+        }
+        
+        private Dictionary<string, VertexPositionNormalTexture[]> _modificadoVertices = new();
+
+
         }
 }

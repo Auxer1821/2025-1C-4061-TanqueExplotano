@@ -224,10 +224,6 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         protected virtual void AplicarDeformacion(Vector3 puntoImpacto , float fuerzaImpacto){
             //limitar la cantidad de deformaciones para no sobrecargar el modelo
-            if(((MTanque)this._modelo).deformaciones.Count >= this._tipoTanque.CantidadMaxDeformaciones())
-            {
-                ((MTanque)this._modelo).deformaciones.RemoveAt(0); // Eliminar la deformación más antigua
-            }
             Matrix inverseWorld = Matrix.Invert(this.GetMundo());
             Vector3 localPosition = Vector3.Transform(puntoImpacto, inverseWorld);
             localPosition *= this._tipoTanque.escala();
