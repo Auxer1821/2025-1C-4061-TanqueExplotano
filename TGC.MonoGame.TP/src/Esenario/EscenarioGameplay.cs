@@ -30,7 +30,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private bool _faltaCrear;
         private List<IMolde> _moldes;
         private DirectorEscenarios _director;
-        private short _cantidadEnemigosIA = 2;
+        private short _cantidadEnemigosIA = 6;
 
 
         private Cameras.FreeCamera _camara;

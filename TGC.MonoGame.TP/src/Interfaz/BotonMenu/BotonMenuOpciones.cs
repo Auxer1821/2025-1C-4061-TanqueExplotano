@@ -23,7 +23,7 @@ namespace TGC.MonoGame.TP.src.HUD
         public override void Enter()
         {
             //TODO - Temporal para pruebas - enviar a Pantalla Derrota
-            this._escenarioDirector.CambiarEsenarioActivo(Escenarios.TipoEsenario.Derrota);
+            //this._escenarioDirector.CambiarEsenarioActivo(Escenarios.TipoEsenario.Derrota);
         }
 
 

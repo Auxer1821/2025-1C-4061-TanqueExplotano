@@ -41,6 +41,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         Vector2 offsetCintas = new Vector2(0f, 0f);
         float modificadorDanio = 1.0f;
         ContentManager Content;
+        String _tecnica = "Main"; 
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
         public MTanque(TipoTanque tipoTanque)
@@ -124,7 +125,7 @@ namespace TGC.MonoGame.TP.src.Tanques
             {
                 foreach (var mesh in _modelo.Meshes)
                 {
-                    _effect2.CurrentTechnique = _effect2.Techniques["Main"];
+                    _effect2.CurrentTechnique = _effect2.Techniques[_tecnica];
 
                     if (mesh.Name.Contains("Treadmill"))
                     {
@@ -283,6 +284,7 @@ namespace TGC.MonoGame.TP.src.Tanques
         public void DibujarShadowMap(GraphicsDevice Graphics, Matrix vista, Matrix proyeccion)
         {
             _effect2.CurrentTechnique = _effect2.Techniques["DepthPass"];
+            this.DeformarModelo();
 
             foreach (var mesh in _modelo.Meshes)
             {
@@ -302,6 +304,7 @@ namespace TGC.MonoGame.TP.src.Tanques
                 }
                 mesh.Draw();
             }
+            this.ResetDeformation();
         }
 
 
@@ -444,6 +447,11 @@ namespace TGC.MonoGame.TP.src.Tanques
                 this._effect2.Parameters["Texture"].SetValue(tanqueTexture);
             }
 
+        }
+
+        public void CambiarTecnica(string tecnica)
+        {
+           _tecnica = tecnica;
         }
         //
         private void deformarTanque(Vector3[] Deformacion)

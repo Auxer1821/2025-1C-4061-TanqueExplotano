@@ -109,6 +109,18 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     return color;
 }
 
+float4 MenuPS(VertexShaderOutput input) : COLOR
+{
+   // Leer color base (difuso)
+    float4 color = tex2D(TextureSampler, input.TexCoord);
+	color.xyz *= Opaco;
+   
+    float3 tangentNormal = tex2D(NormalSampler, input.TexCoord).xyz * 2.0 - 1.0;
+   	PhongShaderInput phongInput = CargarPhoneShaderInput(input.Normal.xyz, input.WorldPosition);
+	color = PhongShaderNormalMap(input.TexCoord, color, tangentNormal, phongInput);
+    return color;
+}
+
 VertexShaderOutput RuedasVS(in VertexShaderInput input)
 {
     // Clear the output
@@ -137,6 +149,18 @@ float4 RuedasPS(VertexShaderOutput input) : COLOR
     return color;
 }
 
+float4 MenuRuedasPS(VertexShaderOutput input) : COLOR
+{
+   // Leer color base (difuso)
+    float4 color = tex2D(TextureSampler2, input.TexCoord);
+	color.xyz *= Opaco;
+
+    float3 tangentNormal = tex2D(NormalSampler2, input.TexCoord).xyz * 2.0 - 1.0;
+   	PhongShaderInput phongInput = CargarPhoneShaderInput(input.Normal.xyz, input.WorldPosition);
+	color = PhongShaderNormalMap(input.TexCoord, color, tangentNormal, phongInput);
+    return color;
+}
+
 technique Main
 {
 	pass P0
@@ -153,4 +177,21 @@ technique RuedasDrawing
 		VertexShader = compile VS_SHADERMODEL RuedasVS();
 		PixelShader = compile PS_SHADERMODEL RuedasPS();
 	}
+};
+
+technique Menu
+{
+    pass P0
+    {
+        VertexShader = compile VS_SHADERMODEL MainVS();
+        PixelShader = compile PS_SHADERMODEL MenuPS();
+    }
+};
+technique MenuRuedas
+{
+    pass P0
+    {
+        VertexShader = compile VS_SHADERMODEL RuedasVS();
+        PixelShader = compile PS_SHADERMODEL MenuRuedasPS();
+    }
 };

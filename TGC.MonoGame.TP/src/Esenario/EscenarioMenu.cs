@@ -182,7 +182,9 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
 
             graphicsDevice.DepthStencilState = DepthStencilState.Default;
+            _tanque.CambiarTecnica("Menu");
             _tanque.Dibujar(graphicsDevice);
+            _tanque.CambiarTecnica("Main");
             graphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
             _TituloJuego.Dibujado(_graphicsDevice);
 

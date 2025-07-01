@@ -21,7 +21,7 @@ namespace TGC.MonoGame.TP.src.EstadoIA
             base.Initialize(tanqueIA, tanqueJugador);
             this._tiempoSeguimiento = 10.0f;
             this._tiempoEspera = 3.0f;
-            this._radioDeteccion = 20.0f;
+            this._radioDeteccion = 10.0f;
 
         }
         //---MetodoPrincipal---//
