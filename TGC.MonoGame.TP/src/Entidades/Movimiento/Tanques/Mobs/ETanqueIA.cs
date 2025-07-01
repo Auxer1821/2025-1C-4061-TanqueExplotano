@@ -13,12 +13,16 @@ namespace TGC.MonoGame.TP.src.Entidades
     /// <summary>
     ///     Clase Abstracta para todos los objetos
     /// </summary>
-    public class ETanqueIA:Etanque
+    public class ETanqueIA : Etanque
     {
-        private IEstadoIA _estado;
+        public IEstadoIA _estado;
+        public EstadoBusqueda _eBusqueda;
+        public EstadoChase _eChase;
+        public EstadoDisparo _eDisparo;
+
         private Vector2 _dispercion;
-        
-        
+
+
 
         //-------------------------------------------||---Constructores-e-inicializador--------------------------------------------------//
         public ETanqueIA() { }
@@ -26,19 +30,25 @@ namespace TGC.MonoGame.TP.src.Entidades
         {
             //Tal vez haga algo
             base.Initialize(Graphics, Mundo, Content, escenario);
-            this._estado = new EstadoBusqueda();
+            this._eBusqueda = new EstadoBusqueda();
+            this._eBusqueda.Initialize(this, escenario.GetJugador());
+            this._eChase = new EstadoChase();
+            this._eChase.Initialize(this, this._escenario.GetJugador());
+            this._eDisparo = new EstadoDisparo();
+            this._eDisparo.Initialize(this, this._escenario.GetJugador());
+            this._estado = _eBusqueda;
             this._estado.Initialize(this, this._escenario.GetJugador());
         }
 
         //----------------------------------------------Metodos-Logica--------------------------------------------------//
 
-    
+
 
 
         public override void Update(GameTime gameTime)
         {
             //setear los valores de movimiento y disparo
-            float mseg = (float) gameTime.ElapsedGameTime.TotalSeconds;
+            float mseg = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             //1. Setear Velocidad Actual = tipo.velocidad
             //this._velocidadActual = this._tipoTanque.velocidad() * mseg * 0.5f;
@@ -60,7 +70,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             Vector2 normalizado = new Vector2(dx, dy);
             normalizado.Normalize();
 
-            this._dirMovimiento = Vector2.Lerp(this._dirMovimiento, normalizado,  ((float)gameTime.ElapsedGameTime.TotalSeconds) * 0.5f);
+            this._dirMovimiento = Vector2.Lerp(this._dirMovimiento, normalizado, ((float)gameTime.ElapsedGameTime.TotalSeconds) * 0.5f);
             this._velocidadActual = this._tipoTanque.velocidad() * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             //HacerMovimiento(direccion, velocidad);
@@ -69,11 +79,11 @@ namespace TGC.MonoGame.TP.src.Entidades
             //x += (float)Math.Cos(direccion * Math.PI / 180) * velocidad * 0.016f; // usando un deltaTime simulado (ej: 60 FPS)
             //y += (float)Math.Sin(direccion * Math.PI / 180) * velocidad * 0.016f;
         }
-        public void ApuntarA(Vector2 objetivo, GameTime gameTime){
-           // Calcular dirección hacia el destino
+        public void ApuntarA(Vector2 objetivo, GameTime gameTime) {
+            // Calcular dirección hacia el destino
             float dx = objetivo.X - this._posicion.X;
             float dy = objetivo.Y - this._posicion.Z;
-            Vector3 normalizado = new Vector3(dx,0f, dy);
+            Vector3 normalizado = new Vector3(dx, 0f, dy);
             normalizado.Normalize();
 
             this._dirApuntado = Vector3.Lerp(this._dirApuntado, normalizado, ((float)gameTime.ElapsedGameTime.TotalSeconds) * 0.8f);
@@ -107,15 +117,15 @@ namespace TGC.MonoGame.TP.src.Entidades
         public void SetDispercion(Vector2 dispercion)
         {
             this._dispercion = dispercion;
-            
+
         }
         protected override void ActualizarBala()
         {
-            Vector3 dirBalar = new Vector3(this._dirApuntado.X, this._dirApuntado.Y , this._dirApuntado.Z);
+            Vector3 dirBalar = new Vector3(this._dirApuntado.X, this._dirApuntado.Y, this._dirApuntado.Z);
 
 
             // Ángulos actuales
-           float pitch = (float)Math.Asin(dirBalar.Y); // Inclinación
+            float pitch = (float)Math.Asin(dirBalar.Y); // Inclinación
             float yaw = (float)Math.Atan2(dirBalar.X, dirBalar.Z); // Rotación horizontal
 
 
@@ -139,8 +149,26 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             // Normalizar si necesitas una dirección unitaria
             direccion.Normalize();
-            
+
             this._bala.ActualizarDatos(direccion, this._posicionSalidaBala);
+        }
+
+        public void CambiarEstadoIA(string estado)
+        {
+            switch(estado)
+            {
+                case "Busqueda":
+                    this._estado = _eBusqueda;
+                    break;
+                case "Chase":
+                    this._estado = _eChase;
+                    break;
+                case "Disparo":
+                    this._estado = _eDisparo;
+                    break;
+                default:
+                    throw new ArgumentException("Estado no reconocido: " + estado);
+            }
         }
 
 

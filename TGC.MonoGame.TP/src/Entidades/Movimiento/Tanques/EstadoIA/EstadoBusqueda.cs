@@ -40,9 +40,10 @@ namespace TGC.MonoGame.TP.src.EstadoIA
 
             if (this.DetectarJugador(_radioDeteccion))
             {
-                EstadoChase estadoChase = new EstadoChase();
-                estadoChase.Initialize(this._tanqueIA, this._tanqueJugador);
-                this._tanqueIA.CambiarEstadoIA(estadoChase);
+//                EstadoChase estadoChase = this._tanqueIA._eChase;
+//                estadoChase.Initialize(this._tanqueIA, this._tanqueJugador);
+                //this._tanqueIA.CambiarEstadoIA(this._tanqueIA._eChase);
+                this._tanqueIA.CambiarEstadoIA("Chase");
             }
         }
         //---CambiaEstado---//

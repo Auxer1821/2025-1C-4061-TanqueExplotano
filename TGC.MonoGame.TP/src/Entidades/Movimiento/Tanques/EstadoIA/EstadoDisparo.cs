@@ -38,9 +38,11 @@ namespace TGC.MonoGame.TP.src.EstadoIA
                 this._tanqueIA.DispararConDispercion(incremento);//en grados el incremento
 
                 //cambio de estado despues de disparar
-                EstadoBusqueda estado = new EstadoBusqueda();
-                estado.Initialize(this._tanqueIA, this._tanqueJugador);
-                this._tanqueIA.CambiarEstadoIA(estado);
+                //EstadoBusqueda estado = new EstadoBusqueda();
+                //estado.Initialize(this._tanqueIA, this._tanqueJugador);
+                //this._tanqueIA.CambiarEstadoIA(estado);
+                this._tanqueIA.CambiarEstadoIA("Busqueda");
+
 
             }
         }

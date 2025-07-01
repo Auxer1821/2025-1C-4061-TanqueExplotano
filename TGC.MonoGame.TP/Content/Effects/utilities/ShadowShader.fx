@@ -12,8 +12,8 @@
 //static const float modulatedEpsilon = 0.000041200182749889791011810302734375;
 //static const float maxEpsilon = 0.000023200045689009130001068115234375;
 //static const float maxEpsilon = 0.000023200045689009130001068115234375;
-static const float modulatedEpsilon = 0.000002;
-static const float maxEpsilon = 0.000005;
+static const float modulatedEpsilon = 0.0002;
+static const float maxEpsilon = 0.0005;
 
 
 //----------Valores a recibir en codigo----------//

@@ -62,11 +62,11 @@ namespace TGC.MonoGame.TP.src.Entidades
             //this._boundingVolume.Transformar(this._posicion, this._angulo, 1f);
 
             this._particulasDisparo = new EmisorParticula();
-            this._particulasDisparo.Initialize(Content, Graphics, 40, this._posicion ,"disparo");
+            this._particulasDisparo.Initialize(Content, Graphics, 20, this._posicion ,"disparo");
             this.SetPosicionParticulas();
 
             this._particulasExplosion = new EmisorParticula();
-            this._particulasExplosion.Initialize(Content, Graphics, 30, this._posicion, "explosion");
+            this._particulasExplosion.Initialize(Content, Graphics, 15, this._posicion, "explosion");
 
             //Cargar el sonido
             this._managerSonido = new Managers.ManagerSonido(Content);

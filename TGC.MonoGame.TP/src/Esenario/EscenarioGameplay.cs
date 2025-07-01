@@ -30,7 +30,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private bool _faltaCrear;
         private List<IMolde> _moldes;
         private DirectorEscenarios _director;
-        private short _cantidadEnemigosIA = 6;
+        private short _cantidadEnemigosIA = 5;
 
 
         private Cameras.FreeCamera _camara;
@@ -180,10 +180,13 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 montana.SetMolde(moldeMontana);
                 this.AgregarACrear(montana);
                 //DERECHA
+                if (-400 + 200 * i > -200)
+                {
                 montana = new EMontana();
                 montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(400, -5, -400 + 200 * i), content, this);
                 montana.SetMolde(moldeMontana);
                 this.AgregarACrear(montana);
+                }
             }
 
             //-------------------Crear tanks--------------------//

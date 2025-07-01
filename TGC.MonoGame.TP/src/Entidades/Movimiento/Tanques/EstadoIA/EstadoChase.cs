@@ -30,9 +30,9 @@ namespace TGC.MonoGame.TP.src.EstadoIA
             _tiempoSeguimiento -= (float)gameTime.ElapsedGameTime.TotalSeconds;
             if (this.DetectarJugador(_radioDeteccion))
             {
-                EstadoDisparo estado = new EstadoDisparo();
-                estado.Initialize(this._tanqueIA, this._tanqueJugador);
-                this._tanqueIA.CambiarEstadoIA(estado);
+                //EstadoDisparo estado = new EstadoDisparo();
+                //estado.Initialize(this._tanqueIA, this._tanqueJugador);
+                this._tanqueIA.CambiarEstadoIA("Disparo");
                 return;
             }
             if (_tiempoSeguimiento >= 0)
@@ -47,9 +47,10 @@ namespace TGC.MonoGame.TP.src.EstadoIA
         
                 if (_tiempoEspera <= 0)
                 {
-                    EstadoBusqueda estado = new EstadoBusqueda();
-                    estado.Initialize(this._tanqueIA, this._tanqueJugador);
-                    this._tanqueIA.CambiarEstadoIA(estado);
+                    //EstadoBusqueda estado = new EstadoBusqueda();
+                    //estado.Initialize(this._tanqueIA, this._tanqueJugador);
+                    //this._tanqueIA.CambiarEstadoIA(estado);
+                    this._tanqueIA.CambiarEstadoIA("Busqueda");
                     return;
                 }
             }

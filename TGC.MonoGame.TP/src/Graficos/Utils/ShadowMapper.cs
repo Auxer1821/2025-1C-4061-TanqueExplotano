@@ -19,9 +19,9 @@ namespace TGC.MonoGame.TP.src.Graficos.Utils
     public class ShadowMapping
     {
         // para el postprocesado
-        public const int _shadowmapSize = 2048 * 4;
-        private const float _lightCameraFarPlaneDistance = 3000f;
-        private const float _lightCameraNearPlaneDistance = 5f;
+        public const int _shadowmapSize = 2048 * 3;
+        private const float _lightCameraFarPlaneDistance = 2300f;
+        private const float _lightCameraNearPlaneDistance = 500f;
         private RenderTarget2D _shadowMapRenderTarget;
         private TargetCamera _targetLightCamera;
         private Vector3 _posSOL;
@@ -52,7 +52,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Utils
             this.ActualizarDepthMap(graphics);
             this.DibujarShadowMap(graphics, listaEntidades, terreno);
             graphics.SetRenderTarget(null);
-            graphics.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1f, 0);
+            //graphics.Clear(ClearOptions.Target | ClearOptions.DepthBuffer, Color.CornflowerBlue, 1f, 0);
         }
         private void ActualizarDepthMap(GraphicsDevice graphics)
         {
