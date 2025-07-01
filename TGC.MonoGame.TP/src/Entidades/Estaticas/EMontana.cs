@@ -54,13 +54,13 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         private Vector3 ObtenerMinimo(Vector3 pos)
         {
-            Vector3 ret = new Vector3(pos.X - 100.0f, pos.Y - 10f, pos.Z - 100.0f);
+            Vector3 ret = new Vector3(pos.X - 100.0f, pos.Y +5f, pos.Z - 100.0f);
             return ret;
         }
 
         private Vector3 ObtenerMaximo(Vector3 pos)
         {
-            Vector3 ret = new Vector3(pos.X + 100.0f, pos.Y + 200.0f, pos.Z + 100.0f);
+            Vector3 ret = new Vector3(pos.X + 100.0f, pos.Y + 100.0f, pos.Z + 100.0f);
             return ret;
         }
     }
