@@ -110,7 +110,9 @@ namespace TGC.MonoGame.TP.src.Managers
             float mseg = this._jugador.tiempoRestante();
             int minuto = (int) mseg / 60;
             int seg = (int) mseg % 60;
-            _tiempo.setValor(minuto.ToString() + ":" + seg.ToString());//DIFERENCIA DE TIMES O ALGO
+            string segundos = seg.ToString();
+            if(seg < 10) segundos = "0" + seg.ToString();
+            _tiempo.setValor(minuto.ToString() + ":" + segundos);//DIFERENCIA DE TIMES O ALGO
             
             float porcentajeRecargado = _jugador.porcentajeRecargado();
             _misil.setClaridad(porcentajeRecargado);

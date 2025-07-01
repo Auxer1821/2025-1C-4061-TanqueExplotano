@@ -81,18 +81,9 @@ namespace TGC.MonoGame.TP.src.Entidades
 
 
             this._dirApuntado = _Camara.getDireccion();
-            if (this.PuedeDisparar())
+            if (raton.LeftButton == ButtonState.Pressed)
             {
-                if (raton.LeftButton == ButtonState.Pressed)
-                {
-                    this.Disparar();
-                    this._particulasDisparo.SetNuevaPosicion(this._posicion / 6 + new Vector3(_dirApuntado.X / 6 * 7f, this._dirApuntado.Y / 6 * 0.5f, _dirApuntado.Z / 6 * 7f));
-                    this._cooldownActual = 0;
-                    //efecto de camara
-                    _Camara.setSacudida(true);
-                    //efecto de sonido
-                    this._managerSonido.reproducirSonido("disparo");
-                }
+                this.Disparar();
             }
 
             //---------------------Logica-Camara-----------------------//
@@ -106,9 +97,24 @@ namespace TGC.MonoGame.TP.src.Entidades
             base.Update(gameTime);
         }
 
+        public override void Disparar(){
+            if(!this.PuedeDisparar()) return;
+            base.Disparar();
+            //efecto de camara
+            _Camara.setSacudida(true);
+            //efecto de sonido
+            this._managerSonido.reproducirSonido("disparo");
+        }
+
         internal float porcentajeRecargado() //TODO
         {
             return 1.0f - (this._tipoTanque.cooldown() - _cooldownActual) / this._tipoTanque.cooldown();
+        }
+
+        public override void SetPosicionParticulas()
+        {
+            this._particulasDisparo.SetNuevaPosicion(this._posicion + new Vector3(_dirApuntado.X * 12f, this._dirApuntado.Y + 4f, _dirApuntado.Z * 12f));
+            this._particulasDisparo.SetPosiciones(this._posicion + new Vector3(_dirApuntado.X * 12f, this._dirApuntado.Y + 4f, _dirApuntado.Z * 12f));
         }
 
         public override void setPosicionSalidaBala()
@@ -129,6 +135,7 @@ namespace TGC.MonoGame.TP.src.Entidades
 
         private void Perder()
         {
+            ((MTanque)this._modelo).ResetDeformation();
             this._escenario.FinJuegoPerder();
         }
         private void Ganar()

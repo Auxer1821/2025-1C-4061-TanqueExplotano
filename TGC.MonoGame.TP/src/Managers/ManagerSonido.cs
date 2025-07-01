@@ -35,7 +35,7 @@ namespace TGC.MonoGame.TP.src.Managers
         private SoundEffectInstance _sonidoColicionInstance;
         private SoundEffectInstance _sonidoMuerteInstance;
         // Volumen maestro para todos los sonidos TODO: Separar en volumen musica y efectos de sonido
-        float _volumenMaestro = 0.1f;
+        float _volumenMaestro = 0.05f;
 
         ContentManager _contentManager;
         public ManagerSonido(ContentManager Content)
@@ -48,17 +48,17 @@ namespace TGC.MonoGame.TP.src.Managers
             SoundEffect sonidoDetenido = _contentManager.Load<SoundEffect>(@"Sounds/tankStop");
             this._sonidoDetenidoInstance = sonidoDetenido.CreateInstance();
             _sonidoDetenidoInstance.IsLooped = true;
-            _sonidoDetenidoInstance.Volume = _volumenMaestro / 6;
+            _sonidoDetenidoInstance.Volume = _volumenMaestro / 3;
 
             SoundEffect sonidoMovimiento = _contentManager.Load<SoundEffect>(@"Sounds/tankMove");
             this._sonidoMovimientoInstance = sonidoMovimiento.CreateInstance();
             _sonidoMovimientoInstance.IsLooped = true;
-            _sonidoMovimientoInstance.Volume = _volumenMaestro / 4;
+            _sonidoMovimientoInstance.Volume = _volumenMaestro / 3;
 
             SoundEffect sonidoDisparo = _contentManager.Load<SoundEffect>(@"Sounds/disparo2");
             this._sonidoDisparoInstance = sonidoDisparo.CreateInstance();
             _sonidoDisparoInstance.IsLooped = false;
-            _sonidoDisparoInstance.Volume = _volumenMaestro * 2;
+            _sonidoDisparoInstance.Volume = _volumenMaestro * 1;
             _sonidoDisparoInstance.Pitch = 0.0f;
 
             SoundEffect sonidoImpactoBala = _contentManager.Load<SoundEffect>(@"Sounds/explocion2");

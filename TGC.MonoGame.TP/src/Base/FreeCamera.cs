@@ -49,44 +49,10 @@ namespace TGC.MonoGame.TP.src.Cameras
         {
             var elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _changed = false;
-            //ProcessKeyboard(elapsedTime);
             ProcessMouseMovement(elapsedTime);
 
             if (_changed)
                 CalculateView();
-        }
-
-        private void ProcessKeyboard(float elapsedTime)
-        {
-            var keyboardState = Keyboard.GetState();
-
-            var currentMovementSpeed = MovementSpeed;
-            if (keyboardState.IsKeyDown(Keys.LeftShift))
-                currentMovementSpeed *= 5f;
-
-            if (keyboardState.IsKeyDown(Keys.Left))
-            {
-                Position += -RightDirection * currentMovementSpeed * elapsedTime;
-                _changed = true;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.Right))
-            {
-                Position += RightDirection * currentMovementSpeed * elapsedTime;
-                _changed = true;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.Up))
-            {
-                Position += FrontDirection * currentMovementSpeed * elapsedTime;
-                _changed = true;
-            }
-
-            if (keyboardState.IsKeyDown(Keys.Down))
-            {
-                Position += -FrontDirection * currentMovementSpeed * elapsedTime;
-                _changed = true;
-            }
         }
 
         private void ProcessMouseMovement(float elapsedTime)
@@ -114,7 +80,6 @@ namespace TGC.MonoGame.TP.src.Cameras
                 if (_lockMouse)
                 {
                     Mouse.SetPosition(_screenCenter.X, _screenCenter.Y);
-                    //Mouse.SetCursor(MouseCursor.);
                 }
                 else
                 {

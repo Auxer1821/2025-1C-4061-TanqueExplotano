@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.BoundingsVolumes;
+using TGC.MonoGame.TP.src.Graficos.Utils;
 using TGC.MonoGame.TP.src.Moldes;
 
 
@@ -78,6 +79,7 @@ namespace TGC.MonoGame.TP.src.Entidades
             _modelo.EfectCamera(vista, proyeccion);
         }
 
+
         public virtual Matrix GetMundo()
         {
             throw new NotImplementedException();
@@ -90,6 +92,21 @@ namespace TGC.MonoGame.TP.src.Entidades
         public virtual bool ExcluidoDelFrustumCulling()
         {
             return false; // Por defecto no se excluye del frustum culling
+        }
+
+        public virtual void DibujarShadowMap(GraphicsDevice graphics, Matrix vista, Matrix proyeccion)
+        {
+            throw new NotImplementedException(); //TODO - Actualizarlo para todos;
+        }
+
+        public virtual void Dibujar(GraphicsDevice graphicsDevice, ShadowMapping shadowMapper)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool FrustumCulling(BVTrufas boundingFrustum)
+        {
+            return this._boundingVolume.FrustumCulling(boundingFrustum);
         }
     }
 }

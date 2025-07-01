@@ -33,6 +33,8 @@ namespace TGC.MonoGame.TP.src.Tanques
         void RecibirDanio(float danio);
 
         bool EstaVivo();
+        float RepararDeformaciones();
+        float CantidadMaxDeformaciones();
 
     }
 }

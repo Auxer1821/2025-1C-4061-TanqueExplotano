@@ -31,10 +31,18 @@ namespace TGC.MonoGame.TP.src.Moldes
             _techoTexture = Content.Load<Texture2D>(@"Models/house/techo2");
             _marcoTexture = Content.Load<Texture2D>(@"Models/house/tablasMadera");
 
-            _efecto.Parameters["TextureChimenea"].SetValue(_chimeneaTexture);
-            _efecto.Parameters["TexturePared"].SetValue(_paredTexture);
-            _efecto.Parameters["TextureTecho"].SetValue(_techoTexture);
-            _efecto.Parameters["TextureVentana"].SetValue(_marcoTexture);
+            _efecto.Parameters["TextureChimenea"]?.SetValue(_chimeneaTexture);
+            _efecto.Parameters["TexturePared"]?.SetValue(_paredTexture);
+            _efecto.Parameters["TextureTecho"]?.SetValue(_techoTexture);
+            _efecto.Parameters["TextureVentana"]?.SetValue(_marcoTexture);
+
+            this._efecto.Parameters["ambientColor"]?.SetValue(Color.White.ToVector3());
+            this._efecto.Parameters["diffuseColor"]?.SetValue(Color.LightYellow.ToVector3());
+            this._efecto.Parameters["specularColor"]?.SetValue(Color.White.ToVector3());
+            this._efecto.Parameters["KAmbient"]?.SetValue(0.5f);
+            this._efecto.Parameters["KDiffuse"]?.SetValue(0.8f);
+            this._efecto.Parameters["KSpecular"]?.SetValue(0.6f);
+            this._efecto.Parameters["shininess"]?.SetValue(1.0f);
 
             foreach (var mesh in _modelo.Meshes)
             {
@@ -46,8 +54,6 @@ namespace TGC.MonoGame.TP.src.Moldes
             }
         }
         public override void Draw(Matrix mundo, GraphicsDevice graphics){
-            _efecto.Parameters["World"].SetValue(mundo);
-
             foreach (var mesh in _modelo.Meshes)
             {
                 if (mesh.Name.Contains("Roof"))
@@ -66,7 +72,19 @@ namespace TGC.MonoGame.TP.src.Moldes
                 {
                     _efecto.CurrentTechnique = _efecto.Techniques["Pared"];
                 }
-                _efecto.Parameters["World"].SetValue(mesh.ParentBone.Transform * mundo);
+                Matrix MundoShader = mesh.ParentBone.Transform * mundo;
+                _efecto.Parameters["World"].SetValue(MundoShader);
+                _efecto.Parameters["InverseTransposeWorld"].SetValue(Matrix.Transpose(Matrix.Invert(MundoShader)));
+
+                mesh.Draw();
+            }
+        }
+
+        public override void DibujarShadowMap(Matrix worldViewProjection, GraphicsDevice graphics){
+            _efecto.CurrentTechnique = _efecto.Techniques["DepthPass"];
+            foreach (var mesh in _modelo.Meshes)
+            {
+                _efecto.Parameters["WorldViewProjection"].SetValue(mesh.ParentBone.Transform * worldViewProjection);
                 mesh.Draw();
             }
         }

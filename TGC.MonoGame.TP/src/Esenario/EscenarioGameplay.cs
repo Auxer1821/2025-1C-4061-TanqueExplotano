@@ -30,6 +30,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private bool _faltaCrear;
         private List<IMolde> _moldes;
         private DirectorEscenarios _director;
+        private short _cantidadEnemigosIA = 5;
 
 
         private Cameras.FreeCamera _camara;
@@ -60,6 +61,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             Matrix view = _camara.Vista;
             Matrix projection = _camara.Proyeccion;
             _managerGrafico.inicializarCamara(_camara);
+            _managerGrafico.InicializarShadowMapping(graphicsDevice);
 
             //-----------------Inicializar el skybox-------------------//
             Entidades.ESkyBox skyBox = new ESkyBox();
@@ -90,20 +92,26 @@ namespace TGC.MonoGame.TP.src.Escenarios
             //-----------------Posiciones usadas----------------------//
             List<Vector3> posicionesUsadas = new List<Vector3>();
 
+            //-----------------Aux----------------------//
+            Random random = new Random(0);            
+            
             //-------Crear un pequeño pueblo (casas y cajas)-----------//
 
-            for (int x = -50; x <= 50; x += 20)
+            for (int x = -100; x <= 100; x += 40)
             {
-                for (int z = -50; z <= 50; z += 20)
+                for (int z = -100; z <= 100; z += 30)
                 {
+                    float rotacionCasa = random.Next(0, 360);
                     var casa = new ECasa();
-                    casa.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this, new Vector3(x, _terreno.GetHeightAt(x, z), z));
-                    casa.SetMolde(moldeCasa);/*SEGUIR DESDE AQUI*/
+                    casa.Initialize(graphicsDevice,Matrix.CreateRotationY(MathHelper.ToRadians(rotacionCasa)) * world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this, new Vector3(x, _terreno.GetHeightAt(x, z), z));
+                    casa.SetMolde(moldeCasa);//SEGUIR DESDE AQUI
                     this.AgregarACrear(casa);
                     posicionesUsadas.Add(new Vector3(x, z, 4));
 
                     var caja = new ECaja();
-                    caja.Initialize(graphicsDevice, world * Matrix.CreateTranslation(x + 8, _terreno.GetHeightAt(x, z), z + 8), content, this);
+                    //float rotacion = 270;
+                    float rotacion = 0f;
+                    caja.Initialize(graphicsDevice, Matrix.CreateRotationY(MathHelper.ToRadians(rotacion)) * world * Matrix.CreateTranslation(x + 8, _terreno.GetHeightAt(x, z), z + 8), content, this);
                     caja.SetMolde(moldeCaja);
                     this.AgregarACrear(caja);
                     posicionesUsadas.Add(new Vector3(x + 8, z + 8, 2));
@@ -111,13 +119,18 @@ namespace TGC.MonoGame.TP.src.Escenarios
             }
 
             //--------Crear un bosque (árboles)---------------//
-            Random random = new Random(0);
-            for (int i = 0; i < 500; i++)
+                for (int i = 0; i < 500; i++)
             {
                 var arbol = new EArbol();
                 float x = random.Next(-300, 300);
-                float z = random.Next(100, 500);
+                float z;
+                if (random.Next(2) == 0) // 50% de probabilidad para cada zona
+                    z = random.Next(-500, -200); // Zona sur (z negativa)
+                else
+                    z = random.Next(200, 500); // Zona norte (z positiva)
                 float rotacion = random.Next(0, 360);
+                //float rotacion = 90;
+                //float rotacion = 0;
                 float tamano = random.Next(10, 20) / 10;
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
@@ -139,12 +152,14 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 var roca = new ERoca();
                 float x = random.Next(-300, 300);
                 float z = random.Next(-300, 300);
-                float rotacion = random.Next(0, 360);
+                //float rotacion = random.Next(0, 360);
+                //float rotacionX = 90;
+                float rotacionY = 250;
                 float tamano = random.Next(10, 20) / 10;
                 var pos = new Vector2(x, z);
                 if (PosicionesLibre(pos, posicionesUsadas, 1))
                 {
-                    roca.Initialize(graphicsDevice, Matrix.CreateScale(tamano) * Matrix.CreateRotationY(MathHelper.ToRadians(rotacion)) * world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this);
+                    roca.Initialize(graphicsDevice, Matrix.CreateScale(tamano) * Matrix.CreateRotationY(MathHelper.ToRadians(rotacionY)) * world * Matrix.CreateTranslation(x, _terreno.GetHeightAt(x, z), z), content, this);
                     roca.SetMolde(moldeRoca);
                     this.AgregarACrear(roca);
                     posicionesUsadas.Add(new Vector3(x, z, 1));
@@ -161,27 +176,30 @@ namespace TGC.MonoGame.TP.src.Escenarios
             {
                 //IZQUIERDA
                 var montana = new EMontana();
-                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(-400, 0, -400 + 200 * i), content, this);
+                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(-400, -5, -400 + 200 * i), content, this);
                 montana.SetMolde(moldeMontana);
                 this.AgregarACrear(montana);
                 //DERECHA
+                if (-400 + 200 * i > -200)
+                {
                 montana = new EMontana();
-                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(400, 0, -400 + 200 * i), content, this);
+                montana.Initialize(graphicsDevice, world * Matrix.CreateTranslation(400, -5, -400 + 200 * i), content, this);
                 montana.SetMolde(moldeMontana);
                 this.AgregarACrear(montana);
+                }
             }
 
             //-------------------Crear tanks--------------------//
             //---Jugador---//
             jugador = new EJugador();
-            float Jx = random.Next(-150, 150);
-            float Jz = random.Next(-150, 150);
+            float Jx = random.Next(-100, 100);
+            float Jz = random.Next(-100, 100);
             var Jpos = new Vector2(Jx, Jz);
 
             while (!PosicionesLibre(Jpos, posicionesUsadas, 10))    //ENCONTRAR UNA POS LIBRE
             {
-                Jx = random.Next(-150, 150);
-                Jz = random.Next(-150, 150);
+                Jx = random.Next(-100, 100);
+                Jz = random.Next(-100, 100);
                 Jpos = new Vector2(Jx, Jz);
             }
 
@@ -194,12 +212,18 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
             //----IA---//
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < _cantidadEnemigosIA; i++)
             {
                 var tank = new ETanqueIA();
                 tank.SetTipoTanque("Panzer");
                 float Ax = random.Next(-150, 150);
-                float Az = random.Next(-150, 150);
+                //float Az = random.Next(-150, 150);
+                float Az;
+                if (random.Next(2) == 0) // 50% de probabilidad para cada zona
+                    Az = random.Next(-500, -150); // Zona sur (z negativa)
+                else
+                    Az = random.Next(150, 500); // Zona norte (z positiva)
+
                 var pos = new Vector2(Ax, Az);
                 if (PosicionesLibre(pos, posicionesUsadas, 10))
                 {
@@ -339,6 +363,11 @@ namespace TGC.MonoGame.TP.src.Escenarios
         public void FinJuegoPerder()
         {
             this._director.CambiarEsenarioActivo(TipoEsenario.Derrota);
+        }
+
+        internal EJugador GetJugador()
+        {
+            return this.jugador;
         }
     }
 

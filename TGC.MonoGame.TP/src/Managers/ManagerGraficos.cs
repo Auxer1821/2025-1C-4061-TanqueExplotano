@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Objetos;
 using System.Linq;
 using TGC.MonoGame.TP.src.Moldes;
+using TGC.MonoGame.TP.src.Graficos.Utils;
+using System.IO;
+
 
 
 
@@ -15,15 +18,11 @@ namespace TGC.MonoGame.TP.src.Managers
     /// <summary>
     ///     Esta es la clase del escenario donde se controla 
     /// </summary>
-    public class ManagerGrafico 
+    public class ManagerGrafico
     {
         //deberia estar el frostum aca o en coliciones?
         private BoundingsVolumes.BVTrufas _boundingFrustum;
-        //ejemplo de uso
-        //_boundingFrustum = new BoundingFrustum(_testCamera.View * _testCamera.Projection);
-        //_boudingFrustum.intersects(_entidad.BoundingBox);
-         // Update the view projection matrix of the bounding frustum
-            //_boundingFrustum.Matrix = _testCamera.View * _testCamera.Projection;
+
         private List<Entidades.Entidad> _entidades; // dif listas [arboles,casa,caja,roca,pasto,montaña]
                                                     //effecto particular [arbol,casa,caja,roca,pasto,montaña]
         private List<Entidades.EPasto> _pastos;
@@ -31,6 +30,8 @@ namespace TGC.MonoGame.TP.src.Managers
         private Camaras.Camera _camera;
         private Terrenos.Terreno _terreno;
         private List<Moldes.IMolde> _moldes;
+        private Vector3 _posSOL;
+        public ShadowMapping _shadowMapper;
 
         //skybox , pasto
         //decidir terreno (separar el dibujado del alturamapa)
@@ -38,6 +39,8 @@ namespace TGC.MonoGame.TP.src.Managers
         {
             _entidades = new List<Entidades.Entidad>();
             _pastos = new List<Entidades.EPasto>();
+            _posSOL = new Vector3(900.0f, 400.0f, -1000.0f);
+            _shadowMapper = new ShadowMapping();
         }
         public void inicializarCamara(Camaras.Camera camera)
         {
@@ -58,16 +61,21 @@ namespace TGC.MonoGame.TP.src.Managers
             _moldes = moldes;
         }
 
+        public void InicializarShadowMapping(GraphicsDevice graphicsDevice){
+            _shadowMapper.Initialize(_posSOL, graphicsDevice);
+        }
+        
+
         public void AgregarEntidad(Entidades.Entidad entidad)
         {
             if (entidad.PuedeDibujar())
                 _entidades.Add(entidad);
         }
-      
+
 
         public void AgregarPasto(Entidades.EPasto pasto)
         {
-                _pastos.Add(pasto);
+            _pastos.Add(pasto);
         }
         public void RemoverEntidad(Entidades.Entidad entidad)
         {
@@ -76,12 +84,18 @@ namespace TGC.MonoGame.TP.src.Managers
 
         public void DibujarObjetos(GraphicsDevice graphicsDevice)
         {
+            //--------------1er Recorrida: ShadowMapping--------------//
+            _shadowMapper.ActualizarShadowMap(graphicsDevice, _entidades, _terreno);
+
+            //--------------2da Recorrida: Dibujado comun--------------//
+
             //recorrer por listas separadas
-            _skyBox.EfectCamera(_camera.Vista,_camera.Proyeccion);
+            _skyBox.EfectCamera(_camera.Vista, _camera.Proyeccion);
             _skyBox.Dibujar(graphicsDevice);//se dibuja primero
 
-            _terreno.EfectCamera(_camera.Vista,_camera.Proyeccion);
-            _terreno.Dibujar(graphicsDevice);
+            _terreno.EfectCamera(_camera.Vista, _camera.Proyeccion);
+            _terreno.setCamara(_camera.Position);
+            _terreno.Dibujar(graphicsDevice, _shadowMapper);
 
             //solamente los tanques pasan aqui
             /*
@@ -112,58 +126,62 @@ namespace TGC.MonoGame.TP.src.Managers
             */
 
             //TODO de los chunks de minegraft
-            
+
             foreach (var entidad in _entidades)
             {
-                if (_boundingFrustum.colisiona(entidad._boundingVolume) || entidad.ExcluidoDelFrustumCulling()) {
+//                if (_boundingFrustum.colisiona(entidad._boundingVolume) || entidad.ExcluidoDelFrustumCulling())
+                if (entidad.FrustumCulling(_boundingFrustum) || entidad.ExcluidoDelFrustumCulling())
+                {
                     if (entidad._tipo == Entidades.TipoEntidad.Obstaculo)
                     {
-                        entidad.GetMolde().Draw(entidad.GetMundo(), graphicsDevice);
+                        entidad.GetMolde().Draw(entidad.GetMundo(), graphicsDevice, _shadowMapper);
                     }
-                    else
+                    else    //tanque
                     {
+                        entidad._modelo.SetPosSOL(_posSOL);
+                        entidad._modelo.setCamara(_camera.Position);
                         entidad.EfectCamera(_camera.Vista, _camera.Proyeccion);
-                        entidad.Dibujar(graphicsDevice);
+                        entidad.Dibujar(graphicsDevice, _shadowMapper);
                     }
                 }
             }
 
-            
 
-            foreach (var pasto in _pastos) //TODO hacer update del efecto pasto
+
+            foreach (var pasto in _pastos) 
             {
-                if (_boundingFrustum.colisiona(pasto._posicion)){
-                //pasto.EfectCamera(_camera.Vista, _camera.Proyeccion);
-                //pasto.Dibujar(graphicsDevice);
-                pasto.GetMolde().Draw(pasto.GetMundo(), graphicsDevice);
+                if (_boundingFrustum.colisiona(pasto._posicion))
+                {
+                    //pasto.EfectCamera(_camera.Vista, _camera.Proyeccion);
+                    //pasto.Dibujar(graphicsDevice);
+                    //pasto.GetMolde().Draw(pasto.GetMundo(), graphicsDevice);
+
+                    pasto.GetMolde().Draw(pasto.GetMundo(), graphicsDevice, _shadowMapper);
                 }
             }
 
         }
 
-        private void setVistaProjection(Moldes.IMolde molde, Matrix vista, Matrix projection){
+        private void setVistaProjection(Moldes.IMolde molde, Matrix vista, Matrix projection)
+        {
             molde.setProjection(projection);
             molde.setVista(vista);
+            molde.setCamara(_camera.Position);
+            molde.SetPosSOL(_posSOL); //sol NO AFECTA AL TERRENO
         }
 
         public void ActualizarAnimacion(GameTime gameTime)
         {
-            /*
-            foreach (var pasto in _pastos)
-            {
-                pasto.ActualizarTime((float)gameTime.TotalGameTime.TotalSeconds);
-            }
-            */
             foreach (var molde in _moldes)
             {
                 molde.setTime(gameTime);
             }
         }
 
-        public void ActualizarCamera(){
+        public void ActualizarCamera()
+        {
             _boundingFrustum.UpdateFrustum(_camera);
         }
-
 
     }
 }

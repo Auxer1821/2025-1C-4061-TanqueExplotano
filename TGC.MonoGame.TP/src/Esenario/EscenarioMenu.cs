@@ -33,14 +33,9 @@ namespace TGC.MonoGame.TP.src.Escenarios
         private float _velocidadDeGiro;
         
          private MTanque _tanque;
-         private string _texturaTanque = "2";
-         private float Rotation = 0.0f;
-
-        private float _tamanioNormalBoton = 0.1f;
-        private float _tamanioElectoBoton = 0.15f;
-
+        private string _texturaTanque = "2";
+        private float Rotation = 0.0f;
         private float _tiempoDeCambio = 1.0f;
-
         private DirectorEscenarios _dEsenarios;
         private Managers.ManagerSonido _managerSonido;
 
@@ -106,9 +101,12 @@ namespace TGC.MonoGame.TP.src.Escenarios
             Matrix Projection =
             Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, device.Viewport.AspectRatio, 1, 250);
             _tanque.EfectCamera(View, Projection);
+            //setear la iluminacion
+            _tanque.setCamara(new Vector3(0, 0, 0));
+            _tanque.SetPosSOL(new Vector3(-30, 30, 10));
 
 
-            this._velocidadDeGiro = 3;
+            this._velocidadDeGiro = 1;
 
             this._managerSonido = new Managers.ManagerSonido(Content);
             this._managerSonido.InstanciarSonidosMenu();
@@ -184,7 +182,9 @@ namespace TGC.MonoGame.TP.src.Escenarios
 
 
             graphicsDevice.DepthStencilState = DepthStencilState.Default;
+            _tanque.CambiarTecnica("Menu");
             _tanque.Dibujar(graphicsDevice);
+            _tanque.CambiarTecnica("Main");
             graphicsDevice.DepthStencilState = DepthStencilState.DepthRead;
             _TituloJuego.Dibujado(_graphicsDevice);
 

@@ -35,6 +35,7 @@ namespace TGC.MonoGame.TP.src.Entidades
         //variables de sonido
         public Managers.ManagerSonido _managerSonido;
         public EmisorParticula _particulasDisparo;
+        public EmisorParticula _particulasExplosion;
 
 
         //----------------------------------------------Constructores-e-inicializador--------------------------------------------------//
@@ -61,15 +62,18 @@ namespace TGC.MonoGame.TP.src.Entidades
             //this._boundingVolume.Transformar(this._posicion, this._angulo, 1f);
 
             this._particulasDisparo = new EmisorParticula();
-            this._particulasDisparo.Initialize(Content, Graphics, 10, new Vector3(0, 2, 0));
-            this._particulasDisparo.SetNuevaPosicion(new Vector3(this._posicion.X/6, 0, this._posicion.Z/6) + new Vector3(_dirApuntado.X/6, 0.05f, _dirApuntado.Z/6));
+            this._particulasDisparo.Initialize(Content, Graphics, 20, this._posicion ,"disparo");
+            this.SetPosicionParticulas();
+
+            this._particulasExplosion = new EmisorParticula();
+            this._particulasExplosion.Initialize(Content, Graphics, 15, this._posicion, "explosion");
 
             //Cargar el sonido
             this._managerSonido = new Managers.ManagerSonido(Content);
             this._managerSonido.InstanciarSonidosTanque();
 
 
-            
+
         }
 
 
@@ -131,25 +135,39 @@ namespace TGC.MonoGame.TP.src.Entidades
             this.tiempoUltimoImpacto += deltaTime;
 
             // Actualizar partículas de disparo
-            if (this._particulasDisparo != null)
-            {
-                this._particulasDisparo.Update(gameTime);
-                this._particulasDisparo.SetNuevaPosicion(new Vector3(this._posicion.X/6, 0, this._posicion.Z/6) + new Vector3(_dirApuntado.X/6, 0.05f, _dirApuntado.Z/6));
-            }
+            this._particulasDisparo.Update(gameTime);
+            // Actualizar partículas de explosión
+            this._particulasExplosion.Update(gameTime);
 
             //actualizar BV
             this._boundingVolume.Transformar(this._posicion, this._angulo, 1f);
+
         }
+
+        //----------------Dibujar----------------//
+        public override void Dibujar(GraphicsDevice graphicsDevice, Graficos.Utils.ShadowMapping shadowMapper)
+        {
+            this._modelo.CargarShadowMapper(shadowMapper);
+            this.Dibujar(graphicsDevice);
+        }
+
 
         public override void Dibujar(GraphicsDevice Graphics)
         {
-            this._particulasDisparo.Dibujar();
             base.Dibujar(Graphics);
+            this._particulasDisparo.Dibujar();
+            this._particulasExplosion.Dibujar();
+        }
+
+        public override void DibujarShadowMap(GraphicsDevice graphics, Matrix vista, Matrix proyeccion)
+        {
+            ((MTanque)this._modelo).DibujarShadowMap(graphics, vista, proyeccion);
         }
 
         public override void EfectCamera(Matrix vista, Matrix proyeccion)
         {
             this._particulasDisparo.SetVistaProyeccion(vista, proyeccion);
+            this._particulasExplosion.SetVistaProyeccion(vista, proyeccion);
             base.EfectCamera(vista, proyeccion);
         }
 
@@ -180,24 +198,39 @@ namespace TGC.MonoGame.TP.src.Entidades
         protected virtual void RecibirDaño(DataChoque choque, EBala bala)
         {
             if (this.tiempoUltimoImpacto < 0.5 || bala == this._bala || !this._tipoTanque.EstaVivo())
-            return;
-            
+                return;
+
+            this.AplicarDeformacion(choque._puntoContacto, 1.0f);
             // Restar vida (suponiendo que existe una propiedad 'Vida')
             this._tipoTanque.RecibirDanio(bala._danio);
             this._modelo.EfectoDaño(Math.Clamp(this._tipoTanque.Vida() / this._tipoTanque.VidaMaxima(), 0.2f, 1.0f));
             this.tiempoUltimoImpacto = 0.0f;
 
             // Efectos visuales
-            // MostrarChispa(choque._puntoContacto);
+            this._particulasExplosion.SetNuevaPosicion(this._posicion + new Vector3(0, 1.5f, 0));
+            this._particulasExplosion.SetPosiciones(this._posicion + new Vector3(0, 1.5f, 0));
+            this._particulasExplosion.SetPuedeDibujar(true);
             // ReproducirSonidoImpacto();
             // Modificar la mesh del modelo para simular el impacto (Entrega 4)
 
             this._managerSonido.reproducirSonido("impactoBala");
             // Chequear destrucción
-            if (!this._tipoTanque.EstaVivo()){   
+            if (!this._tipoTanque.EstaVivo())
+            {
                 this.Destruir();
                 bala.Kill();
             }
+        }
+
+        protected virtual void AplicarDeformacion(Vector3 puntoImpacto , float fuerzaImpacto){
+            //limitar la cantidad de deformaciones para no sobrecargar el modelo
+            Matrix inverseWorld = Matrix.Invert(this.GetMundo());
+            Vector3 localPosition = Vector3.Transform(puntoImpacto, inverseWorld);
+            localPosition *= this._tipoTanque.escala();
+
+            //((MTanque)this._modelo).DeformModel(-localPosition, 4f  , fuerzaImpacto);
+            ((MTanque)this._modelo).AddImpact(localPosition * this._tipoTanque.RepararDeformaciones(), 8f  , fuerzaImpacto);
+            
         }
 
 
@@ -254,7 +287,6 @@ namespace TGC.MonoGame.TP.src.Entidades
         public void Mover()
         {
 
-
             this._posicion += new Vector3(_dirMovimiento.X, 0, _dirMovimiento.Y) * _velocidadActual;//p
 
             // triangulo 
@@ -268,13 +300,30 @@ namespace TGC.MonoGame.TP.src.Entidades
             // Calcular el ángulo de inclinación del tanque en función de la altura del terreno
             var distanciaZ = Vector2.Distance(punto1, new Vector2(_posicion.X, _posicion.Z));
             var AlturaZ = this._escenario.getAltura(new Vector3(punto1.X, 0f, punto1.Y)) - _posicion.Y;
-            var ArcoSenoZ = (float)Math.Asin(AlturaZ / distanciaZ);
+            //var ArcoSenoZ = (float)Math.Asin(AlturaZ / distanciaZ);
+
+            // Validación para evitar NaN
+            float ArcoSenoZ = 0f;
+            if (Math.Abs(distanciaZ) > 0.001f) // Evitar división por cero
+            {
+                float ratioZ = AlturaZ / distanciaZ;
+                // Clampear al rango válido para Math.Asin
+                ratioZ = MathHelper.Clamp(ratioZ, -1f, 1f);
+                ArcoSenoZ = (float)Math.Asin(ratioZ);
+            }
 
             //altura entre los puntos 2 y 3
             var distanciaX = Vector2.Distance(punto2, punto3);
             var AlturaX = this._escenario.getAltura(new Vector3(punto2.X, 0f, punto2.Y)) - this._escenario.getAltura(new Vector3(punto3.X, 0f, punto3.Y));
 
-            var ArcoSenoX = (float)Math.Asin(AlturaX / distanciaX);
+            //var ArcoSenoX = (float)Math.Asin(AlturaX / distanciaX);
+            float ArcoSenoX = 0f;
+            if (Math.Abs(distanciaX) > 0.001f) // Evitar división por cero
+            {
+                float ratioX = AlturaX / distanciaX;
+                ratioX = MathHelper.Clamp(ratioX, -1f, 1f);
+                ArcoSenoX = (float)Math.Asin(ratioX);
+            }
 
             //suavizado de angulo para que no se vea tan brusco
             var anguloObjetivo = new Vector3(ArcoSenoZ, -ArcoSenoX, 0f);
@@ -293,7 +342,7 @@ namespace TGC.MonoGame.TP.src.Entidades
 
             var posAux = this._posicion;
             posAux.Y = this._escenario.getAltura(punto1, punto2, punto3);
-            this._posicion = Vector3.Lerp(this._posicion, posAux, 0.3f); // Suavizado de altura
+            this._posicion = Vector3.Lerp(this._posicion, posAux, 0.6f); // Suavizado de altura
 
 
 
@@ -308,22 +357,35 @@ namespace TGC.MonoGame.TP.src.Entidades
             //TODO: direccion de la mira
         }
         // 
-        public void Disparar()
+        public virtual void Disparar()
         {
+            if (!this.PuedeDisparar()) return;
+            
             this.setPosicionSalidaBala();
-            this._bala.ActualizarDatos(this._dirApuntado, this._posicionSalidaBala); //TODO - Cambiar lugar de disparo para que no se autodestruya
+            this.ActualizarBala(); //TODO - Cambiar lugar de disparo para que no se autodestruya
             this._escenario.AgregarACrear(this._bala); //temporal
 
-            this._particulasDisparo.SetNuevaPosicion(this._posicion/6 + new Vector3(_dirApuntado.X/6 *7f, 0.6f , _dirApuntado.Z/6 *7f));
+            this.SetPosicionParticulas();
             this._particulasDisparo.SetPuedeDibujar(true);
+            this._cooldownActual = 0.0f;
 
             //sonido disparo
             //this._managerSonido.reproducirSonido("disparo");
         }
+        protected virtual void ActualizarBala()
+        {
+            this._bala.ActualizarDatos(this._dirApuntado, this._posicionSalidaBala);
+        }
+
+        public virtual void SetPosicionParticulas()
+        {
+            this._particulasDisparo.SetNuevaPosicion(this._posicion + new Vector3(_dirApuntado.X * 9f, this._dirApuntado.Y + 4f, _dirApuntado.Z * 9f));
+            this._particulasDisparo.SetPosiciones( this._posicion + new Vector3(_dirApuntado.X * 9f, this._dirApuntado.Y + 4f, _dirApuntado.Z * 9f));
+        }
 
         public virtual void setPosicionSalidaBala()
         {
-            this._posicionSalidaBala=this._posicion;
+            this._posicionSalidaBala = this._posicion;
         }
 
         protected void ActualizarApuntado(Vector3 apuntado)
@@ -342,8 +404,14 @@ namespace TGC.MonoGame.TP.src.Entidades
             throw new NotImplementedException();
         }
 
-        public float GetKills(){
+        public float GetKills()
+        {
             return this._killCount;
+        }
+        
+        public Vector2 GetPosition()
+        {
+            return new Vector2(this._posicion.X, this._posicion.Z);
         }
 
         

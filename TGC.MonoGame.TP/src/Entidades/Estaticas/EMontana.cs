@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using TGC.MonoGame.TP.src.Moldes;
 using TGC.MonoGame.TP.src.Objetos;
 
+using TGC.MonoGame.TP.src.BoundingsVolumes;
 
 namespace TGC.MonoGame.TP.src.Entidades
 {
@@ -15,12 +16,30 @@ namespace TGC.MonoGame.TP.src.Entidades
     public class EMontana : Entidades.EntidadFullPrimitiva
     {
         public EMontana() { }
+        
         public override void Initialize(GraphicsDevice Graphics, Matrix Mundo, ContentManager Content, Escenarios.Escenario escenario)
         {
             this._objeto = new Montanas.OMontana();
             this._tipo = TipoEntidad.Obstaculo;
             base.Initialize(Graphics, Mundo, Content, escenario);
+            this._boundingVolume = new BVCuboAABB(ObtenerMinimo(this._posicion), ObtenerMaximo(this._posicion));
         }
+
+        
+        public override void Chocar(DataChoque dataChoque, Entidad entidadEstatica)
+        {
+            switch (entidadEstatica._tipo)
+            {
+                case TipoEntidad.Bala:
+                    //this._escenario.AgregarAEliminar(this);
+                    break;
+                default:
+                    base.Chocar(dataChoque, entidadEstatica);
+                    break;
+            }
+        }
+        
+        
 
         public void SetMolde(MoldeMontana molde)
         {
@@ -31,6 +50,18 @@ namespace TGC.MonoGame.TP.src.Entidades
         public override bool ExcluidoDelFrustumCulling()
         {
             return true;
+        }
+
+        private Vector3 ObtenerMinimo(Vector3 pos)
+        {
+            Vector3 ret = new Vector3(pos.X - 100.0f, pos.Y -5f, pos.Z - 100.0f);
+            return ret;
+        }
+
+        private Vector3 ObtenerMaximo(Vector3 pos)
+        {
+            Vector3 ret = new Vector3(pos.X + 100.0f, pos.Y + 100.0f, pos.Z + 100.0f);
+            return ret;
         }
     }
 }

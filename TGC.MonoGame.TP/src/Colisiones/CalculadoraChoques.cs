@@ -172,8 +172,8 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             if (esferaChocada._centro.X < cuboMovimento._minimo.X) distancia2 += sqr(esferaChocada._centro.X - cuboMovimento._minimo.X);
             else if (esferaChocada._centro.X > cuboMovimento._maximo.X) distancia2 += sqr(esferaChocada._centro.X - cuboMovimento._maximo.X);
 
-            if (esferaChocada._centro.Y < cuboMovimento._minimo.Y) distancia2 += sqr(esferaChocada._centro.Y - cuboMovimento._minimo.Y);
-            else if (esferaChocada._centro.Y > cuboMovimento._minimo.Y) distancia2 += sqr(esferaChocada._centro.Y - cuboMovimento._minimo.Y);
+            //if (esferaChocada._centro.Y < cuboMovimento._minimo.Y) distancia2 += sqr(esferaChocada._centro.Y - cuboMovimento._minimo.Y);
+            //else if (esferaChocada._centro.Y > cuboMovimento._minimo.Y) distancia2 += sqr(esferaChocada._centro.Y - cuboMovimento._minimo.Y);
 
             if (esferaChocada._centro.Z < cuboMovimento._minimo.Z) distancia2 += sqr(esferaChocada._centro.Z - cuboMovimento._minimo.Z);
             else if (esferaChocada._centro.Z > cuboMovimento._maximo.Z) distancia2 += sqr(esferaChocada._centro.Z - cuboMovimento._maximo.Z);
@@ -372,77 +372,6 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             // La proyección total es la suma de las 3
             return proyRight + proyUp + proyForward;
         }
-
-        /*
-                public static DataChoque ParametrosChoque(BVCuboOBB cubo1, BVCuboOBB cubo2)
-                {
-                    // Primero verificamos si hay colisión
-                    if (!DetectarColisiones(cubo1, cubo2))
-                        return new DataChoque(Vector3.Zero, 0, Vector3.Zero);
-
-                    // Implementación del algoritmo GJK/EPA para OBB-OBB
-                    // Para simplificar, usaremos un enfoque basado en ejes de separación (SAT)
-
-                    Vector3 centroDiff = cubo2.Centro - cubo1.Centro;
-
-                    // Ejes de prueba: los 3 de cada OBB (6) + los 9 productos cruzados (15 en total)
-                    Vector3[] ejes = {
-                        cubo1.Orientacion.Right, cubo1.Orientacion.Up, cubo1.Orientacion.Backward,
-                        cubo2.Orientacion.Right, cubo2.Orientacion.Up, cubo2.Orientacion.Backward,
-                        Vector3.Cross(cubo1.Orientacion.Right, cubo2.Orientacion.Right),
-                        Vector3.Cross(cubo1.Orientacion.Right, cubo2.Orientacion.Up),
-                        Vector3.Cross(cubo1.Orientacion.Right, cubo2.Orientacion.Backward),
-                        Vector3.Cross(cubo1.Orientacion.Up, cubo2.Orientacion.Right),
-                        Vector3.Cross(cubo1.Orientacion.Up, cubo2.Orientacion.Up),
-                        Vector3.Cross(cubo1.Orientacion.Up, cubo2.Orientacion.Backward),
-                        Vector3.Cross(cubo1.Orientacion.Backward, cubo2.Orientacion.Right),
-                        Vector3.Cross(cubo1.Orientacion.Backward, cubo2.Orientacion.Up),
-                        Vector3.Cross(cubo1.Orientacion.Backward, cubo2.Orientacion.Backward)
-                    };
-
-                    float minPenetracion = float.MaxValue;
-                    Vector3 ejeColision = Vector3.Zero;
-
-                    foreach (Vector3 eje in ejes)
-                    {
-                        if (eje.LengthSquared() < 0.001f) continue;
-
-                        Vector3 ejeNormalizado = Vector3.Normalize(eje);
-
-                        // Proyectamos ambos cubos en el eje
-                        float proy1 = ProyectarOBB(cubo1, ejeNormalizado);
-                        float proy2 = ProyectarOBB(cubo2, ejeNormalizado);
-
-                        // Proyectamos la distancia entre centros
-                        float distancia = Math.Abs(Vector3.Dot(centroDiff, ejeNormalizado));
-
-                        // Calculamos la penetración en este eje
-                        float penetracion = (proy1 + proy2) - distancia;
-
-                        if (penetracion <= 0)
-                            return new DataChoque(Vector3.Zero, 0, Vector3.Zero); // No debería ocurrir si hay colisión
-
-                        if (penetracion < minPenetracion)
-                        {
-                            minPenetracion = penetracion;
-                            ejeColision = ejeNormalizado * Math.Sign(Vector3.Dot(centroDiff, ejeNormalizado));
-                        }
-                    }
-
-                    // Punto de contacto aproximado (podría mejorarse con Closest Points)
-                    Vector3 puntoContacto = (cubo1.Centro + cubo2.Centro) * 0.5f;
-
-                    // Mejorar el punto de contacto encontrando la cara de colisión
-                    // Esto es una aproximación simple, una implementación más precisa requeriría GJK/EPA
-                    Vector3 direccionCentros = cubo2.Centro - cubo1.Centro;
-                    if (Vector3.Dot(direccionCentros, ejeColision) < 0)
-                    {
-                        ejeColision = -ejeColision;
-                    }
-
-                    return new DataChoque(puntoContacto, minPenetracion, ejeColision);
-                }
-        */
 public static DataChoque ParametrosChoque(BVCuboOBB cubo1, BVCuboOBB cubo2)
 {
     Vector3 centroDiff = cubo2.Centro - cubo1.Centro;
@@ -1320,82 +1249,7 @@ public static DataChoque ParametrosChoque(BVCuboOBB cubo1, BVCuboOBB cubo2)
         }
 
         // ----------------------------- Colisiones CilindroOBB - Esfera --------------------------------------------- //
-                /*
-        public static bool DetectarColisiones(BVCilindroOBB cilindro, BVEsfera esfera)
-        {
-            // Vector del centro del cilindro al centro de la esfera
-            Vector3 centroACentro = esfera._centro - cilindro._centro;
 
-            // Proyectamos en el eje del cilindro
-            float proyeccionEje = Vector3.Dot(centroACentro, cilindro._direccion);
-            float distanciaEje = Math.Abs(proyeccionEje);
-            float sumaAlturas = esfera._radio + cilindro._alto / 2;
-
-            if (distanciaEje > sumaAlturas)
-                return false;
-
-            // Proyectamos en el plano perpendicular al eje del cilindro
-            Vector3 proyeccionEjeVector = cilindro._direccion * proyeccionEje;
-            Vector3 centroEsferaPlano = centroACentro - proyeccionEjeVector;
-            float distanciaPlano = centroEsferaPlano.Length();
-
-            return distanciaPlano <= (esfera._radio + cilindro._radio);
-        }
-
-        public static DataChoque ParametrosChoque(BVCilindroOBB cilindro, BVEsfera esfera)
-        {
-            Vector3 centroACentro = esfera._centro - cilindro._centro;
-
-            // Proyección en el eje del cilindro
-            float proyeccionEje = Vector3.Dot(centroACentro, cilindro._direccion);
-            float distanciaEje = Math.Abs(proyeccionEje);
-            float penetracionEje = (cilindro._alto / 2 + esfera._radio) - distanciaEje;
-
-            // Proyección en el plano perpendicular
-            Vector3 proyeccionEjeVector = cilindro._direccion * proyeccionEje;
-            Vector3 centroEsferaPlano = centroACentro - proyeccionEjeVector;
-            float distanciaPlano = centroEsferaPlano.Length();
-            float penetracionPlano = (cilindro._radio + esfera._radio) - distanciaPlano;
-
-            Vector3 normal;
-            float penetracion;
-            Vector3 puntoContacto;
-
-            if (penetracionPlano < penetracionEje)
-            {
-                // Colisión lateral
-                if (distanciaPlano > 0)
-                    centroEsferaPlano /= distanciaPlano;
-                else
-                    centroEsferaPlano = Vector3.Cross(cilindro._direccion, Vector3.UnitX);
-
-                normal = centroEsferaPlano;
-                penetracion = penetracionPlano;
-                puntoContacto = cilindro._centro + proyeccionEjeVector + centroEsferaPlano * cilindro._radio;
-            }
-            else
-            {
-                // Colisión en los extremos
-                normal = cilindro._direccion * Math.Sign(proyeccionEje);
-                penetracion = penetracionEje;
-                puntoContacto = cilindro._centro + cilindro._direccion * (cilindro._alto / 2 * Math.Sign(proyeccionEje));
-            }
-
-            return new DataChoque(puntoContacto, penetracion, normal);
-        }
-        */
-
-        /*public static bool DetectarColisiones(BVEsfera esfera, BVCilindroOBB cilindro)
-        {
-            return DetectarColisiones(cilindro, esfera);
-        }
-
-        public static DataChoque ParametrosChoque(BVEsfera esfera, BVCilindroOBB cilindro)
-        {
-            DataChoque choque = ParametrosChoque(cilindro, esfera);
-            return new DataChoque(choque._puntoContacto, choque._penetracion, -choque._normal);
-        }
-        */
         // ----------------------------- Colisiones CilindroOBB - CuboAABB --------------------------------------------- //
         public static bool DetectarColisiones(BVCilindroOBB cilindro, BVCuboAABB cubo)
         {
@@ -1429,42 +1283,6 @@ public static DataChoque ParametrosChoque(BVCuboOBB cubo1, BVCuboOBB cubo2)
         }
 
         // ----------------------------- Colisiones CilindroOBB - CuboOBB --------------------------------------------- //
- /*       public static bool DetectarColisiones(BVCilindroOBB cilindro, BVCuboOBB cubo)
-        {
-            // Implementación simplificada usando SAT (Separating Axis Theorem)
-            // Consideramos el eje del cilindro y los ejes del OBB como posibles ejes de separación
-
-            Vector3 centroDiff = cubo.Centro - cilindro._centro;
-
-            // Eje del cilindro
-            if (SeparanCilindroOBB(cilindro, cubo, cilindro._direccion, centroDiff))
-                return false;
-
-            // Ejes del OBB
-            if (SeparanCilindroOBB(cilindro, cubo, cubo.Orientacion.Right, centroDiff))
-                return false;
-            if (SeparanCilindroOBB(cilindro, cubo, cubo.Orientacion.Up, centroDiff))
-                return false;
-            if (SeparanCilindroOBB(cilindro, cubo, cubo.Orientacion.Backward, centroDiff))
-                return false;
-
-            // Ejes perpendiculares (productos cruz entre el eje del cilindro y los ejes del OBB)
-            Vector3 axis1 = Vector3.Cross(cilindro._direccion, cubo.Orientacion.Right);
-            if (axis1.LengthSquared() > 1e-6f && SeparanCilindroOBB(cilindro, cubo, axis1, centroDiff))
-                return false;
-
-            Vector3 axis2 = Vector3.Cross(cilindro._direccion, cubo.Orientacion.Up);
-            if (axis2.LengthSquared() > 1e-6f && SeparanCilindroOBB(cilindro, cubo, axis2, centroDiff))
-                return false;
-
-            Vector3 axis3 = Vector3.Cross(cilindro._direccion, cubo.Orientacion.Backward);
-            if (axis3.LengthSquared() > 1e-6f && SeparanCilindroOBB(cilindro, cubo, axis3, centroDiff))
-                return false;
-
-            return true;
-        }
-        */
-
         private static bool SeparanCilindroOBB(BVCilindroOBB cilindro, BVCuboOBB cubo, Vector3 axis, Vector3 centroDiff)
         {
             if (axis.LengthSquared() < 1e-6f)
@@ -1484,20 +1302,6 @@ public static DataChoque ParametrosChoque(BVCuboOBB cubo1, BVCuboOBB cubo2)
             // Si la distancia es mayor que la suma de proyecciones => hay separación
             return distanciaCentros > (proyCilindro + proyOBB);
         }
-/*
-        private static float ProyectarCilindroOBB(BVCilindroOBB cilindro, Vector3 axis)
-        {
-            // Proyección del eje del cilindro
-            float proyeccionEje = MathF.Abs(Vector3.Dot(cilindro._direccion, axis)) * (cilindro._alto / 2);
-
-            // Proyección del radio en el plano perpendicular
-            Vector3 proyeccionPlano = axis - cilindro._direccion * Vector3.Dot(axis, cilindro._direccion);
-            float proyeccionRadio = proyeccionPlano.Length() * cilindro._radio;
-
-            return proyeccionEje + proyeccionRadio;
-        }
-    */
-        
 
         public static DataChoque ParametrosChoque(BVCilindroOBB cilindro, BVCuboOBB cubo)
         {
@@ -1675,51 +1479,6 @@ public static DataChoque ParametrosChoque(BVCuboOBB cubo1, BVCuboOBB cubo2)
         }
 
         // ----------------------------- Colisiones Rayo - CilindroOBB --------------------------------------------- //
-/*
-        public static bool DetectarColisiones(BVRayo rayo, BVCilindroOBB cilindro)
-        {
-            // Transformamos el rayo al espacio local del cilindro
-            Matrix invTransform = Matrix.Invert(Matrix.CreateWorld(cilindro._centro, cilindro._direccion, Vector3.UnitX));
-            Vector3 origenLocal = Vector3.Transform(rayo._PuntoPartda, invTransform);
-            Vector3 direccionLocal = Vector3.TransformNormal(rayo._Direccion, invTransform);
-
-            // Ahora tratamos como un cilindro AABB alineado con Y
-            BVCilindroAABB cilindroLocal = new BVCilindroAABB(
-                Vector3.Zero,
-                cilindro._radio,
-                cilindro._alto
-            );
-
-            BVRayo rayoLocal = new BVRayo(direccionLocal, origenLocal);
-            return DetectarColisiones(rayoLocal, cilindroLocal);
-        }
-
-        public static DataChoque ParametrosChoque(BVRayo rayo, BVCilindroOBB cilindro)
-        {
-            Matrix invTransform = Matrix.Invert(Matrix.CreateWorld(cilindro._centro, cilindro._direccion, Vector3.UnitX));
-            Vector3 origenLocal = Vector3.Transform(rayo._PuntoPartda, invTransform);
-            Vector3 direccionLocal = Vector3.TransformNormal(rayo._Direccion, invTransform);
-
-            BVCilindroAABB cilindroLocal = new BVCilindroAABB(
-                Vector3.Zero,
-                cilindro._radio,
-                cilindro._alto
-            );
-
-            BVRayo rayoLocal = new BVRayo(direccionLocal, origenLocal);
-            DataChoque choqueLocal = ParametrosChoque(rayoLocal, cilindroLocal);
-
-            if (choqueLocal._penetracion <= 0)
-                return new DataChoque(Vector3.Zero, 0, Vector3.Zero);
-
-            // Convertimos los datos de vuelta al espacio mundial
-            Vector3 puntoContacto = Vector3.Transform(choqueLocal._puntoContacto, cilindro.Orientacion) + cilindro._centro;
-            Vector3 normal = Vector3.TransformNormal(choqueLocal._normal, cilindro.Orientacion);
-            normal.Normalize();
-
-            return new DataChoque(puntoContacto, 0, normal);
-        }*/
-
         public static bool DetectarColisiones(BVCilindroOBB cilindro, BVRayo rayo)
         {
             return DetectarColisiones(rayo, cilindro);
@@ -1731,14 +1490,7 @@ public static DataChoque ParametrosChoque(BVCuboOBB cubo1, BVCuboOBB cubo2)
             return new DataChoque(choque._puntoContacto, choque._penetracion, -choque._normal);
         }
 
-
-
-
-
-
-
-
-                // ----------------------------- Colisiones CilindroOBB - Esfera --------------------------------------------- //
+        // ----------------------------- Colisiones CilindroOBB - Esfera --------------------------------------------- //
         public static bool DetectarColisiones(BVCilindroOBB cilindro, BVEsfera esfera)
         {
             // Vector del centro del cilindro al centro de la esfera

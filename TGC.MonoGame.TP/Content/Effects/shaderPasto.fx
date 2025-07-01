@@ -14,6 +14,9 @@
 // HLSL Semantics - https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics
 // Parámetros del efecto
 
+#include "utilities/ShadowShader.fx"
+float3 lightPosition;
+
 texture2D Texture;
 sampler TextureSampler = sampler_state
 {
@@ -40,13 +43,15 @@ struct VertexShaderInput
 {
 	float4 Position : POSITION0;
 	float2 TexCoord : TEXCOORD0;
-    float3 Normal : NORMAL0;
+    //float4 Normal : NORMAL0;
 };
 
 struct VertexShaderOutput
 {
 	float4 Position : SV_POSITION;
 	float2 TexCoord : TEXCOORD0;
+    float4 WorldPosition : TEXCOORD1;
+    float4 LightPosition : TEXCOORD2;
 	float4 Color : COLOR0;
 };
 
@@ -63,8 +68,10 @@ VertexShaderOutput MainVS(in VertexShaderInput input)
     
     // Transformaciones normales
     float4 WorldModificado = mul(modifiedPosition ,World);
+    output.WorldPosition = WorldModificado;
     float4 ViewModificado = mul(WorldModificado, View);
     output.Position = mul(ViewModificado, Projection);
+    output.LightPosition = mul(output.WorldPosition, LightViewProjection);
     output.TexCoord = input.TexCoord;
     
     return output;
@@ -81,6 +88,7 @@ float4 MainPS(VertexShaderOutput input) : COLOR
     
     // Muestreamos la textura con las coordenadas modificadas
     float4 color = tex2D(TextureSampler, distortedTexCoord);
+    color = ShadowShader(color, input.LightPosition, input.WorldPosition, float4(0.0,1.0,0.0,0.0), lightPosition);
     if (color.a < AlphaThreshold)         
         discard;
 
