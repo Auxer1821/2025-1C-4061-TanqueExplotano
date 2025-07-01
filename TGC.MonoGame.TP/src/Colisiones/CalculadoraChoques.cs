@@ -172,8 +172,8 @@ namespace TGC.MonoGame.TP.src.BoundingsVolumes
             if (esferaChocada._centro.X < cuboMovimento._minimo.X) distancia2 += sqr(esferaChocada._centro.X - cuboMovimento._minimo.X);
             else if (esferaChocada._centro.X > cuboMovimento._maximo.X) distancia2 += sqr(esferaChocada._centro.X - cuboMovimento._maximo.X);
 
-            if (esferaChocada._centro.Y < cuboMovimento._minimo.Y) distancia2 += sqr(esferaChocada._centro.Y - cuboMovimento._minimo.Y);
-            else if (esferaChocada._centro.Y > cuboMovimento._minimo.Y) distancia2 += sqr(esferaChocada._centro.Y - cuboMovimento._minimo.Y);
+            //if (esferaChocada._centro.Y < cuboMovimento._minimo.Y) distancia2 += sqr(esferaChocada._centro.Y - cuboMovimento._minimo.Y);
+            //else if (esferaChocada._centro.Y > cuboMovimento._minimo.Y) distancia2 += sqr(esferaChocada._centro.Y - cuboMovimento._minimo.Y);
 
             if (esferaChocada._centro.Z < cuboMovimento._minimo.Z) distancia2 += sqr(esferaChocada._centro.Z - cuboMovimento._minimo.Z);
             else if (esferaChocada._centro.Z > cuboMovimento._maximo.Z) distancia2 += sqr(esferaChocada._centro.Z - cuboMovimento._maximo.Z);
