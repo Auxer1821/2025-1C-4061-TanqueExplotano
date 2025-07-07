@@ -9,6 +9,7 @@ using System.Linq;
 using TGC.MonoGame.TP.src.Moldes;
 using TGC.MonoGame.TP.src.Graficos.Utils;
 using System.IO;
+using TGC.MonoGame.TP.src.Entidades;
 
 
 
@@ -32,12 +33,14 @@ namespace TGC.MonoGame.TP.src.Managers
         private List<Moldes.IMolde> _moldes;
         private Vector3 _posSOL;
         public ShadowMapping _shadowMapper;
+        private List<Entidades.Entidad> _entidadesShadowMap;
 
         //skybox , pasto
         //decidir terreno (separar el dibujado del alturamapa)
         public ManagerGrafico()
         {
             _entidades = new List<Entidades.Entidad>();
+            _entidadesShadowMap = new List<Entidades.Entidad>();
             _pastos = new List<Entidades.EPasto>();
             _posSOL = new Vector3(900.0f, 400.0f, -1000.0f);
             _shadowMapper = new ShadowMapping();
@@ -68,10 +71,22 @@ namespace TGC.MonoGame.TP.src.Managers
 
         public void AgregarEntidad(Entidades.Entidad entidad)
         {
-            if (entidad.PuedeDibujar())
+            if (entidad.PuedeDibujar()){
                 _entidades.Add(entidad);
+                this.AgregarAShadowMap(entidad);
+            }
+
         }
 
+        private void AgregarAShadowMap(Entidad entidad)
+        {
+            if (entidad._posicion.X > 140 && entidad._posicion.Z > 200 && entidad._tipo == TipoEntidad.Obstaculo){
+                return;
+            }
+            else{
+                _entidadesShadowMap.Add(entidad);
+            }
+        }
 
         public void AgregarPasto(Entidades.EPasto pasto)
         {
@@ -80,12 +95,13 @@ namespace TGC.MonoGame.TP.src.Managers
         public void RemoverEntidad(Entidades.Entidad entidad)
         {
             _entidades.Remove(entidad);
+            _entidadesShadowMap.Remove(entidad);
         }
 
         public void DibujarObjetos(GraphicsDevice graphicsDevice)
         {
             //--------------1er Recorrida: ShadowMapping--------------//
-            _shadowMapper.ActualizarShadowMap(graphicsDevice, _entidades, _terreno);
+            _shadowMapper.ActualizarShadowMap(graphicsDevice, _entidadesShadowMap, _terreno);
 
             //--------------2da Recorrida: Dibujado comun--------------//
 

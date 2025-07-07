@@ -129,12 +129,6 @@ namespace TGC.MonoGame.TP.src.Moldes
             _indices = new IndexBuffer(Graphics, IndexElementSize.SixteenBits, Indices.Length, BufferUsage.WriteOnly);
             _indices.SetData(Indices);
         }
-        Vector3 CalculateNormal(Vector3 a, Vector3 b, Vector3 c)
-        {
-            Vector3 ab = b - a;
-            Vector3 ac = c - a;
-            return Vector3.Cross(ab, ac);
-        }
 
     }
 }

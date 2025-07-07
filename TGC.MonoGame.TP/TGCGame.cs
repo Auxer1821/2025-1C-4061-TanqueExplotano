@@ -40,6 +40,9 @@ namespace TGC.MonoGame.TP
             Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width - 100;
             Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 100;
 
+
+            Graphics.IsFullScreen = true;
+
             Graphics.GraphicsProfile = GraphicsProfile.HiDef;
             // Para que el juego sea pantalla completa se puede usar Graphics IsFullScreen.
             // Carpeta raiz donde va a estar toda la Media.
@@ -169,6 +172,10 @@ namespace TGC.MonoGame.TP
             Content.Unload();
 
             base.UnloadContent();
+        }
+
+        public GraphicsDeviceManager GetGraphics() {
+            return Graphics;
         }
 
     }

@@ -21,7 +21,7 @@ namespace TGC.MonoGame.TP.src.EstadoIA
             base.Initialize(tanqueIA, tanqueJugador);
             this._tiempoSeguimiento = 10.0f;
             this._tiempoEspera = 3.0f;
-            this._radioDeteccion = 10.0f;
+            this._radioDeteccion = 20.0f;
 
         }
         //---MetodoPrincipal---//
@@ -33,6 +33,7 @@ namespace TGC.MonoGame.TP.src.EstadoIA
                 //EstadoDisparo estado = new EstadoDisparo();
                 //estado.Initialize(this._tanqueIA, this._tanqueJugador);
                 this._tanqueIA.CambiarEstadoIA("Disparo");
+                this.ResetState();
                 return;
             }
             if (_tiempoSeguimiento >= 0)
@@ -47,10 +48,8 @@ namespace TGC.MonoGame.TP.src.EstadoIA
         
                 if (_tiempoEspera <= 0)
                 {
-                    //EstadoBusqueda estado = new EstadoBusqueda();
-                    //estado.Initialize(this._tanqueIA, this._tanqueJugador);
-                    //this._tanqueIA.CambiarEstadoIA(estado);
                     this._tanqueIA.CambiarEstadoIA("Busqueda");
+                    this.ResetState();
                     return;
                 }
             }
@@ -61,6 +60,11 @@ namespace TGC.MonoGame.TP.src.EstadoIA
         public override void Exit()
         {
 
+        }
+
+        private void ResetState(){
+            this._tiempoSeguimiento = 10.0f;
+            this._tiempoEspera = 3.0f;
         }
     }
 }

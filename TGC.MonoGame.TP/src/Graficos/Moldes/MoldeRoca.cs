@@ -61,12 +61,15 @@ namespace TGC.MonoGame.TP.src.Moldes
         }
 
         public override void DibujarShadowMap(Matrix worldViewProjection, GraphicsDevice graphics){
+            /*
             _efecto.CurrentTechnique = _efecto.Techniques["DepthPass"];
             foreach (var mesh in _modelo.Meshes)
             {
                 _efecto.Parameters["WorldViewProjection"].SetValue(mesh.ParentBone.Transform * worldViewProjection);
                 mesh.Draw();
             }
+            */
+            
         }
 
     }

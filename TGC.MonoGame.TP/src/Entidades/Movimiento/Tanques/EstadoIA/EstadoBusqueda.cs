@@ -35,21 +35,23 @@ namespace TGC.MonoGame.TP.src.EstadoIA
             if (_tanqueIA.GetPosition() == _posicionDestino || 0f >= _cooldownPosicion)
             {
                 this._posicionDestino = new Vector2(_random.Next(-300, 300), _random.Next(-300, 300));
-                _cooldownPosicion = 3.0f;
+                this.ResetState();
             }
 
             if (this.DetectarJugador(_radioDeteccion))
             {
-//                EstadoChase estadoChase = this._tanqueIA._eChase;
-//                estadoChase.Initialize(this._tanqueIA, this._tanqueJugador);
-                //this._tanqueIA.CambiarEstadoIA(this._tanqueIA._eChase);
                 this._tanqueIA.CambiarEstadoIA("Chase");
+                this.ResetState();
             }
         }
         //---CambiaEstado---//
         public override void Exit()
         {
 
+        }
+        private void ResetState()
+        {
+            this._cooldownPosicion = 3.0f;
         }
     }
 }
