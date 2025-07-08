@@ -62,6 +62,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             Matrix projection = _camara.Proyeccion;
             _managerGrafico.inicializarCamara(_camara);
             _managerGrafico.InicializarShadowMapping(graphicsDevice);
+            _managerGrafico.InicializarParticulas(content, graphicsDevice);
 
             //-----------------Inicializar el skybox-------------------//
             Entidades.ESkyBox skyBox = new ESkyBox();
@@ -278,6 +279,9 @@ namespace TGC.MonoGame.TP.src.Escenarios
         {
             this._entidadesEliminar.Add(entidad);
             this._faltaEliminar = true;
+            if (entidad._tipo == TipoEntidad.Tanque){
+                this._managerGrafico.AgregarTanqueDestruido(entidad);
+            }
         }
 
         public void AgregarACrear(Entidad entidad)

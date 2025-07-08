@@ -26,6 +26,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
         private Vector4 _colorParticula = new Vector4(Color.Red.ToVector3(), 0.9f); // Color de la partícula
         private Vector4 _colorParticulaInicial = new Vector4(Color.Red.ToVector3(), 0.9f); // Color de la partícula
         private Vector4 _colorParticulaFinal = new Vector4(Color.Yellow.ToVector3(), 0.3f);
+        private String _tipoParticula; // Tipo de partícula (explosión, humo, fuego, etc.)
         public EmisorParticula()
         {
         }
@@ -47,8 +48,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
             this.inicializarTipo(tipo); // Configurar el tipo de partícula (explosión, humo, fuego, etc.)
             this._tiempoVida = _tiempoVidaInicial; // Inicializar el tiempo de vida de las partículas
             this.InicializarParticulas(posicionInicial, cantidadParticulas, _tiempoVida, tipo);
-
-
+            this._tipoParticula = tipo; // Guardar el tipo de partícula
         }
 
         public void Dibujar()
@@ -94,9 +94,17 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
                 _colorParticula = Vector4.Lerp(_colorParticulaInicial, _colorParticulaFinal, 1 - (_tiempoVida / _tiempoVidaInicial));
             }
 
+            if(_tipoParticula == "disparo" || _tipoParticula == "explosion")
+            {
             if (_tiempoVida <= 0)
             {
                 _puedeDibujar = false; // Desactivar el dibujado si el tiempo de vida es 0 o menor
+                _tiempoVida = _tiempoVidaInicial; // Reiniciar el tiempo de vida si es necesario
+                _colorParticula = _colorParticulaInicial; // Reiniciar el color de la partícula
+            }
+            }
+            else if (_tipoParticula == "humo" || _tipoParticula == "fuego")
+            {
                 _tiempoVida = _tiempoVidaInicial; // Reiniciar el tiempo de vida si es necesario
                 _colorParticula = _colorParticulaInicial; // Reiniciar el color de la partícula
             }
@@ -117,7 +125,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Temporales
                     _colorParticulaFinal = new Vector4(Color.Yellow.ToVector3(), 0.3f);
                     break;
                 case "humo":
-                    _tiempoVidaInicial = 1.2f; // Tiempo de vida para humo
+                    _tiempoVidaInicial = 2.8f; // Tiempo de vida para humo
                     _colorParticulaInicial = new Vector4(Color.Gray.ToVector3(), 0.5f);
                     _colorParticulaFinal = new Vector4(Color.Transparent.ToVector3(), 0.1f);
                     break;

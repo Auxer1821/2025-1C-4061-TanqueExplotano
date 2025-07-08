@@ -34,6 +34,7 @@ namespace TGC.MonoGame.TP.src.Managers
         private Vector3 _posSOL;
         public ShadowMapping _shadowMapper;
         private List<Entidades.Entidad> _entidadesShadowMap;
+        private Particulas _particulas;
 
         //skybox , pasto
         //decidir terreno (separar el dibujado del alturamapa)
@@ -44,6 +45,7 @@ namespace TGC.MonoGame.TP.src.Managers
             _pastos = new List<Entidades.EPasto>();
             _posSOL = new Vector3(900.0f, 400.0f, -1000.0f);
             _shadowMapper = new ShadowMapping();
+            _particulas = new Particulas();
         }
         public void inicializarCamara(Camaras.Camera camera)
         {
@@ -66,6 +68,9 @@ namespace TGC.MonoGame.TP.src.Managers
 
         public void InicializarShadowMapping(GraphicsDevice graphicsDevice){
             _shadowMapper.Initialize(_posSOL, graphicsDevice);
+        }
+        public void InicializarParticulas(ContentManager content, GraphicsDevice graphicsDevice){
+            _particulas.Initialize(content, graphicsDevice);
         }
         
 
@@ -162,7 +167,7 @@ namespace TGC.MonoGame.TP.src.Managers
                 }
             }
 
-
+            //--------------3da Sección: Dibujado Opcional--------------//
 
             foreach (var pasto in _pastos) 
             {
@@ -175,6 +180,9 @@ namespace TGC.MonoGame.TP.src.Managers
                     pasto.GetMolde().Draw(pasto.GetMundo(), graphicsDevice, _shadowMapper);
                 }
             }
+
+            //--------------4ta Sección: Dibujado de Particulas--------------//
+            _particulas.Dibujar();
 
         }
 
@@ -192,11 +200,16 @@ namespace TGC.MonoGame.TP.src.Managers
             {
                 molde.setTime(gameTime);
             }
+            this._particulas.Update(gameTime);
         }
 
         public void ActualizarCamera()
         {
             _boundingFrustum.UpdateFrustum(_camera);
+        }
+
+        public void AgregarTanqueDestruido(Entidad entidad){
+            this._particulas.AgregarTanqueDestruido(entidad._posicion);
         }
 
     }
