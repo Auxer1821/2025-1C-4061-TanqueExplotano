@@ -26,11 +26,9 @@ namespace TGC.MonoGame.TP.src.Managers
 
         private Effect _textoEffect;
 
-        /*
         private HTexto _posX;
         private HTexto _posY;
         private HTexto _posZ;
-        */
 
         //-------------HImagen--------------//
         private List<HImagen> _imagenesHud;
@@ -51,11 +49,11 @@ namespace TGC.MonoGame.TP.src.Managers
             _imagenesHud = new List<HImagen>();
             _misil = new HImagen();
 
-            /*
+            
             _posX = new HTexto();
             _posY = new HTexto();
             _posZ = new HTexto();
-            */
+            
         }
 
         public void Inicializar(GraphicsDevice device, ContentManager Content, Entidades.EJugador jugador)
@@ -80,14 +78,14 @@ namespace TGC.MonoGame.TP.src.Managers
             _tiempo.Initialize(new Vector2(-0.1f, 0.9f));
             _tiempo.setValor("00:00");
 
-            /*
+            
             _posX.Initialize(new Vector2(-0.9f, 0.5f));
             _posX.setValor("0000");
             _posY.Initialize(new Vector2(-0.9f, 0.4f));
             _posY.setValor("0000");
             _posZ.Initialize(new Vector2(-0.9f, 0.3f));
             _posZ.setValor("0000");
-            */
+            
 
             HImagen mira = new HImagen();
             mira.Initialize(new Vector2(0.0f, 0.0f), Content, "Textures/miras/aim_PNG56");
@@ -112,11 +110,11 @@ namespace TGC.MonoGame.TP.src.Managers
             _vida.Dibujado(_graphicsDevice, _textoEffect, _indexBuffer, _vertexBuffer);
             _progreso.Dibujado(_graphicsDevice, _textoEffect, _indexBuffer, _vertexBuffer);
             _tiempo.Dibujado(_graphicsDevice, _textoEffect, _indexBuffer, _vertexBuffer);
-            /*
+            
             _posX.Dibujado(_graphicsDevice, _textoEffect, _indexBuffer, _vertexBuffer);
             _posY.Dibujado(_graphicsDevice, _textoEffect, _indexBuffer, _vertexBuffer);
             _posZ.Dibujado(_graphicsDevice, _textoEffect, _indexBuffer, _vertexBuffer);
-            */
+            
             _misil.Dibujado(_graphicsDevice);
 
             foreach (HImagen hImagen in _imagenesHud)
@@ -139,11 +137,11 @@ namespace TGC.MonoGame.TP.src.Managers
             float porcentajeRecargado = _jugador.porcentajeRecargado();
             _misil.setClaridad(porcentajeRecargado);
 
-            /*
+            
             _posX.setValor("X:" + _jugador._posicion.X.ToString());
             _posY.setValor("Y:" + _jugador._posicion.Y.ToString());
             _posZ.setValor("Z:" + _jugador._posicion.Z.ToString());
-            */
+            
             
         }
 

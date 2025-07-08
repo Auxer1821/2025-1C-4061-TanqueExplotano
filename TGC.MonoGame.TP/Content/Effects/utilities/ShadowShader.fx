@@ -59,6 +59,6 @@ float4 ShadowShader(float4 color, float4 LightSpacePosition , float4 WorldSpaceP
 	}
     float porcentaje_de_sombra = 0.6;
 	
-	return float4(color.xyz * ( (1.0-porcentaje_de_sombra) + porcentaje_de_sombra * notInShadow), color.a);
+	return float4(color.xyz * ( (1.0-porcentaje_de_sombra) + porcentaje_de_sombra * notInShadow * 1.5), color.a);
     //return color;
 }

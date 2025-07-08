@@ -61,7 +61,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             Matrix view = _camara.Vista;
             Matrix projection = _camara.Proyeccion;
             _managerGrafico.inicializarCamara(_camara);
-            _managerGrafico.InicializarShadowMapping(graphicsDevice);
+            //_managerGrafico.InicializarShadowMapping(graphicsDevice);
             _managerGrafico.InicializarParticulas(content, graphicsDevice);
 
             //-----------------Inicializar el skybox-------------------//
@@ -120,7 +120,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             }
 
             //--------Crear un bosque (árboles)---------------//
-                for (int i = 0; i < 500; i++)
+                for (int i = 0; i < 400; i++)
             {
                 var arbol = new EArbol();
                 float x = random.Next(-300, 300);
@@ -207,6 +207,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             jugador.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Jx, 0f, Jz), content, this);
             jugador.setCamara(_camara);
             this.AgregarACrear(jugador);
+            this._managerGrafico.InicializarJugador(jugador);
             this._managerGameplay.AgregarJugador(jugador);
             this._managerInterfaz.Inicializar(graphicsDevice, content, jugador);
             posicionesUsadas.Add(new Vector3(Jx, Jz, 10));
@@ -260,6 +261,8 @@ namespace TGC.MonoGame.TP.src.Escenarios
                 }
 
             }
+
+            _managerGrafico.InicializarShadowMapping(graphicsDevice);
 
         }
         public void Dibujar(GraphicsDevice graphicsDevice)

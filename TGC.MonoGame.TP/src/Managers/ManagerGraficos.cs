@@ -33,17 +33,22 @@ namespace TGC.MonoGame.TP.src.Managers
         private List<Moldes.IMolde> _moldes;
         private Vector3 _posSOL;
         public ShadowMapping _shadowMapper;
-        private List<Entidades.Entidad> _entidadesShadowMap;
+        private List<Entidades.Entidad> _entidadesShadowMapEstaticas;
+        private List<Entidades.Entidad> _entidadesShadowMapDinamicas;
         private Particulas _particulas;
+        private EJugador _jugador;
+        private GraphicsDevice _graphics;
 
         //skybox , pasto
         //decidir terreno (separar el dibujado del alturamapa)
         public ManagerGrafico()
         {
             _entidades = new List<Entidades.Entidad>();
-            _entidadesShadowMap = new List<Entidades.Entidad>();
+            _entidadesShadowMapEstaticas = new List<Entidades.Entidad>();
+            _entidadesShadowMapDinamicas = new List<Entidades.Entidad>();
             _pastos = new List<Entidades.EPasto>();
-            _posSOL = new Vector3(900.0f, 400.0f, -1000.0f);
+            //_posSOL = new Vector3(900.0f, 400.0f, -1000.0f);
+            _posSOL = new Vector3(500.0f, 400.0f, -600.0f);
             _shadowMapper = new ShadowMapping();
             _particulas = new Particulas();
         }
@@ -67,7 +72,9 @@ namespace TGC.MonoGame.TP.src.Managers
         }
 
         public void InicializarShadowMapping(GraphicsDevice graphicsDevice){
+            _graphics = graphicsDevice;
             _shadowMapper.Initialize(_posSOL, graphicsDevice);
+            //hace el swadow static
         }
         public void InicializarParticulas(ContentManager content, GraphicsDevice graphicsDevice){
             _particulas.Initialize(content, graphicsDevice);
@@ -80,16 +87,20 @@ namespace TGC.MonoGame.TP.src.Managers
                 _entidades.Add(entidad);
                 this.AgregarAShadowMap(entidad);
             }
-
+        }
+        public void InicializarJugador(EJugador jugador){
+            _jugador = jugador;
         }
 
         private void AgregarAShadowMap(Entidad entidad)
         {
-            if (entidad._posicion.X > 140 && entidad._posicion.Z > 200 && entidad._tipo == TipoEntidad.Obstaculo){
+            if (entidad._tipo == TipoEntidad.Obstaculo){
+                _entidadesShadowMapEstaticas.Add(entidad);
                 return;
             }
-            else{
-                _entidadesShadowMap.Add(entidad);
+            else if (entidad._tipo == TipoEntidad.Tanque){
+
+                _entidadesShadowMapDinamicas.Add(entidad);
             }
         }
 
@@ -100,15 +111,30 @@ namespace TGC.MonoGame.TP.src.Managers
         public void RemoverEntidad(Entidades.Entidad entidad)
         {
             _entidades.Remove(entidad);
-            _entidadesShadowMap.Remove(entidad);
+            this.RemoverDeShadowMap(entidad);
+        }
+
+        private void RemoverDeShadowMap(Entidad entidad)
+        {
+            if (entidad._tipo == TipoEntidad.Obstaculo || entidad.ExcluidoDelFrustumCulling()){
+                _entidadesShadowMapEstaticas.Remove(entidad);
+                _shadowMapper.ActualizarShadowMapStatic(_graphics, _entidadesShadowMapEstaticas, _terreno);
+                return;
+            }
         }
 
         public void DibujarObjetos(GraphicsDevice graphicsDevice)
         {
-            //--------------1er Recorrida: ShadowMapping--------------//
-            _shadowMapper.ActualizarShadowMap(graphicsDevice, _entidadesShadowMap, _terreno);
+            //--------------1er Recorrida: ShadowMapping-(estatoco)--------------//
+            _shadowMapper.ActualizarShadowMapStatic(graphicsDevice, _entidadesShadowMapEstaticas, _terreno); // <- En el Initialize y en el Eliminado de objeto
 
-            //--------------2da Recorrida: Dibujado comun--------------//
+            //--------------2da Recorrida: ShadowMapping-(dinamico)--------------//
+            _shadowMapper.ActualizarShadowMapDinamic(graphicsDevice, _entidadesShadowMapDinamicas);
+
+            //--------------3ra Recorrida: ShadowMapping-(final)-----------------//
+            _shadowMapper.JuntarShadows(graphicsDevice);
+
+            //--------------4ta Recorrida: Dibujado comun------------------------//
 
             //recorrer por listas separadas
             _skyBox.EfectCamera(_camera.Vista, _camera.Proyeccion);
@@ -167,7 +193,7 @@ namespace TGC.MonoGame.TP.src.Managers
                 }
             }
 
-            //--------------3da Sección: Dibujado Opcional--------------//
+            //--------------5da Sección: Dibujado Opcional--------------//
 
             foreach (var pasto in _pastos) 
             {
@@ -181,10 +207,36 @@ namespace TGC.MonoGame.TP.src.Managers
                 }
             }
 
-            //--------------4ta Sección: Dibujado de Particulas--------------//
+            //--------------6ta Sección: Dibujado de Particulas--------------//
             _particulas.Dibujar();
 
+            //_shadowMapper.ActualizarShadowMapStatic2(graphicsDevice, _entidadesShadowMapEstaticas, _terreno); // <- En el Initialize y en el Eliminado de objeto
+            //_shadowMapper.ActualizarShadowMapDinamic2(graphicsDevice, _entidadesShadowMapDinamicas);
+            //_shadowMapper.JuntarShadows2(graphicsDevice);
+
         }
+
+        /*private void ActualizarEntidadesShadowMap(GameTime gameTime)
+        {
+            if (_cooldownShadowMap < gameTime.ElapsedGameTime.TotalSeconds){
+                _cooldownShadowMap++;
+            }
+
+            else {
+                
+                _entidadesShadowMap.Clear();
+                foreach (var entidad in _entidades)
+                {
+                    float distancia = Vector3.Distance(entidad._posicion, _jugador._posicion);
+                    if ( entidad.FrustumCulling(_boundingFrustum) || distancia < 100.0f || entidad.ExcluidoDelFrustumCulling()){
+                        if (distancia < 300.0f || entidad.ExcluidoDelFrustumCulling()){
+                            _entidadesShadowMap.Add(entidad);
+                        }
+                    }    
+                }
+            }
+            
+        }*/
 
         private void setVistaProjection(Moldes.IMolde molde, Matrix vista, Matrix projection)
         {
@@ -201,6 +253,7 @@ namespace TGC.MonoGame.TP.src.Managers
                 molde.setTime(gameTime);
             }
             this._particulas.Update(gameTime);
+            //this.ActualizarEntidadesShadowMap(gameTime);
         }
 
         public void ActualizarCamera()
