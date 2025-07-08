@@ -39,7 +39,7 @@ namespace TGC.MonoGame.TP.src.Graficos.Utils
 
             this._posSOL = posSOL;
             _targetLightCamera = new TargetCamera(1f, _posSOL, Vector3.Zero);
-            _targetLightCamera.BuildProjection(1f, _lightCameraNearPlaneDistance, _lightCameraFarPlaneDistance, MathHelper.PiOver2 - 0.70f);
+            _targetLightCamera.BuildProjection(1f, _lightCameraNearPlaneDistance, _lightCameraFarPlaneDistance, MathHelper.PiOver2 - 0.90f);
             _shadowMapRenderTarget = new RenderTarget2D(graphics, _shadowmapSize, _shadowmapSize, false,
                 SurfaceFormat.Single, DepthFormat.Depth24, 0, RenderTargetUsage.PlatformContents);
             

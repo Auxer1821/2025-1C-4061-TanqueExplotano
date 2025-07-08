@@ -207,6 +207,7 @@ namespace TGC.MonoGame.TP.src.Escenarios
             jugador.Initialize(graphicsDevice, world * Matrix.CreateTranslation(Jx, 0f, Jz), content, this);
             jugador.setCamara(_camara);
             this.AgregarACrear(jugador);
+            this._managerGrafico.InicializarJugador(jugador);
             this._managerGameplay.AgregarJugador(jugador);
             this._managerInterfaz.Inicializar(graphicsDevice, content, jugador);
             posicionesUsadas.Add(new Vector3(Jx, Jz, 10));
